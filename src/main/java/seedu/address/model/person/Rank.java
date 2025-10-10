@@ -36,7 +36,7 @@ public class Rank {
             "Rank must be one of the following: iron, bronze, silver, gold, platinum, "
                     + "emerald, diamond, master, grandmaster, challenger.";
 
-    public final String rank;
+    public final String value;
 
     /**
      * Constructs a {@code Rank }.
@@ -46,7 +46,7 @@ public class Rank {
     public Rank(String rank) {
         requireNonNull(rank);
         checkArgument(isValidRank(rank), MESSAGE_CONSTRAINTS);
-        this.rank = rank;
+        this.value = rank;
     }
 
     /**
@@ -64,7 +64,7 @@ public class Rank {
 
     @Override
     public String toString() {
-        return rank;
+        return value;
     }
 
     @Override
@@ -79,12 +79,12 @@ public class Rank {
         }
 
         Rank otherRank = (Rank) other;
-        return rank.equals(otherRank.rank);
+        return value.equals(otherRank.value);
     }
 
     @Override
     public int hashCode() {
-        return rank.hashCode();
+        return value.hashCode();
     }
 
 }

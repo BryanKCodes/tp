@@ -11,11 +11,13 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Person;
+import seedu.address.model.team.Team;
+import seedu.address.testutil.TypicalPersons;
 import seedu.address.testutil.TypicalTeams;
 
 public class JsonAdaptedTeamTest {
-
-    private static final List<Person> ALL_PERSONS = TypicalTeams.getTypicalTeamPlayers();
+    private static final List<Person> ALL_PERSONS = TypicalPersons.getTypicalPersons();
+    private static final List<Team> ALL_TEAMS = TypicalTeams.getTypicalTeams();
 
     @Test
     public void toModelType_validTeamDetails_returnsTeam() throws Exception {

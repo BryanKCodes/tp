@@ -26,7 +26,7 @@ public class Champion {
     /** Stores all valid champions loaded from the file. */
     private static final Set<String> VALID_CHAMPIONS = loadChampions();
 
-    public final String champion;
+    public final String value;
 
     /**
      * Constructs a {@code Champion}.
@@ -36,7 +36,7 @@ public class Champion {
     public Champion(String champion) {
         requireNonNull(champion);
         checkArgument(isValidChampion(champion), MESSAGE_CONSTRAINTS);
-        this.champion = champion.trim();
+        this.value = champion.trim();
     }
 
     /**
@@ -75,7 +75,7 @@ public class Champion {
 
     @Override
     public String toString() {
-        return champion;
+        return value;
     }
 
     @Override
@@ -87,11 +87,11 @@ public class Champion {
             return false;
         }
         Champion otherChampion = (Champion) other;
-        return champion.equalsIgnoreCase(otherChampion.champion);
+        return value.equalsIgnoreCase(otherChampion.value);
     }
 
     @Override
     public int hashCode() {
-        return champion.toLowerCase().hashCode();
+        return value.toLowerCase().hashCode();
     }
 }

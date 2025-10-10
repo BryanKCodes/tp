@@ -10,12 +10,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Champion;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
 import seedu.address.model.tag.Tag;
@@ -29,9 +26,6 @@ class JsonAdaptedPerson {
 
     private final String id;
     private final String name;
-    private final String phone;
-    private final String email;
-    private final String address;
     private final String role;
     private final String rank;
     private final String champion;
@@ -41,16 +35,14 @@ class JsonAdaptedPerson {
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
-    public JsonAdaptedPerson(@JsonProperty("id") String id, @JsonProperty("name") String name,
-                             @JsonProperty("phone") String phone, @JsonProperty("email") String email,
-                             @JsonProperty("address") String address, @JsonProperty("role") String role,
-                             @JsonProperty("rank") String rank, @JsonProperty("champion") String champion,
+    public JsonAdaptedPerson(@JsonProperty("id") String id,
+                             @JsonProperty("name") String name,
+                             @JsonProperty("role") String role,
+                             @JsonProperty("rank") String rank,
+                             @JsonProperty("champion") String champion,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.id = id;
         this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
         this.role = role;
         this.rank = rank;
         this.champion = champion;
@@ -65,9 +57,6 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(Person source) {
         id = source.getId();
         name = source.getName().fullName;
-        phone = source.getPhone().value;
-        email = source.getEmail().value;
-        address = source.getAddress().value;
         role = source.getRole().toString();
         rank = source.getRank().toString();
         champion = source.getChampion().toString();
@@ -100,30 +89,6 @@ class JsonAdaptedPerson {
         }
         final Name modelName = new Name(name);
 
-        if (phone == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
-        }
-        if (!Phone.isValidPhone(phone)) {
-            throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
-        }
-        final Phone modelPhone = new Phone(phone);
-
-        if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
-        }
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
-        }
-        final Email modelEmail = new Email(email);
-
-        if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
-
         if (role == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Role.class.getSimpleName()));
         }
@@ -150,8 +115,7 @@ class JsonAdaptedPerson {
         final Champion modelChampion = new Champion(champion);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelId, modelName, modelPhone, modelEmail, modelAddress,
-                modelRole, modelRank, modelChampion, modelTags);
+        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags);
     }
 
 }

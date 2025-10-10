@@ -14,34 +14,25 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Champion;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
     private static final String INVALID_NAME = "R@chel";
-    private static final String INVALID_PHONE = "+651234";
-    private static final String INVALID_ADDRESS = " ";
-    private static final String INVALID_EMAIL = "example.com";
+    private static final String INVALID_ROLE = "Sky";
+    private static final String INVALID_RANK = "Wood";
+    private static final String INVALID_CHAMPION = "Aniga";
     private static final String INVALID_TAG = "#friend";
-    private static final String INVALID_CHAMPION = "123";
-    private static final String INVALID_RANK = "X";
-    private static final String INVALID_ROLE = "";
 
     private static final String VALID_NAME = "Rachel Walker";
-    private static final String VALID_PHONE = "123456";
-    private static final String VALID_ADDRESS = "123 Main Street #0505";
-    private static final String VALID_EMAIL = "rachel@example.com";
+    private static final String VALID_ROLE = "Mid";
+    private static final String VALID_RANK = "Gold";
+    private static final String VALID_CHAMPION = "Ahri";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
-    private static final String VALID_CHAMPION = "Ahri";
-    private static final String VALID_RANK = "Gold";
-    private static final String VALID_ROLE = "Mid";
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -89,72 +80,72 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parsePhone_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> ParserUtil.parsePhone((String) null));
+    public void parseRole_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRole((String) null));
     }
 
     @Test
-    public void parsePhone_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_PHONE));
+    public void parseRole_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRole(INVALID_ROLE));
     }
 
     @Test
-    public void parsePhone_validValueWithoutWhitespace_returnsPhone() throws Exception {
-        Phone expectedPhone = new Phone(VALID_PHONE);
-        assertEquals(expectedPhone, ParserUtil.parsePhone(VALID_PHONE));
+    public void parseRole_validValueWithoutWhitespace_returnsRole() throws Exception {
+        Role expectedRole = new Role(VALID_ROLE);
+        assertEquals(expectedRole, ParserUtil.parseRole(VALID_ROLE));
     }
 
     @Test
-    public void parsePhone_validValueWithWhitespace_returnsTrimmedPhone() throws Exception {
-        String phoneWithWhitespace = WHITESPACE + VALID_PHONE + WHITESPACE;
-        Phone expectedPhone = new Phone(VALID_PHONE);
-        assertEquals(expectedPhone, ParserUtil.parsePhone(phoneWithWhitespace));
+    public void parseRole_validValueWithWhitespace_returnsTrimmedRole() throws Exception {
+        String roleWithWhitespace = WHITESPACE + VALID_ROLE + WHITESPACE;
+        Role expectedRole = new Role(VALID_ROLE);
+        assertEquals(expectedRole, ParserUtil.parseRole(roleWithWhitespace));
     }
 
     @Test
-    public void parseAddress_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> ParserUtil.parseAddress((String) null));
+    public void parseRank_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRank((String) null));
     }
 
     @Test
-    public void parseAddress_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_ADDRESS));
+    public void parseRank_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRank(INVALID_RANK));
     }
 
     @Test
-    public void parseAddress_validValueWithoutWhitespace_returnsAddress() throws Exception {
-        Address expectedAddress = new Address(VALID_ADDRESS);
-        assertEquals(expectedAddress, ParserUtil.parseAddress(VALID_ADDRESS));
+    public void parseRank_validValueWithoutWhitespace_returnsRank() throws Exception {
+        Rank expectedRank = new Rank(VALID_RANK);
+        assertEquals(expectedRank, ParserUtil.parseRank(VALID_RANK));
     }
 
     @Test
-    public void parseAddress_validValueWithWhitespace_returnsTrimmedAddress() throws Exception {
-        String addressWithWhitespace = WHITESPACE + VALID_ADDRESS + WHITESPACE;
-        Address expectedAddress = new Address(VALID_ADDRESS);
-        assertEquals(expectedAddress, ParserUtil.parseAddress(addressWithWhitespace));
+    public void parseRank_validValueWithWhitespace_returnsTrimmedRank() throws Exception {
+        String rankWithWhitespace = WHITESPACE + VALID_RANK + WHITESPACE;
+        Rank expectedRank = new Rank(VALID_RANK);
+        assertEquals(expectedRank, ParserUtil.parseRank(rankWithWhitespace));
     }
 
     @Test
-    public void parseEmail_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> ParserUtil.parseEmail((String) null));
+    public void parseChampion_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseChampion((String) null));
     }
 
     @Test
-    public void parseEmail_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_EMAIL));
+    public void parseChampion_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseChampion(INVALID_CHAMPION));
     }
 
     @Test
-    public void parseEmail_validValueWithoutWhitespace_returnsEmail() throws Exception {
-        Email expectedEmail = new Email(VALID_EMAIL);
-        assertEquals(expectedEmail, ParserUtil.parseEmail(VALID_EMAIL));
+    public void parseChampion_validValueWithoutWhitespace_returnsChampion() throws Exception {
+        Champion expectedEmail = new Champion(VALID_CHAMPION);
+        assertEquals(expectedEmail, ParserUtil.parseChampion(VALID_CHAMPION));
     }
 
     @Test
-    public void parseEmail_validValueWithWhitespace_returnsTrimmedEmail() throws Exception {
-        String emailWithWhitespace = WHITESPACE + VALID_EMAIL + WHITESPACE;
-        Email expectedEmail = new Email(VALID_EMAIL);
-        assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
+    public void parseChampion_validValueWithWhitespace_returnsTrimmedChampion() throws Exception {
+        String championWithWhitespace = WHITESPACE + VALID_CHAMPION + WHITESPACE;
+        Champion expectedChampion = new Champion(VALID_CHAMPION);
+        assertEquals(expectedChampion, ParserUtil.parseChampion(championWithWhitespace));
     }
 
     @Test
@@ -201,44 +192,5 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
-    }
-
-    // Champion tests
-    @Test
-    public void parseChampion_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseChampion(INVALID_CHAMPION));
-    }
-
-    @Test
-    public void parseChampion_validValue_returnsChampion() throws Exception {
-        Champion expectedChampion = new Champion(VALID_CHAMPION);
-        assertEquals(expectedChampion, ParserUtil.parseChampion(VALID_CHAMPION));
-        assertEquals(expectedChampion, ParserUtil.parseChampion(WHITESPACE + VALID_CHAMPION + WHITESPACE));
-    }
-
-    // Rank tests
-    @Test
-    public void parseRank_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseRank(INVALID_RANK));
-    }
-
-    @Test
-    public void parseRank_validValue_returnsRank() throws Exception {
-        Rank expectedRank = new Rank(VALID_RANK);
-        assertEquals(expectedRank, ParserUtil.parseRank(VALID_RANK));
-        assertEquals(expectedRank, ParserUtil.parseRank(WHITESPACE + VALID_RANK + WHITESPACE));
-    }
-
-    // Role tests
-    @Test
-    public void parseRole_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseRole(INVALID_ROLE));
-    }
-
-    @Test
-    public void parseRole_validValue_returnsRole() throws Exception {
-        Role expectedRole = new Role(VALID_ROLE);
-        assertEquals(expectedRole, ParserUtil.parseRole(VALID_ROLE));
-        assertEquals(expectedRole, ParserUtil.parseRole(WHITESPACE + VALID_ROLE + WHITESPACE));
     }
 }
