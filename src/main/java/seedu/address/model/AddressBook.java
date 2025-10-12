@@ -148,6 +148,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     public String toString() {
         return new ToStringBuilder(this)
                 .add("persons", persons)
+                .add("teams", teams)
                 .toString();
     }
 
@@ -173,11 +174,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return persons.equals(otherAddressBook.persons)
+                && teams.equals(otherAddressBook.teams);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return java.util.Objects.hash(persons, teams);
     }
 }

@@ -9,6 +9,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalTeams.TEAM_A;
+import static seedu.address.testutil.TypicalTeams.TEAM_B;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.team.Team;
 import seedu.address.model.team.exceptions.DuplicateTeamException;
+import seedu.address.model.team.exceptions.TeamNotFoundException;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddressBookTest {
@@ -32,6 +34,7 @@ public class AddressBookTest {
     @Test
     public void constructor() {
         assertEquals(Collections.emptyList(), addressBook.getPersonList());
+        assertEquals(Collections.emptyList(), addressBook.getTeamList());
     }
 
     @Test
@@ -112,8 +115,73 @@ public class AddressBookTest {
     }
 
     @Test
+    public void addTeam_duplicateTeam_throwsDuplicateTeamException() {
+        addressBook.addTeam(TEAM_A);
+        assertThrows(DuplicateTeamException.class, () -> addressBook.addTeam(TEAM_A));
+    }
+
+    @Test
+    public void setTeam_replacesTeamInList() {
+        addressBook.addTeam(TEAM_A);
+        addressBook.setTeam(TEAM_A, TEAM_B);
+        AddressBook expectedAddressBook = new AddressBook();
+        expectedAddressBook.addTeam(TEAM_B);
+        assertEquals(expectedAddressBook, addressBook);
+    }
+
+    @Test
+    public void setTeam_targetTeamNotInList_throwsTeamNotFoundException() {
+        assertThrows(TeamNotFoundException.class, () -> addressBook.setTeam(TEAM_A, TEAM_A));
+    }
+
+    @Test
+    public void removeTeam_removesTeamFromList() {
+        addressBook.addTeam(TEAM_A);
+        addressBook.removeTeam(TEAM_A);
+        AddressBook expectedAddressBook = new AddressBook();
+        assertEquals(expectedAddressBook, addressBook);
+    }
+
+    @Test
+    public void removeTeam_teamDoesNotExist_throwsTeamNotFoundException() {
+        assertThrows(TeamNotFoundException.class, () -> addressBook.removeTeam(TEAM_A));
+    }
+
+    @Test
+    public void getTeamList_modifyList_throwsUnsupportedOperationException() {
+        assertThrows(UnsupportedOperationException.class, () -> addressBook.getTeamList().remove(0));
+    }
+
+    @Test
+    public void equals() {
+        // same object -> returns true
+        assertTrue(addressBook.equals(addressBook));
+
+        // same values -> returns true
+        AddressBook addressBookCopy = new AddressBook();
+        assertTrue(addressBook.equals(addressBookCopy));
+
+        // different types -> returns false
+        assertFalse(addressBook.equals(5));
+
+        // null -> returns false
+        assertFalse(addressBook.equals(null));
+
+        // different persons -> returns false
+        AddressBook differentPersonsAddressBook = new AddressBook();
+        differentPersonsAddressBook.addPerson(ALICE);
+        assertFalse(addressBook.equals(differentPersonsAddressBook));
+
+        // different teams -> returns false
+        AddressBook differentTeamsAddressBook = new AddressBook();
+        differentTeamsAddressBook.addTeam(TEAM_A);
+        assertFalse(addressBook.equals(differentTeamsAddressBook));
+    }
+
+    @Test
     public void toStringMethod() {
-        String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getPersonList() + "}";
+        String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getPersonList()
+                + ", teams=" + addressBook.getTeamList() + "}";
         assertEquals(expected, addressBook.toString());
     }
 
