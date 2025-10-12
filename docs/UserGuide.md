@@ -127,7 +127,7 @@ Success output:
 Failure outputs (examples):
 
 - `The player index provided is invalid.`
-- `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`  
+- `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`
   (Remove from team before deleting.)
 
 ### Finding players : `find`
@@ -135,7 +135,7 @@ Failure outputs (examples):
 Filters the player list by one or more attributes. Matching is **case-insensitive**. Results show players that satisfy *
 *all** provided filters (logical AND). Exact value matching is used for rank/role; name/champion use substring match.
 
-Format (any order, at least one filter):  
+Format (any order, at least one filter):
 `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]`
 
 - Case-insensitive. faker matches Faker.
@@ -296,26 +296,26 @@ the data of your previous AddressBook home folder.
 
 ## Command summary - SummonersBook
 
- Action            | Format, Examples                                 
+ Action            | Format, Examples
 -------------------|--------------------------------------------------
- **Help**          | `help`                                           
- **Add player**    | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`          
- **View player**   | `view INDEX`                                     
- **Delete player** | `delete INDEX`                                   
- **Find players**  | `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]` 
- **Group teams**   | `group`                                          
- **Ungroup**       | `ungroup TEAM_INDEX`  ·  `ungroup all`           
- **View team**     | `viewteam INDEX`                                 
- **Exit**          | `exit`                                           
+ **Help**          | `help`
+ **Add player**    | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
+ **View player**   | `view INDEX`
+ **Delete player** | `delete INDEX`
+ **Find players**  | `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]`
+ **Group teams**   | `group`
+ **Ungroup**       | `ungroup TEAM_INDEX`  ·  `ungroup all`
+ **View team**     | `viewteam INDEX`
+ **Exit**          | `exit`
 
 ## Command summary - AB3
 
- Action     | Format, Examples                                                                                                                                                      
+ Action     | Format, Examples
 ------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
- **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague` 
- **Clear**  | `clear`                                                                                                                                                               
- **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                                                   
- **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`                                           
- **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`                                                                                                            
- **List**   | `list`                                                                                                                                                                
- **Help**   | `help`                                                                                                                                                                
+ **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+ **Clear**  | `clear`
+ **Delete** | `delete INDEX`<br> e.g., `delete 3`
+ **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+ **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+ **List**   | `list`
+ **Help**   | `help`

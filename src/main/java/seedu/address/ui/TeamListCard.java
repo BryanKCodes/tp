@@ -8,7 +8,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
 /**
- * An UI component that displays information of a {@code Team}.
+ * A UI component that displays information of a {@code Team}.
  */
 public class TeamListCard extends UiPart<Region> {
 
@@ -46,23 +46,23 @@ public class TeamListCard extends UiPart<Region> {
         // Assuming roles are fixed and every team has one of each
         for (Person person : team.getPersons()) {
             switch (person.getRole().toString().toUpperCase()) {
-                case "TOP":
-                    top.setText("Top: " + person.getName().fullName);
-                    break;
-                case "JUNGLE":
-                    jungle.setText("Jungle: " + person.getName().fullName);
-                    break;
-                case "MID":
-                    mid.setText("Mid: " + person.getName().fullName);
-                    break;
-                case "ADC":
-                    adc.setText("ADC: " + person.getName().fullName);
-                    break;
-                case "SUPPORT":
-                    support.setText("Support: " + person.getName().fullName);
-                    break;
-                default:
-                    break;
+            case "TOP":
+                top.setText("Top: " + person.getName().fullName);
+                break;
+            case "JUNGLE":
+                jungle.setText("Jungle: " + person.getName().fullName);
+                break;
+            case "MID":
+                mid.setText("Mid: " + person.getName().fullName);
+                break;
+            case "ADC":
+                adc.setText("ADC: " + person.getName().fullName);
+                break;
+            case "SUPPORT":
+                support.setText("Support: " + person.getName().fullName);
+                break;
+            default:
+                break;
             }
         }
     }
