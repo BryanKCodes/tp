@@ -23,6 +23,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.model.team.Team;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
@@ -124,6 +125,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public void addTeam(Team team) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void setAddressBook(ReadOnlyAddressBook newData) {
             throw new AssertionError("This method should not be called.");
         }
@@ -139,7 +145,17 @@ public class AddCommandTest {
         }
 
         @Override
+        public boolean hasTeam(seedu.address.model.team.Team team) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void deletePerson(Person target) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteTeam(seedu.address.model.team.Team target) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -149,12 +165,27 @@ public class AddCommandTest {
         }
 
         @Override
+        public void setTeam(Team target, Team editedTeam) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public ObservableList<Person> getFilteredPersonList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
+        public ObservableList<Team> getFilteredTeamList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void updateFilteredPersonList(Predicate<Person> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredTeamList(Predicate<Team> predicate) {
             throw new AssertionError("This method should not be called.");
         }
     }
