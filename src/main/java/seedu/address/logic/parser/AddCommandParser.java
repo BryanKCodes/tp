@@ -12,12 +12,9 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Champion;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
 import seedu.address.model.tag.Tag;
@@ -49,21 +46,7 @@ public class AddCommandParser implements Parser<AddCommand> {
         Champion champion = ParserUtil.parseChampion(argMultimap.getValue(PREFIX_CHAMPION).get());
         Set<Tag> tags = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        // Use default values directly
-        String defaultPhone = "85355255";
-        String defaultEmail = "amy@gmail.com";
-        String defaultAddress = "123, Jurong West Ave 6, #08-111";
-
-        Person person = new Person(
-                name,
-                new Phone(defaultPhone),
-                new Email(defaultEmail),
-                new Address(defaultAddress),
-                role,
-                rank,
-                champion,
-                tags
-        );
+        Person person = new Person(name, role, rank, champion, tags);
 
         return new AddCommand(person);
     }
@@ -76,4 +59,3 @@ public class AddCommandParser implements Parser<AddCommand> {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 }
-

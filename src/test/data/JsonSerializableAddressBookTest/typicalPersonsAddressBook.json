@@ -4,9 +4,6 @@
     {
       "id": "6ec2d5ad-b84c-48f1-adc1-cac753f4d961",
       "name": "Alice Pauline",
-      "phone": "94351253",
-      "email": "alice@example.com",
-      "address": "123, Jurong West Ave 6, #08-111",
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
@@ -15,9 +12,6 @@
     {
       "id": "5fd80efe-a7b4-4ed4-bbd1-f48e30bcac58",
       "name": "Benson Meier",
-      "phone": "98765432",
-      "email": "johnd@example.com",
-      "address": "311, Clementi Ave 2, #02-25",
       "role": "top",
       "rank": "silver",
       "champion": "Garen",
@@ -26,9 +20,6 @@
     {
       "id": "ff55a1bb-7c29-49fa-9931-06483207fe23",
       "name": "Carl Kurz",
-      "phone": "95352563",
-      "email": "heinz@example.com",
-      "address": "wall street",
       "role": "jungle",
       "rank": "platinum",
       "champion": "Lee Sin",
@@ -37,31 +28,22 @@
     {
       "id": "04ea32c7-9bce-460d-b42b-3fbaa6e0578c",
       "name": "Daniel Meier",
-      "phone": "87652533",
-      "email": "cornelia@example.com",
-      "address": "10th street",
       "role": "adc",
       "rank": "gold",
-      "champion": "Jinx",
+      "champion": "Caitlyn",
       "tags": [ "friends" ]
     },
     {
       "id": "a2485a46-04ae-4cc0-b4a4-45444ed5ed94",
       "name": "Elle Meyer",
-      "phone": "9482224",
-      "email": "werner@example.com",
-      "address": "michegan ave",
       "role": "support",
       "rank": "diamond",
-      "champion": "Thresh",
+      "champion": "Lulu",
       "tags": []
     },
     {
       "id": "e861f4b6-9102-4665-9bc6-5d1d52c708e8",
       "name": "Fiona Kunz",
-      "phone": "9482427",
-      "email": "lydia@example.com",
-      "address": "little tokyo",
       "role": "mid",
       "rank": "master",
       "champion": "Zed",
@@ -70,12 +52,17 @@
     {
       "id": "59d18342-58f7-4708-a333-7860c4ab16d9",
       "name": "George Best",
-      "phone": "9482442",
-      "email": "anna@example.com",
-      "address": "4th street",
       "role": "top",
-      "rank": "bronze",
-      "champion": "Malphite",
+      "rank": "iron",
+      "champion": "Darius",
+      "tags": []
+    },
+    {
+      "id": "ad25fd23-bd20-4dac-8365-db573c9b5ff4",
+      "name": "Hoon Meier",
+      "role": "support",
+      "rank": "silver",
+      "champion": "Leona",
       "tags": []
     }
   ],

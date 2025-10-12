@@ -3,9 +3,6 @@
     {
       "id": "6ec2d5ad-b84c-48f1-adc1-cac753f4d961",
       "name": "Alice Pauline",
-      "phone": "94351253",
-      "email": "alice@example.com",
-      "address": "123, Jurong West Ave 6, #08-111",
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
@@ -14,9 +11,6 @@
     {
       "id": "6ec2d5ad-b84c-48f1-adc1-cac753f4d961",
       "name": "Alice Pauline",
-      "phone": "94351253",
-      "email": "alice@example.com",
-      "address": "123, Jurong West Ave 6, #08-111",
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
