@@ -46,12 +46,21 @@
           </padding>
         </StackPane>
 
-        <VBox fx:id="personList" styleClass="pane-with-border" minWidth="340" prefWidth="340" VBox.vgrow="ALWAYS">
-          <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
-          </padding>
-          <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
-        </VBox>
+        <SplitPane VBox.vgrow="ALWAYS" dividerPositions="0.5" style="-fx-border-color: transparent;">
+          <items>
+            <VBox minWidth="340" prefWidth="340">
+              <children>
+                <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
+              </children>
+            </VBox>
+            <VBox minWidth="340" prefWidth="340">
+              <children>
+                <!-- This is the new placeholder for your Team List -->
+                <StackPane fx:id="teamListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
+              </children>
+            </VBox>
+          </items>
+        </SplitPane>
 
         <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />
       </VBox>

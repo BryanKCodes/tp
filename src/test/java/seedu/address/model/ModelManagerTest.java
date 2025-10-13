@@ -7,6 +7,8 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalTeams.TEAM_A;
+import static seedu.address.testutil.TypicalTeams.TEAM_B;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -89,13 +91,65 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void deletePerson_deletesPerson_success() {
+        modelManager.addPerson(ALICE);
+        modelManager.deletePerson(ALICE);
+        assertFalse(modelManager.hasPerson(ALICE));
+    }
+
+    @Test
+    public void setPerson_replacesPerson_success() {
+        modelManager.addPerson(ALICE);
+        modelManager.setPerson(ALICE, BENSON);
+        assertFalse(modelManager.hasPerson(ALICE));
+        assertTrue(modelManager.hasPerson(BENSON));
+    }
+
+    @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
     }
 
     @Test
+    public void hasTeam_nullTeam_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.hasTeam(null));
+    }
+
+    @Test
+    public void hasTeam_teamNotInAddressBook_returnsFalse() {
+        assertFalse(modelManager.hasTeam(TEAM_A));
+    }
+
+    @Test
+    public void hasTeam_teamInAddressBook_returnsTrue() {
+        modelManager.addTeam(TEAM_A);
+        assertTrue(modelManager.hasTeam(TEAM_A));
+    }
+
+    @Test
+    public void deleteTeam_deletesTeam_success() {
+        modelManager.addTeam(TEAM_A);
+        modelManager.deleteTeam(TEAM_A);
+        assertFalse(modelManager.hasTeam(TEAM_A));
+    }
+
+    @Test
+    public void setTeam_replacesTeam_success() {
+        modelManager.addTeam(TEAM_A);
+        modelManager.setTeam(TEAM_A, TEAM_B);
+        assertFalse(modelManager.hasTeam(TEAM_A));
+        assertTrue(modelManager.hasTeam(TEAM_B));
+    }
+
+    @Test
+    public void getFilteredTeamList_modifyList_throwsUnsupportedOperationException() {
+        assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredTeamList().remove(0));
+    }
+
+    @Test
     public void equals() {
-        AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
+        AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON)
+                .withTeam(TEAM_A).build();
         AddressBook differentAddressBook = new AddressBook();
         UserPrefs userPrefs = new UserPrefs();
 
@@ -123,6 +177,13 @@ public class ModelManagerTest {
 
         // resets modelManager to initial state for upcoming tests
         modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+
+        // different filteredTeamList -> returns false
+        modelManager.updateFilteredTeamList(team -> false);
+        assertFalse(modelManager.equals(new ModelManager(addressBook, userPrefs)));
+
+        // resets modelManager to initial state for upcoming tests
+        modelManager.updateFilteredTeamList(Model.PREDICATE_SHOW_ALL_TEAMS);
 
         // different userPrefs -> returns false
         UserPrefs differentUserPrefs = new UserPrefs();
