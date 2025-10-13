@@ -46,9 +46,7 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
 
 ## Features
 
-<box type="info" seamless>
-
-**Notes about the command format:**<br>
+**Notes about the command format:**
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
@@ -72,7 +70,6 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines
   as space characters surrounding line-breaks may be omitted when copied over to the application.
-  </box>
 
 ## SummonersBook commands
 
@@ -100,11 +97,11 @@ Shows a list of all players in the Summonersbook.
 
 Format: `list`
 
-### Listing all teams : `listTeam`
+### Listing all teams : `listteam`
 
 Shows a list of all teams in SummonersBook.
 
-Format: `list`
+Format: `listteam`
 
 ### Deleting a player: `delete`
 
@@ -269,26 +266,18 @@ the data of your previous AddressBook home folder.
 
 ## Command summary - SummonersBook
 
- Action            | Format, Examples
--------------------|--------------------------------------------------
- **Help**          | `help`
- **Add player**    | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
- **View player**   | `view INDEX`
- **Delete player** | `delete INDEX`
- **Find players**  | `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]`
- **Group teams**   | `group`
- **Ungroup**       | `ungroup TEAM_INDEX`  ·  `ungroup all`
- **View team**     | `viewteam INDEX`
- **Exit**          | `exit`
-
-## Command summary - AB3
-
- Action     | Format, Examples
-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
- **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
- **Clear**  | `clear`
- **Delete** | `delete INDEX`<br> e.g., `delete 3`
- **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
- **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
- **List**   | `list`
- **Help**   | `help`
+Action               | Format
+-------------------- | --------------------------------------------------
+**Help**             | `help`
+**Add player**       | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
+**List all players** | `list`
+**List all teams**   | `listteam`
+**View player**      | `view INDEX`
+**Delete player**    | `delete INDEX`
+**Find players**     | `find KEYWORD [MORE_KEYWORDS...]`
+**Filter players**   | `filter [rl/ROLE ...] [rk/RANK ...]`
+**Edit player**      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+**Auto-group teams** | `group`
+**Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
+**Clear all entries**| `clear`
+**Exit**             | `exit`
