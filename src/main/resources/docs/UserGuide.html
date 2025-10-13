@@ -89,18 +89,13 @@
     <div class="callout">
         <strong>Notes about the command format:</strong><br/>
         <ul>
-            <li>Words in <code>UPPER_CASE</code> are parameters you supply. e.g. in
-                <code>add n/NAME rk/RANK rl/ROLE c/CHAMPION</code>, <code>NAME</code>, <code>RANK</code>,
-                <code>ROLE</code>, <code>CHAMPION</code> are parameters.
-            </li>
-            <li>Items in square brackets are optional. e.g. <code>find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]</code>.
-            </li>
-            <li>Parameters can be in any order. e.g. <code>add rk/RANK n/NAME rl/ROLE c/CHAMPION</code> is valid.</li>
-            <li>Extraneous parameters for commands that take none (e.g. <code>help</code>, <code>exit</code>) are
-                ignored.
-            </li>
-            <li>Indices refer to the <strong>currently displayed</strong> list (players or teams), starting from 1.</li>
-            <li>If using a PDF, be careful when copying multi-line commands; line-break spaces may be omitted.</li>
+            <li>Parameters in <code>UPPER_CASE</code> are supplied by the user.</li>
+            <li>Optional items are in square brackets, e.g., <code>find [n/NAME] [rl/ROLE]</code>.</li>
+            <li>Items with <code>…</code> after them can be used multiple times or not at all, e.g., <code>[t/TAG]…</code>.</li>
+            <li>Parameters can be in any order. e.g., <code>add rk/RANK n/NAME rl/ROLE c/CHAMPION</code>.</li>
+            <li>Indices start from 1, referring to the currently displayed list.</li>
+            <li>Players already in a team cannot be edited.</li>
+            <li>Case-insensitive matching for applicable parameters.</li>
         </ul>
     </div>
 
@@ -110,15 +105,18 @@
         <div class="toc">
             <a href="#cmd-help"><code>help</code> — View help</a>
             <a href="#cmd-add"><code>add</code> — Add a player</a>
-            <a href="#cmd-view"><code>view</code> — View a player</a>
+            <a href="#cmd-list"><code>list</code> — List all players</a>
+            <a href="#cmd-listteam"><code>listTeam</code> — List all teams</a>
             <a href="#cmd-delete"><code>delete</code> — Delete a player</a>
-            <a href="#cmd-find"><code>find</code> — Find players</a>
-            <a href="#cmd-group"><code>group</code> — Auto‑group players</a>
-            <a href="#cmd-ungroup"><code>ungroup</code> — Disband team(s)</a>
-            <a href="#cmd-viewteam"><code>viewteam</code> — View a team</a>
-            <a href="#cmd-exit"><code>exit</code> — Exit app</a>
+            <a href="#cmd-find"><code>find</code> — Find players by keyword</a>
+            <a href="#cmd-filter"><code>filter</code> — Filter players</a>
+            <a href="#cmd-edit"><code>edit</code> — Edit a player</a>
+            <a href="#cmd-group"><code>group</code> — Auto‑group players into teams</a>
+            <a href="#cmd-ungroup"><code>ungroup</code> — Disband a team or all teams</a>
+            <a href="#cmd-clear"><code>clear</code> — Clear all entries</a>
+            <a href="#cmd-exit"><code>exit</code> — Exit the program</a>
             <a href="#cmd-saving"><code>saving</code> — Auto‑save</a>
-            <a href="#cmd-editdata"><code>edit data</code> — JSON file</a>
+            <a href="#cmd-editdata"><code>edit data</code> — Edit JSON file</a>
         </div>
     </div>
 
@@ -126,25 +124,32 @@
 
     <a id="cmd-help"></a>
     <h3>Viewing help : <code>help</code></h3>
-    <p>Shows a message explaining how to access the help page.</p>
+    <p>A help window will appear, displaying our User Guide page.</p>
     <p><strong>Format:</strong> <code>help</code></p>
 
     <a id="cmd-add"></a>
     <h3>Adding a player: <code>add</code></h3>
-    <p>Adds a new player with mandatory details.</p>
     <p><strong>Format:</strong> <code>add n/NAME rk/RANK rl/ROLE c/CHAMPION</code></p>
+    <p><strong>Notes:</strong></p>
+    <ul>
+        <li>All fields are <strong>mandatory</strong>.</li>
+        <li>Parameters can be provided in <strong>any order</strong>.</li>
+    </ul>
     <p><strong>Examples:</strong></p>
     <ul>
         <li><code>add n/Faker rk/Grandmaster rl/Bottom c/Sivir</code></li>
         <li><code>add n/Imissher rk/Gold rl/Support c/Thresh</code></li>
     </ul>
 
-    <a id="cmd-view"></a>
-    <h3>View a player's details : <code>view</code></h3>
-    <p>Displays full information for a specific player.</p>
-    <p><strong>Format:</strong> <code>view INDEX</code></p>
-    <p><strong>Example:</strong> <code>view 1</code></p>
-    <p><strong>Failure output:</strong> <code>The player index provided is invalid.</code></p>
+    <a id="cmd-list"></a>
+    <h3>Listing all players : <code>list</code></h3>
+    <p>Shows a list of all players in SummonersBook.</p>
+    <p><strong>Format:</strong> <code>list</code></p>
+
+    <a id="cmd-listteam"></a>
+    <h3>Listing all teams : <code>listTeam</code></h3>
+    <p>Shows a list of all teams in SummonersBook.</p>
+    <p><strong>Format:</strong> <code>listTeam</code></p>
 
     <a id="cmd-delete"></a>
     <h3>Deleting a player: <code>delete</code></h3>
@@ -164,31 +169,67 @@
     </ul>
 
     <a id="cmd-find"></a>
-    <h3>Finding players : <code>find</code></h3>
-    <p>Filters the player list by one or more attributes. Matching is <strong>case-insensitive</strong>. Results show
-        players that satisfy <strong>all</strong> provided filters (logical AND). Exact value matching is used for
-        rank/role; name/champion use substring match.</p>
-    <p><strong>Format (any order, at least one filter):</strong> <code>find [n/NAME] [rl/ROLE] [rk/RANK]
-        [c/CHAMPION]</code></p>
+    <h3>Finding players by keyword : <code>find</code></h3>
+    <p>Searches for players by <strong>keyword(s)</strong> in their <strong>name</strong>. Matching is case-insensitive and based on whole words only.</p>
+    <p><strong>Format:</strong> <code>find KEYWORD [MORE_KEYWORDS...]</code></p>
+    <p><strong>Examples:</strong></p>
     <ul>
-        <li>Case-insensitive. <code>faker</code> matches <code>Faker</code>.</li>
-        <li>Full-word (AND) name matching for keywords use the keyword mode; substring for <code>n/</code> and
-            <code>c/</code>.
-        </li>
+        <li><code>find joanne lim</code> — finds <strong>Joanne Koh</strong>, <strong>Joanne Lim</strong>, and <strong>June Lim</strong>, but <strong>not</strong> <strong>John Kim</strong>.</li>
+        <li><code>find john</code> — finds <strong>John Doe</strong> and <strong>John Smith</strong>.</li>
+        <li><code>find jo</code> — finds <strong>Jo Lin</strong>, but <strong>not</strong> “John Doe” or “John Smith”.</li>
+    </ul>
+
+    <a id="cmd-filter"></a>
+    <h3>Filtering players : <code>filter</code></h3>
+    <p>Narrows the player list using one or more filters. Matching is <strong>case-insensitive</strong>.</p>
+    <p>You can filter by:</p>
+    <ul>
+        <li><code>rl/</code> — role (exact match)</li>
+        <li><code>rk/</code> — rank (exact match)</li>
+    </ul>
+    <p><strong>Format (any order, at least one filter):</strong> <code>filter [rl/ROLE ...] [rk/RANK ...]</code></p>
+    <p><strong>How filtering works:</strong></p>
+    <ul>
+        <li>Filters of <strong>different types</strong> (e.g. <code>rl/</code> and <code>rk/</code>) are combined with <strong>AND</strong>.</li>
+        <li>Filters <strong>within the same type</strong> (e.g. multiple <code>rl/</code> values) are combined with <strong>OR</strong>.</li>
+        <li>Matching is <strong>case-insensitive</strong> and <strong>exact</strong>.</li>
     </ul>
     <p><strong>Examples:</strong></p>
     <ul>
-        <li><code>find rl/Bottom</code> — all Bottom players</li>
-        <li><code>find rk/Gold</code> — all Gold players</li>
-        <li><code>find rl/Mid rk/Diamond</code> — all Diamond Mid players</li>
-        <li><code>find c/Thresh</code> — players whose main champion name contains “Thresh”</li>
-        <li><code>find n/faker</code> — players whose name contains “faker”</li>
+        <li><code>filter rl/Mid Jungle</code> — players who are <strong>Mid OR Jungle</strong>.</li>
+        <li><code>filter rl/Mid rk/Gold</code> — players who are <strong>Mid AND Gold</strong>.</li>
+        <li><code>filter rl/Mid Jungle rk/Gold Silver</code> — players who are <strong>(Mid OR Jungle) AND (Gold OR Silver)</strong>.</li>
+    </ul>
+
+    <a id="cmd-edit"></a>
+    <h3>Editing a player : <code>edit</code></h3>
+    <p>Edits an existing player in your roster. Players already in a team cannot be edited.</p>
+    <p><strong>Format:</strong> <code>edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]</code></p>
+    <p><strong>Notes:</strong></p>
+    <ul>
+        <li><code>INDEX</code> refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).</li>
+        <li>At least one field to edit must be provided.</li>
+        <li>Existing values are <strong>overwritten</strong> by the new input.</li>
+        <li>Tags are <strong>replaced</strong>, not added. To clear all tags, type <code>t/</code> with no tag values.</li>
+    </ul>
+    <p><strong>Examples:</strong></p>
+    <ul>
+        <li><code>edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri</code> — updates name, role, rank, and champion</li>
+        <li><code>edit 2 t/</code> — clears all tags</li>
+        <li><code>edit 3 rl/Top rk/Gold</code> — updates role and rank</li>
     </ul>
 
     <a id="cmd-group"></a>
-    <h3>Auto-grouping players into teams: <code>group</code></h3>
+    <h3>Auto-grouping players into teams : <code>group</code></h3>
     <p>Forms as many balanced teams of five as possible from <strong>unassigned</strong> players.</p>
     <p><strong>Format:</strong> <code>group</code></p>
+    <p><strong>How it works:</strong></p>
+    <ul>
+        <li>Only players <strong>not already in a team</strong> are considered.</li>
+        <li>Each team has <strong>no conflicting roles</strong> (each role appears at most once).</li>
+        <li>Players are grouped to create teams with <strong>similar ranks</strong> whenever possible.</li>
+        <li>Teams are automatically created until there are fewer than five unassigned players remaining.</li>
+    </ul>
 
     <a id="cmd-ungroup"></a>
     <h3>Disbanding a team or all teams : <code>ungroup</code></h3>
@@ -200,11 +241,10 @@
         <li><code>ungroup all</code> — disbands all teams</li>
     </ul>
 
-    <a id="cmd-viewteam"></a>
-    <h3>Viewing a team’s details : <code>viewteam</code></h3>
-    <p>Shows roster and summary performance for a specific team.</p>
-    <p><strong>Format:</strong> <code>viewteam INDEX</code></p>
-    <p><strong>Example:</strong> <code>viewteam 1</code></p>
+    <a id="cmd-clear"></a>
+    <h3>Clearing all entries : <code>clear</code></h3>
+    <p>Clears all entries from SummonersBook.</p>
+    <p><strong>Format:</strong> <code>clear</code></p>
 
     <a id="cmd-exit"></a>
     <h3>Exiting the program : <code>exit</code></h3>
@@ -216,58 +256,16 @@
     <p>Data is saved automatically to disk after any command that changes data. No manual save is required.</p>
 
     <a id="cmd-editdata"></a>
-    <h2>Editing the data file</h2>
-    <p>SummonersBook stores data as JSON at <code>[JAR file location]/data/summonersbook.json</code>.
-        Advanced users can edit this file directly.</p>
-
-    <hr/>
-
-    <h2>Other commands that AB3 has</h2>
-
-    <h3>Listing all persons : <code>list</code></h3>
-    <p>Shows a list of all persons in the address book.</p>
-    <p><strong>Format:</strong> <code>list</code></p>
-
-    <h3>Editing a person : <code>edit</code></h3>
-    <p>Edits an existing person in the address book.</p>
-    <p><strong>Format:</strong> <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​</code></p>
+    <h3>Editing the data file</h3>
+    <p>SummonersBook stores data as a JSON file at:</p>
+    <p><code>[JAR file location]/data/summonersbook.json</code></p>
+    <p>Advanced users can edit this file directly if needed.</p>
+    <p><strong>Caution:</strong></p>
     <ul>
-        <li>Edits the person at the specified <code>INDEX</code> (1-based from displayed list).</li>
-        <li>At least one optional field must be provided; existing values will be updated.</li>
-        <li>When editing tags, existing tags are replaced with the provided ones; <code>t/</code> removes all.</li>
+        <li>Editing the data file incorrectly can corrupt your data.</li>
+        <li>This may cause SummonersBook to start with an empty file.</li>
+        <li>Always <strong>back up the file</strong> before making changes.</li>
     </ul>
-    <p><strong>Examples:</strong></p>
-    <ul>
-        <li><code>edit 1 p/91234567 e/johndoe@example.com</code></li>
-        <li><code>edit 2 n/Betsy Crower t/</code></li>
-    </ul>
-
-    <h3>Locating persons by name: <code>find</code></h3>
-    <p>Finds persons whose names contain ANY of the given keywords.</p>
-    <p><strong>Format:</strong> <code>find KEYWORD [MORE_KEYWORDS]</code></p>
-    <ul>
-        <li>Case-insensitive; order of keywords does not matter.</li>
-        <li>Only the name is searched; full-word matching; OR search across keywords.</li>
-    </ul>
-    <p><strong>Examples:</strong></p>
-    <ul>
-        <li><code>find John</code> — returns <em>john</em> and <em>John Doe</em></li>
-        <li><code>find alex david</code> — returns <em>Alex Yeoh</em>, <em>David Li</em></li>
-    </ul>
-
-    <h3>Clearing all entries : <code>clear</code></h3>
-    <p>Clears all entries from the address book.</p>
-    <p><strong>Format:</strong> <code>clear</code></p>
-
-    <h3>Editing the data file (AB3)</h3>
-    <div class="callout small">
-        <strong>Caution:</strong> If the data file becomes invalid, the app will start with an empty dataset on next
-        run.
-        Back up the file before editing. Invalid values can cause unexpected behavior.
-    </div>
-
-    <h3>Archiving data files <span class="small">[coming in v2.0]</span></h3>
-    <p><em>Details coming soon ...</em></p>
 
     <hr/>
 
@@ -301,34 +299,71 @@
     <h2>Command summary — SummonersBook</h2>
     <table>
         <thead>
-        <tr><th>Action</th><th>Format, Examples</th></tr>
+        <tr><th>Action</th><th>Format / Examples</th></tr>
         </thead>
         <tbody>
         <tr><td><strong>Help</strong></td><td><code>help</code></td></tr>
-        <tr><td><strong>Add player</strong></td><td><code>add n/NAME rk/RANK rl/ROLE c/CHAMPION</code></td></tr>
-        <tr><td><strong>View player</strong></td><td><code>view INDEX</code></td></tr>
-        <tr><td><strong>Delete player</strong></td><td><code>delete INDEX</code></td></tr>
-        <tr><td><strong>Find players</strong></td><td><code>find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]</code></td></tr>
-        <tr><td><strong>Group teams</strong></td><td><code>group</code></td></tr>
-        <tr><td><strong>Ungroup</strong></td><td><code>ungroup TEAM_INDEX</code> · <code>ungroup all</code></td></tr>
-        <tr><td><strong>View team</strong></td><td><code>viewteam INDEX</code></td></tr>
+        <tr><td><strong>Add player</strong></td>
+            <td>
+                <code>add n/NAME rk/RANK rl/ROLE c/CHAMPION</code><br>
+                <em>Example:</em> <code>add n/Faker rk/Grandmaster rl/Bottom c/Sivir</code><br>
+                <em>Note:</em> Parameters can be in any order.
+            </td>
+        </tr>
+        <tr><td><strong>List all players</strong></td><td><code>list</code></td></tr>
+        <tr><td><strong>List all teams</strong></td><td><code>listTeam</code></td></tr>
+        <tr><td><strong>Delete player</strong></td>
+            <td>
+                <code>delete INDEX</code><br>
+                <em>Success:</em> <code>Deleted Player: &lt;NAME&gt;.</code><br>
+                <em>Failure examples:</em>
+                <ul>
+                    <li><code>The player index provided is invalid.</code></li>
+                    <li><code>Cannot delete player. &lt;NAME&gt; is currently on team '&lt;TEAM NAME&gt;'.</code></li>
+                </ul>
+            </td>
+        </tr>
+        <tr><td><strong>Find players</strong></td>
+            <td>
+                <code>find KEYWORD [MORE_KEYWORDS...]</code><br>
+                <em>Case-insensitive, matches whole words only.</em><br>
+                <em>Example:</em> <code>find joanne lim</code>
+            </td>
+        </tr>
+        <tr><td><strong>Filter players</strong></td>
+            <td>
+                <code>filter [rl/ROLE ...] [rk/RANK ...]</code><br>
+                <em>Examples:</em>
+                <ul>
+                    <li><code>filter rl/Mid Jungle</code> — Mid OR Jungle</li>
+                    <li><code>filter rl/Mid rk/Gold</code> — Mid AND Gold</li>
+                </ul>
+            </td>
+        </tr>
+        <tr><td><strong>Edit player</strong></td>
+            <td>
+                <code>edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]</code><br>
+                <em>Examples:</em>
+                <ul>
+                    <li><code>edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri</code></li>
+                    <li><code>edit 2 t/</code> — clears tags</li>
+                </ul>
+            </td>
+        </tr>
+        <tr><td><strong>Auto-group teams</strong></td>
+            <td>
+                <code>group</code><br>
+                <em>Forms balanced teams of 5 from unassigned players.</em>
+            </td>
+        </tr>
+        <tr><td><strong>Ungroup teams</strong></td>
+            <td>
+                <code>ungroup TEAM_INDEX</code> · <code>ungroup all</code><br>
+                <em>Example:</em> <code>ungroup 1</code> or <code>ungroup all</code>
+            </td>
+        </tr>
+        <tr><td><strong>Clear all entries</strong></td><td><code>clear</code></td></tr>
         <tr><td><strong>Exit</strong></td><td><code>exit</code></td></tr>
-        </tbody>
-    </table>
-
-    <h2>Command summary — AB3</h2>
-    <table>
-        <thead>
-        <tr><th>Action</th><th>Format, Examples</th></tr>
-        </thead>
-        <tbody>
-        <tr><td><strong>Add</strong></td><td><code>add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​</code></td></tr>
-        <tr><td><strong>Clear</strong></td><td><code>clear</code></td></tr>
-        <tr><td><strong>Delete</strong></td><td><code>delete INDEX</code></td></tr>
-        <tr><td><strong>Edit</strong></td><td><code>edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​</code></td></tr>
-        <tr><td><strong>Find</strong></td><td><code>find KEYWORD [MORE_KEYWORDS]</code></td></tr>
-        <tr><td><strong>List</strong></td><td><code>list</code></td></tr>
-        <tr><td><strong>Help</strong></td><td><code>help</code></td></tr>
         </tbody>
     </table>
 
