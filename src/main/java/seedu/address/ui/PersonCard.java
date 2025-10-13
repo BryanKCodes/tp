@@ -16,6 +16,10 @@ public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
 
+    private static final String ICON_RANK = "\u269C";
+    private static final String ICON_ROLE = "\u2694";
+    private static final String ICON_CHAMPION = "\u2727";
+
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
      * As a consequence, UI elements' variable names cannot be set to such keywords
@@ -33,13 +37,14 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
-    private Label role;
-    @FXML
     private Label rank;
+    @FXML
+    private Label role;
     @FXML
     private Label champion;
     @FXML
     private FlowPane tags;
+
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -49,11 +54,51 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-        role.setText(person.getRole().value);
-        rank.setText(person.getRank().value);
-        champion.setText(person.getChampion().value);
+
+        setupDetailLabel(rank, ICON_RANK, person.getRank().value, "rank");
+        setupDetailLabel(role, ICON_ROLE, person.getRole().value, "role");
+        setupDetailLabel(champion, ICON_CHAMPION, person.getChampion().value, "champion");
+
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+    }
+
+    /**
+     * A helper method to configure a detail label with an icon, text, and dynamic style.
+     * @param label The main label to configure.
+     * @param iconCode The Unicode string for the icon.
+     * @param text The text to display.
+     * @param type The type of detail ("rank", "role", or "champion") for styling.
+     */
+    private void setupDetailLabel(Label label, String iconCode, String text, String type) {
+        // Create the icon as its own Label
+        Label icon = new Label(iconCode);
+        icon.getStyleClass().add("icon_label");
+
+        // Set the icon as the graphic for the main label
+        label.setGraphic(icon);
+
+        // Set the text for the main label
+        label.setText(text);
+
+        // Apply dynamic styling based on the type
+        String dynamicStyleClass = "";
+        switch (type) {
+        case "rank":
+            dynamicStyleClass = text.toLowerCase() + "_rank";
+            break;
+        case "role":
+            dynamicStyleClass = "role_" + text.toLowerCase();
+            break;
+        case "champion":
+            dynamicStyleClass = "champion_label";
+            break;
+        default:
+            break;
+        }
+        if (!dynamicStyleClass.isEmpty()) {
+            label.getStyleClass().add(dynamicStyleClass);
+        }
     }
 }

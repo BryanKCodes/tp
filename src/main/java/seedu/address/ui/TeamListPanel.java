@@ -41,7 +41,7 @@ public class TeamListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new TeamListCard(team, getIndex() + 1).getRoot());
+                setGraphic(new TeamCard(team, getIndex() + 1).getRoot());
             }
         }
     }

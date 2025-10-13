@@ -307,6 +307,100 @@
     -fx-padding: 8 1 8 1;
 }
 
+.person_details_label {
+    -fx-padding: 1px 10px 1px 8px;
+    -fx-background-radius: 10px;
+    -fx-font-size: 0.8em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1e1e;
+}
+
+.team_details_label {
+    -fx-padding: 3px 8px 3px 8px;
+    -fx-background-radius: 10px;
+    -fx-font-size: 0.8em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1e1e;
+}
+
+.icon_label {
+    -fx-font-size: 1.5em;
+}
+
+.tag_label {
+    -fx-background-color: #4f4f4f;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 2px 6px 2px 6px;
+}
+
+.iron_rank {
+    -fx-background-color: #51484A;
+    -fx-text-fill: #e0e0e0;
+}
+
+.bronze_rank {
+    -fx-background-color: #8C5229;
+    -fx-text-fill: #e0e0e0;
+}
+
+.silver_rank {
+    -fx-background-color: #A1B2B2;
+}
+
+.gold_rank {
+    -fx-background-color: #C78626;
+}
+
+.platinum_rank {
+    -fx-background-color: #4E9996;
+}
+
+.emerald_rank {
+    -fx-background-color: #2ECC71;
+}
+
+.diamond_rank {
+    -fx-background-color: #7B95E0;
+}
+
+.master_rank {
+    -fx-background-color: #9446ED;
+    -fx-text-fill: #e0e0e0;
+}
+
+.grandmaster_rank {
+    -fx-background-color: #D90429;
+    -fx-text-fill: #e0e0e0;
+}
+
+.challenger_rank {
+    -fx-background-color: #0BB0BD;
+}
+
+.role_top {
+    -fx-background-color: #E74C3C;
+}
+
+.role_jungle {
+    -fx-background-color: #27AE60;
+}
+
+.role_mid {
+    -fx-background-color: #BA9500;
+}
+.role_adc {
+    -fx-background-color: #3498DB;
+}
+
+.role_support {
+    -fx-background-color: #9B59B6;
+}
+
+.champion_label {
+    -fx-background-color: #6200FF;
+}
+
 #cardPane {
     -fx-background-color: transparent;
     -fx-border-width: 0;
