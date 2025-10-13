@@ -105,7 +105,7 @@ public class TeamTest {
         assertNotNull(exception.getPerson1());
         assertNotNull(exception.getPerson2());
         assertEquals(exception.getPerson1().getRole(), exception.getPerson2().getRole());
-        assertTrue(exception.getMessage().contains("mid"));
+        assertTrue(exception.getMessage().contains("Mid"));
     }
 
     @Test

@@ -21,6 +21,6 @@ public class DuplicateRoleExceptionTest {
 
         assertEquals(person1, exception.getPerson1());
         assertEquals(person2, exception.getPerson2());
-        assertTrue(exception.getMessage().contains("mid"));
+        assertTrue(exception.getMessage().contains("Mid"));
     }
 }
