@@ -36,7 +36,8 @@ public class Champion {
     public Champion(String champion) {
         requireNonNull(champion);
         checkArgument(isValidChampion(champion), MESSAGE_CONSTRAINTS);
-        this.value = champion.trim();
+        this.value = champion.trim().substring(0, 1).toUpperCase()
+                + champion.trim().substring(1).toLowerCase();;
     }
 
     /**
