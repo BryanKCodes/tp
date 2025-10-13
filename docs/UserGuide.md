@@ -1,7 +1,7 @@
 ---
-  layout: default.md
-    title: "User Guide"
-    pageNav: 3
+layout: default.md
+title: "User Guide"
+pageNav: 3
 ---
 
 # SummonersBook User Guide
@@ -54,11 +54,13 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
   as `add n/Faker rk/Grandmaster rl/Bottom c/Sivir`.
 
+* Parameters are _**case-insensitive**_
+
 * Items in square brackets are optional.<br>
   e.g., `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]` can be used as `find rk/Gold`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items with `…` after them can be used multiple times including zero times.<br>
+  e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
 
 * Parameters can be in any order.<br>
   e.g., for `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `add rk/RANK n/NAME rl/ROLE c/CHAMPION` is also acceptable.
@@ -76,9 +78,7 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
-
-![help message](images/helpMessage.png)
+A help window will appear, displaying our User Guide page.
 
 Format: `help`
 
@@ -94,18 +94,17 @@ Examples:
 * `add n/Faker rk/Grandmaster rl/Bottom c/Sivir`
 * `add n/Imissher rk/Gold rl/Support c/Thresh`
 
-### View a player's details : `view`
+### Listing all persons : `list`
 
-Displays full information for a specific player.
+Shows a list of all players in the Summonersbook.
 
-Format:
-`view INDEX`
+Format: `list`
 
-Example:
-`view 1`
+### Listing all teams : `listTeam`
 
-Failure output:
-`The player index provided is invalid.`
+Shows a list of all teams in SummonersBook.
+
+Format: `list`
 
 ### Deleting a player: `delete`
 
@@ -116,7 +115,7 @@ Format:
 
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+* The index **must be a positive integer** 1, 2, 3, …
 
 Example:
 `delete 3`
@@ -130,55 +129,97 @@ Failure outputs (examples):
 - `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`
   (Remove from team before deleting.)
 
-### Finding players : `find`
+### Finding players by keyword : `find`
 
-Filters the player list by one or more attributes. Matching is **case-insensitive**. Results show players that satisfy *
-*all** provided filters (logical AND). Exact value matching is used for rank/role; name/champion use substring match.
+Searches for players by **keyword(s)** in their **name**.
+If multiple keywords are given, players with at least 1 keyword in their name will be shown.
+Matching is **case-insensitive** and based on **whole words only** (not partial matches!).
 
-Format (any order, at least one filter):
-`find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]`
+**Format:**
+`find KEYWORD [MORE_KEYWORDS...]`
 
-- Case-insensitive. faker matches Faker.
-- Only the name is searched in this mode.
-- Full-word matching (not substrings). Fa does not match Faker.
-- AND search: the player’s name must contain all the given keywords (in any order).
+#### Examples
+- `find joanne lim` — finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
+- `find john` — finds **John Doe** and **John Smith**.
+- `find jo` — finds **Jo Lin**, but **not** “John Doe” or “John Smith”.
 
-Examples:
+### Filtering players : `filter`
 
-- `find rl/Bottom` — all Bottom players
-- `find rk/Gold` — all Gold players
-- `find rl/Mid rk/Diamond` — all Diamond Mid players
-- `find c/Thresh` — players whose main champion name contains “Thresh”
-- `find n/faker` — players whose name contains “faker”
+Narrows the player list using one or more filters.  
+Matching is **case-insensitive**.
 
-### Auto-grouping players into teams: `group`
+You can filter by:
+- `rl/` — role (exact match)
+- `rk/` — rank (exact match)
+
+**Format (any order, at least one filter):**
+`filter [rl/ROLE ...] [rk/RANK ...]`
+
+
+#### How filtering works
+- Filters of **different types** (e.g. `rl/` and `rk/`) are combined with **AND**.
+- Filters **within the same type** (e.g. multiple `rl/` values) are combined with **OR**.
+- Matching is **case-insensitive** and **exact**
+
+#### Examples
+- `filter rl/Mid Jungle` — players who are **Mid OR Jungle**.
+- `filter rl/Mid rk/Gold` — players who are **Mid AND Gold**.
+- `filter rl/Mid Jungle rk/Gold Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
+
+### Editing a player : `edit`
+
+Edits an existing player in your roster.
+
+**Format:**
+`edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+
+#### Notes
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* At least one field to edit must be provided.
+* Existing values are **overwritten** by the new input.
+* Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
+* **Players that have already been added to a team cannot be edited.**
+
+#### Examples
+* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`  
+  Updates the 1st player’s name, role, rank, and champion.
+
+* `edit 2 t/`  
+  Clears all tags of the 2nd player.
+
+* `edit 3 rl/Top rk/Gold`  
+  Updates the 3rd player’s role and rank.
+
+### Auto-grouping players into teams: `group` (WIP)
 
 Forms as many balanced teams of five as possible from **unassigned** players.
-
 Format:
 `group`
+
+#### How it works
+* Only players **not already in a team** are considered.
+* The system ensures that each team has **no conflicting roles** (each role appears at most once per team).
+* Players are grouped to create teams with **similar ranks** whenever possible, balancing skill across teams.
+* Teams are automatically created until there are fewer than five unassigned players remaining.
+
 
 ### Disbanding a team or all teams : `ungroup`
 
 Disbands one team (returns its players to the unassigned pool) or disbands all teams.
 
 Format:
-`ungroup TEAM_INDEX|all`
+`ungroup TEAM_INDEX` OR `ungroup all` ('all' is case-insensitive)
 
 Examples:
 
 - `ungroup 1` — disbands the 1st team
 - `ungroup all` — disbands all teams
 
-### Viewing a team’s details : `viewteam`
+### Clearing all entries : `clear`
 
-Shows roster and summary performance for a specific team.
+Clears all entries from the address book.
 
-Format:
-`viewteam INDEX`
-
-Example:
-`viewteam 1`
+Format: `clear`
 
 ### Exiting the program : `exit`
 
@@ -189,82 +230,14 @@ Format: `exit`
 
 Data is saved automatically to disk after any command that changes data. No manual save is required.
 
-## Editing the data file
-
-SummonersBook stores data as JSON at `[JAR file location]/data/summonersbook.json`.
-Advanced users can edit this file directly.
-
-## other commands that AB3 has
-
-### Listing all persons : `list`
-
-Shows a list of all persons in the address book.
-
-Format: `list`
-
-### Editing a person : `edit`
-
-Edits an existing person in the address book.
-
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
-
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list.
-  The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-  specifying any tags after it.
-
-Examples:
-
-* `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567`
-  and `johndoe@example.com` respectively.
-* `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
-
-### Locating persons by name: `find`
-
-Finds persons whose names contain ANY of the given keywords.
-
-Format: `find KEYWORD [MORE_KEYWORDS]`
-
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
-
-Examples:
-
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-  ![result for 'find alex david'](images/findAlexDavidResult.png)
-
-### Clearing all entries : `clear`
-
-Clears all entries from the address book.
-
-Format: `clear`
-
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are
-welcome to update data directly by editing that data file.
+SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/addressbook.json`.  
+Advanced users can edit this file directly if needed.
 
-<box type="warning" seamless>
-
-**Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty
-data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside
-the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
-
-</box>
-
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
+**Caution:**  
+Editing the data file incorrectly can **corrupt your data**, causing SummonersBook to start with an empty file.  
+Always **back up the file** before making changes, and only edit it if you are confident about the updates.
 
 --------------------------------------------------------------------------------------------------------------------
 
