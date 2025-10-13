@@ -10,7 +10,7 @@ import seedu.address.model.team.Team;
 /**
  * A UI component that displays information of a {@code Team}.
  */
-public class TeamListCard extends UiPart<Region> {
+public class TeamCard extends UiPart<Region> {
 
     private static final String FXML = "TeamListCard.fxml";
 
@@ -25,45 +25,66 @@ public class TeamListCard extends UiPart<Region> {
     @FXML
     private Label top;
     @FXML
+    private Label topName;
+    @FXML
     private Label jungle;
+    @FXML
+    private Label jungleName;
     @FXML
     private Label mid;
     @FXML
+    private Label midName;
+    @FXML
     private Label adc;
     @FXML
+    private Label adcName;
+    @FXML
     private Label support;
+    @FXML
+    private Label supportName;
 
 
     /**
      * Creates a {@code TeamListCard} with the given {@code Team} and index to display.
      */
-    public TeamListCard(Team team, int displayedIndex) {
+    public TeamCard(Team team, int displayedIndex) {
         super(FXML);
         this.team = team;
         id.setText(displayedIndex + ". ");
-        teamName.setText("Team " + displayedIndex); // Or any other naming convention
+        teamName.setText("Team " + displayedIndex);
 
-        // Assuming roles are fixed and every team has one of each
         for (Person person : team.getPersons()) {
+            String value = person.getRole().value;
+            String name = person.getName().fullName;
+
             switch (person.getRole().toString().toUpperCase()) {
             case "TOP":
-                top.setText("Top: " + person.getName().fullName);
+                configureRoleLabels(top, topName, value, name);
                 break;
             case "JUNGLE":
-                jungle.setText("Jungle: " + person.getName().fullName);
+                configureRoleLabels(jungle, jungleName, value, name);
                 break;
             case "MID":
-                mid.setText("Mid: " + person.getName().fullName);
+                configureRoleLabels(mid, midName, value, name);
                 break;
             case "ADC":
-                adc.setText("ADC: " + person.getName().fullName);
+                configureRoleLabels(adc, adcName, value, name);
                 break;
             case "SUPPORT":
-                support.setText("Support: " + person.getName().fullName);
+                configureRoleLabels(support, supportName, value, name);
                 break;
             default:
                 break;
             }
         }
+    }
+
+    /**
+     * Helper method to set the text and style for a pair of role and name labels.
+     */
+    private void configureRoleLabels(Label roleLabel, Label nameLabel, String role, String name) {
+        roleLabel.setText(role);
+        nameLabel.setText(name);
+        roleLabel.getStyleClass().add("role_" + role.toLowerCase());
     }
 }
