@@ -2,8 +2,15 @@ package seedu.address.model.team;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
+import static seedu.address.testutil.TypicalPersons.ELLE;
+import static seedu.address.testutil.TypicalPersons.FIONA;
 import static seedu.address.testutil.TypicalTeams.TEAM_A;
 import static seedu.address.testutil.TypicalTeams.TEAM_B;
 
@@ -107,5 +114,43 @@ public class UniqueTeamListTest {
     public void asUnmodifiableObservableList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, ()
                 -> uniqueTeamList.asUnmodifiableObservableList().remove(0));
+    }
+
+    @Test
+    public void isPersonInAnyTeam_nullPerson_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> uniqueTeamList.isPersonInAnyTeam(null));
+    }
+
+    @Test
+    public void isPersonInAnyTeam_personNotInAnyTeam_returnsFalse() {
+        uniqueTeamList.add(TEAM_A);
+        assertFalse(uniqueTeamList.isPersonInAnyTeam(FIONA));
+    }
+
+    @Test
+    public void isPersonInAnyTeam_personInTeam_returnsTrue() {
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        uniqueTeamList.add(team);
+        assertTrue(uniqueTeamList.isPersonInAnyTeam(ALICE));
+        assertTrue(uniqueTeamList.isPersonInAnyTeam(BENSON));
+    }
+
+    @Test
+    public void getTeamContainingPerson_nullPerson_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> uniqueTeamList.getTeamContainingPerson(null));
+    }
+
+    @Test
+    public void getTeamContainingPerson_personNotInAnyTeam_returnsNull() {
+        uniqueTeamList.add(TEAM_A);
+        assertNull(uniqueTeamList.getTeamContainingPerson(FIONA));
+    }
+
+    @Test
+    public void getTeamContainingPerson_personInTeam_returnsTeam() {
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        uniqueTeamList.add(team);
+        assertEquals(team, uniqueTeamList.getTeamContainingPerson(ALICE));
+        assertEquals(team, uniqueTeamList.getTeamContainingPerson(BENSON));
     }
 }
