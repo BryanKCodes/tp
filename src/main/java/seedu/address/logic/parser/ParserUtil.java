@@ -92,6 +92,18 @@ public class ParserUtil {
     }
 
     /**
+     * Parses {@code Collection<String> champions} into a {@code Set<Champion>}.
+     */
+    public static Set<Champion> parseChampions(Collection<String> champions) throws ParseException {
+        requireNonNull(champions);
+        final Set<Champion> championSet = new HashSet<>();
+        for (String championName : champions) {
+            championSet.add(parseChampion(championName));
+        }
+        return championSet;
+    }
+
+    /**
      * Parses a {@code String rank} into a {@code Rank}.
      * Leading and trailing whitespaces will be trimmed.
      *
@@ -107,6 +119,18 @@ public class ParserUtil {
     }
 
     /**
+     * Parses {@code Collection<String> ranks} into a {@code Set<Rank>}.
+     */
+    public static Set<Rank> parseRanks(Collection<String> ranks) throws ParseException {
+        requireNonNull(ranks);
+        final Set<Rank> rankSet = new HashSet<>();
+        for (String rankName : ranks) {
+            rankSet.add(parseRank(rankName));
+        }
+        return rankSet;
+    }
+
+    /**
      * Parses a {@code String role} into a {@code Role}.
      * Leading and trailing whitespaces will be trimmed.
      *
@@ -119,5 +143,17 @@ public class ParserUtil {
             throw new ParseException(Role.MESSAGE_CONSTRAINTS);
         }
         return new Role(trimmedRole);
+    }
+
+    /**
+     * Parses {@code Collection<String> roles} into a {@code Set<Role>}.
+     */
+    public static Set<Role> parseRoles(Collection<String> roles) throws ParseException {
+        requireNonNull(roles);
+        final Set<Role> roleSet = new HashSet<>();
+        for (String roleName : roles) {
+            roleSet.add(parseRole(roleName));
+        }
+        return roleSet;
     }
 }
