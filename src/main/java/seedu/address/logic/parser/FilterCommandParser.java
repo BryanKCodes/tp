@@ -46,7 +46,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
         if (!filterPersonDescriptor.isAnyFieldFiltered()) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_NOT_FILTERED));
         }
 
         return new FilterCommand(filterPersonDescriptor);

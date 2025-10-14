@@ -56,8 +56,20 @@ public class FilterCommandTest {
         // different types -> returns false
         assertFalse(standardCommand.equals(new ClearCommand()));
 
-        // different descriptor -> returns false
-        assertFalse(standardCommand.equals(new FilterCommand(FILTER_AMY_AND_BOB)));
+        FilterPersonDescriptor anotherDescriptor = new FilterPersonDescriptorBuilder(FILTER_AMY)
+                .withRanks("silver", "gold").build();
+        // different ranks -> returns false
+        assertFalse(standardCommand.equals(new FilterCommand(anotherDescriptor)));
+
+        anotherDescriptor = new FilterPersonDescriptorBuilder(FILTER_AMY)
+                .withRoles("mid", "top").build();
+        // different roles -> returns false
+        assertFalse(standardCommand.equals(new FilterCommand(anotherDescriptor)));
+
+        anotherDescriptor = new FilterPersonDescriptorBuilder(FILTER_AMY)
+                .withChampions("xayah", "rakan").build();
+        // different champions -> returns false
+        assertFalse(standardCommand.equals(new FilterCommand(anotherDescriptor)));
     }
 
     @Test
