@@ -20,6 +20,7 @@ import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.FilterPersonDescriptorBuilder;
 
 /**
  * Contains helper methods for testing commands.
@@ -67,6 +68,19 @@ public class CommandTestUtil {
         DESC_BOB = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withRole(VALID_ROLE_AMY).withRank(VALID_RANK_AMY).withChampion(VALID_CHAMPION_AMY)
                 .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+    }
+
+    public static final FilterCommand.FilterPersonDescriptor FILTER_AMY;
+    public static final FilterCommand.FilterPersonDescriptor FILTER_AMY_AND_BOB;
+
+    static {
+        FILTER_AMY = new FilterPersonDescriptorBuilder()
+                .withRoles(VALID_ROLE_AMY).withRanks(VALID_RANK_AMY)
+                .withChampions(VALID_CHAMPION_AMY).build();
+        FILTER_AMY_AND_BOB = new FilterPersonDescriptorBuilder()
+                .withRoles(VALID_ROLE_AMY, VALID_ROLE_BOB)
+                .withRanks(VALID_RANK_AMY, VALID_RANK_BOB)
+                .withChampions(VALID_CHAMPION_AMY, VALID_CHAMPION_BOB).build();
     }
 
     /**
