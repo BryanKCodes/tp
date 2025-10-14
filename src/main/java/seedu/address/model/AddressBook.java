@@ -90,6 +90,14 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
+     * Returns true if the given person is currently in any team.
+     */
+    public boolean isPersonInAnyTeam(Person person) {
+        requireNonNull(person);
+        return teams.isPersonInAnyTeam(person);
+    }
+
+    /**
      * Adds a person to the address book.
      * The person must not already exist in the address book.
      */

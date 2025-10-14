@@ -114,6 +114,15 @@ public class UniqueTeamList implements Iterable<Team> {
     }
 
     /**
+     * Returns true if the given person is currently in any team.
+     * @param person The person to check.
+     * @return True if the person is in a team, false otherwise.
+     */
+    public boolean isPersonInAnyTeam(Person person) {
+        return getTeamContainingPerson(person) != null;
+    }
+
+    /**
      * Returns the backing list as an unmodifiable {@code ObservableList}.
      */
     public ObservableList<Team> asUnmodifiableObservableList() {
