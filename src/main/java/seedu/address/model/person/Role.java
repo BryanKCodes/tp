@@ -10,11 +10,11 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Role {
 
     private enum RoleName {
-        TOP("top"),
-        JUNGLE("jungle"),
-        MID("mid"),
-        ADC("adc"),
-        SUPPORT("support");
+        TOP("TOP"),
+        JUNGLE("JUNGLE"),
+        MID("MID"),
+        ADC("ADC"),
+        SUPPORT("SUPPORT");
 
         private final String name;
 
@@ -28,7 +28,7 @@ public class Role {
     }
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Role must be one of the following: top, jungle, mid, adc, support.";
+            "Role must be one of the following: TOP, JUNGLE, MID, ADC, SUPPORT.";
 
     public final String value;
 
@@ -40,7 +40,7 @@ public class Role {
     public Role(String role) {
         requireNonNull(role);
         checkArgument(isValidRole(role), MESSAGE_CONSTRAINTS);
-        this.value = role;
+        this.value = role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase();
     }
 
     /**
