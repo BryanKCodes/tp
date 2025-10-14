@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.exceptions.PersonInTeamException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.team.Team;
@@ -108,10 +109,12 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Replaces the given person {@code target} in the list with {@code editedPerson}.
      * {@code target} must exist in the address book.
      * The person identity of {@code editedPerson} must not be the same as another existing person in the address book.
+     * @throws PersonInTeamException if the person is currently in a team.
      */
     public void setPerson(Person target, Person editedPerson) {
         requireNonNull(editedPerson);
-        persons.setPerson(target, editedPerson, teams);
+        requirePersonNotInTeam(target);
+        persons.setPerson(target, editedPerson);
     }
 
     /**
@@ -128,9 +131,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Removes {@code key} from this {@code AddressBook}.
      * {@code key} must exist in the address book.
+     * @throws PersonInTeamException if the person is currently in a team.
      */
     public void removePerson(Person key) {
-        persons.remove(key, teams);
+        requirePersonNotInTeam(key);
+        persons.remove(key);
     }
 
     /**
@@ -139,6 +144,18 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void removeTeam(Team key) {
         teams.remove(key);
+    }
+
+    /**
+     * Ensures that the person is not in any team.
+     * @param person The person to check.
+     * @throws PersonInTeamException if the person is currently in a team.
+     */
+    private void requirePersonNotInTeam(Person person) {
+        Team team = teams.getTeamContainingPerson(person);
+        if (team != null) {
+            throw new PersonInTeamException(person, team);
+        }
     }
 
     //// util methods

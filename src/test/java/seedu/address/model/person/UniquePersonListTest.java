@@ -7,11 +7,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_CHAMPION_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON;
 import static seedu.address.testutil.TypicalPersons.BOB;
-import static seedu.address.testutil.TypicalPersons.CARL;
-import static seedu.address.testutil.TypicalPersons.DANIEL;
-import static seedu.address.testutil.TypicalPersons.ELLE;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,16 +16,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonInTeamException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
-import seedu.address.model.team.Team;
-import seedu.address.model.team.UniqueTeamList;
 import seedu.address.testutil.PersonBuilder;
 
 public class UniquePersonListTest {
 
     private final UniquePersonList uniquePersonList = new UniquePersonList();
-    private final UniqueTeamList emptyTeamList = new UniqueTeamList();
 
     @Test
     public void contains_nullPerson_throwsNullPointerException() {
@@ -68,23 +60,23 @@ public class UniquePersonListTest {
 
     @Test
     public void setPerson_nullTargetPerson_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> uniquePersonList.setPerson(null, ALICE, emptyTeamList));
+        assertThrows(NullPointerException.class, () -> uniquePersonList.setPerson(null, ALICE));
     }
 
     @Test
     public void setPerson_nullEditedPerson_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> uniquePersonList.setPerson(ALICE, null, emptyTeamList));
+        assertThrows(NullPointerException.class, () -> uniquePersonList.setPerson(ALICE, null));
     }
 
     @Test
     public void setPerson_targetPersonNotInList_throwsPersonNotFoundException() {
-        assertThrows(PersonNotFoundException.class, () -> uniquePersonList.setPerson(ALICE, ALICE, emptyTeamList));
+        assertThrows(PersonNotFoundException.class, () -> uniquePersonList.setPerson(ALICE, ALICE));
     }
 
     @Test
     public void setPerson_editedPersonIsSamePerson_success() {
         uniquePersonList.add(ALICE);
-        uniquePersonList.setPerson(ALICE, ALICE, emptyTeamList);
+        uniquePersonList.setPerson(ALICE, ALICE);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();
         expectedUniquePersonList.add(ALICE);
         assertEquals(expectedUniquePersonList, uniquePersonList);
@@ -95,7 +87,7 @@ public class UniquePersonListTest {
         uniquePersonList.add(ALICE);
         Person editedAlice = new PersonBuilder(ALICE).withChampion(VALID_CHAMPION_BOB).withTags(VALID_TAG_HUSBAND)
                 .build();
-        uniquePersonList.setPerson(ALICE, editedAlice, emptyTeamList);
+        uniquePersonList.setPerson(ALICE, editedAlice);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();
         expectedUniquePersonList.add(editedAlice);
         assertEquals(expectedUniquePersonList, uniquePersonList);
@@ -104,7 +96,7 @@ public class UniquePersonListTest {
     @Test
     public void setPerson_editedPersonHasDifferentIdentity_success() {
         uniquePersonList.add(ALICE);
-        uniquePersonList.setPerson(ALICE, BOB, emptyTeamList);
+        uniquePersonList.setPerson(ALICE, BOB);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();
         expectedUniquePersonList.add(BOB);
         assertEquals(expectedUniquePersonList, uniquePersonList);
@@ -114,23 +106,23 @@ public class UniquePersonListTest {
     public void setPerson_editedPersonHasNonUniqueIdentity_throwsDuplicatePersonException() {
         uniquePersonList.add(ALICE);
         uniquePersonList.add(BOB);
-        assertThrows(DuplicatePersonException.class, () -> uniquePersonList.setPerson(ALICE, BOB, emptyTeamList));
+        assertThrows(DuplicatePersonException.class, () -> uniquePersonList.setPerson(ALICE, BOB));
     }
 
     @Test
     public void remove_nullPerson_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> uniquePersonList.remove(null, emptyTeamList));
+        assertThrows(NullPointerException.class, () -> uniquePersonList.remove(null));
     }
 
     @Test
     public void remove_personDoesNotExist_throwsPersonNotFoundException() {
-        assertThrows(PersonNotFoundException.class, () -> uniquePersonList.remove(ALICE, emptyTeamList));
+        assertThrows(PersonNotFoundException.class, () -> uniquePersonList.remove(ALICE));
     }
 
     @Test
     public void remove_existingPerson_removesPerson() {
         uniquePersonList.add(ALICE);
-        uniquePersonList.remove(ALICE, emptyTeamList);
+        uniquePersonList.remove(ALICE);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();
         assertEquals(expectedUniquePersonList, uniquePersonList);
     }
@@ -179,34 +171,5 @@ public class UniquePersonListTest {
     @Test
     public void toStringMethod() {
         assertEquals(uniquePersonList.asUnmodifiableObservableList().toString(), uniquePersonList.toString());
-    }
-
-    @Test
-    public void setPerson_personInTeam_throwsPersonInTeamException() {
-        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
-        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
-        UniqueTeamList teamList = new UniqueTeamList();
-        teamList.add(team);
-
-        // Add ALICE to the person list
-        uniquePersonList.add(ALICE);
-
-        // Try to edit ALICE who is in the team
-        Person editedAlice = new PersonBuilder(ALICE).withChampion(VALID_CHAMPION_BOB).build();
-        assertThrows(PersonInTeamException.class, () -> uniquePersonList.setPerson(ALICE, editedAlice, teamList));
-    }
-
-    @Test
-    public void remove_personInTeam_throwsPersonInTeamException() {
-        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
-        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
-        UniqueTeamList teamList = new UniqueTeamList();
-        teamList.add(team);
-
-        // Add ALICE to the person list
-        uniquePersonList.add(ALICE);
-
-        // Try to remove ALICE who is in the team
-        assertThrows(PersonInTeamException.class, () -> uniquePersonList.remove(ALICE, teamList));
     }
 }

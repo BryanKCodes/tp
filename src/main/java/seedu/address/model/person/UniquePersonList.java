@@ -9,10 +9,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonInTeamException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
-import seedu.address.model.team.Team;
-import seedu.address.model.team.UniqueTeamList;
 
 /**
  * A list of persons that enforces uniqueness between its elements and does not allow nulls.
@@ -55,11 +52,9 @@ public class UniquePersonList implements Iterable<Person> {
      * Replaces the person {@code target} in the list with {@code editedPerson}.
      * {@code target} must exist in the list.
      * The person identity of {@code editedPerson} must not be the same as another existing person in the list.
-     * @param teams The team list to check if the person is in a team.
-     * @throws PersonInTeamException if the person is currently in a team.
      */
-    public void setPerson(Person target, Person editedPerson, UniqueTeamList teams) {
-        requireAllNonNull(target, editedPerson, teams);
+    public void setPerson(Person target, Person editedPerson) {
+        requireAllNonNull(target, editedPerson);
 
         int index = internalList.indexOf(target);
         if (index == -1) {
@@ -70,34 +65,17 @@ public class UniquePersonList implements Iterable<Person> {
             throw new DuplicatePersonException();
         }
 
-        requirePersonNotInTeam(target, teams);
         internalList.set(index, editedPerson);
     }
 
     /**
      * Removes the equivalent person from the list.
      * The person must exist in the list.
-     * @param teams The team list to check if the person is in a team.
-     * @throws PersonInTeamException if the person is currently in a team.
      */
-    public void remove(Person toRemove, UniqueTeamList teams) {
-        requireAllNonNull(toRemove, teams);
-        requirePersonNotInTeam(toRemove, teams);
+    public void remove(Person toRemove) {
+        requireNonNull(toRemove);
         if (!internalList.remove(toRemove)) {
             throw new PersonNotFoundException();
-        }
-    }
-
-    /**
-     * Ensures that the person is not in any team.
-     * @param person The person to check.
-     * @param teams The team list to check against.
-     * @throws PersonInTeamException if the person is currently in a team.
-     */
-    private void requirePersonNotInTeam(Person person, UniqueTeamList teams) {
-        Team team = teams.getTeamContainingPerson(person);
-        if (team != null) {
-            throw new PersonInTeamException(person, team);
         }
     }
 

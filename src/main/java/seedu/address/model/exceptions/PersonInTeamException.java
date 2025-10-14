@@ -1,4 +1,4 @@
-package seedu.address.model.person.exceptions;
+package seedu.address.model.exceptions;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
