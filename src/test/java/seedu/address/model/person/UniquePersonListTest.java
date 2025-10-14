@@ -7,7 +7,11 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_CHAMPION_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
 import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
+import static seedu.address.testutil.TypicalPersons.ELLE;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +20,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.person.exceptions.PersonInTeamException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
+import seedu.address.model.team.Team;
 import seedu.address.model.team.UniqueTeamList;
 import seedu.address.testutil.PersonBuilder;
 
@@ -173,5 +179,34 @@ public class UniquePersonListTest {
     @Test
     public void toStringMethod() {
         assertEquals(uniquePersonList.asUnmodifiableObservableList().toString(), uniquePersonList.toString());
+    }
+
+    @Test
+    public void setPerson_personInTeam_throwsPersonInTeamException() {
+        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        UniqueTeamList teamList = new UniqueTeamList();
+        teamList.add(team);
+
+        // Add ALICE to the person list
+        uniquePersonList.add(ALICE);
+
+        // Try to edit ALICE who is in the team
+        Person editedAlice = new PersonBuilder(ALICE).withChampion(VALID_CHAMPION_BOB).build();
+        assertThrows(PersonInTeamException.class, () -> uniquePersonList.setPerson(ALICE, editedAlice, teamList));
+    }
+
+    @Test
+    public void remove_personInTeam_throwsPersonInTeamException() {
+        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        UniqueTeamList teamList = new UniqueTeamList();
+        teamList.add(team);
+
+        // Add ALICE to the person list
+        uniquePersonList.add(ALICE);
+
+        // Try to remove ALICE who is in the team
+        assertThrows(PersonInTeamException.class, () -> uniquePersonList.remove(ALICE, teamList));
     }
 }
