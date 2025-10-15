@@ -94,6 +94,16 @@ public class MakeGroupCommandTest {
     }
 
     @Test
+    public void execute_insufficientPlayers_throwsCommandException() {
+        List<Name> fewerNames = Arrays.asList(alice.getName(), bob.getName(), cathy.getName());
+        MakeGroupCommand command = new MakeGroupCommand(fewerNames);
+        ModelStub modelStub = new ModelStubAcceptingTeamAdded(Arrays.asList(alice, bob, cathy, derek, ella));
+
+        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        assertEquals(MakeGroupCommand.MESSAGE_INSUFFICIENT_PLAYERS, thrown.getMessage());
+    }
+
+    @Test
     public void equals() {
         List<Name> names1 = Arrays.asList(
                 alice.getName(), bob.getName(), cathy.getName(), derek.getName(), ella.getName()
