@@ -10,6 +10,7 @@ import static seedu.address.testutil.TypicalPersons.ALICE;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 import seedu.address.testutil.PersonBuilder;
@@ -187,6 +189,11 @@ public class AddCommandTest {
         @Override
         public void updateFilteredTeamList(Predicate<Team> predicate) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findPersonByName(Name name) {
+            return Optional.empty(); // default stub returns empty
         }
     }
 
