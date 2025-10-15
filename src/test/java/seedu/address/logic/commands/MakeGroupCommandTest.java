@@ -142,23 +142,75 @@ public class MakeGroupCommandTest {
             throw new AssertionError("This method should not be called.");
         }
 
-        // Minimal implementations for abstract methods
-        @Override public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {}
-        @Override public ReadOnlyUserPrefs getUserPrefs() { return null; }
-        @Override public GuiSettings getGuiSettings() { return null; }
-        @Override public void setGuiSettings(GuiSettings guiSettings) {}
-        @Override public void setAddressBook(ReadOnlyAddressBook newData) {}
-        @Override public ReadOnlyAddressBook getAddressBook() { return null; }
-        @Override public Path getAddressBookFilePath() { return null; }
-        @Override public void setAddressBookFilePath(Path addressBookFilePath) {}
-        @Override public void deletePerson(Person target) {}
-        @Override public void deleteTeam(Team target) {}
-        @Override public void setPerson(Person target, Person editedPerson) {}
-        @Override public void setTeam(Team target, Team editedTeam) {}
-        @Override public ObservableList<Person> getFilteredPersonList() { return null; }
-        @Override public ObservableList<Team> getFilteredTeamList() { return null; }
-        @Override public void updateFilteredPersonList(Predicate<Person> predicate) {}
-        @Override public void updateFilteredTeamList(Predicate<Team> predicate) {}
+        @Override
+        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
+        }
+
+        @Override
+        public ReadOnlyUserPrefs getUserPrefs() {
+            return null;
+        }
+
+        @Override
+        public GuiSettings getGuiSettings() {
+            return null;
+        }
+
+        @Override
+        public void setGuiSettings(GuiSettings guiSettings) {
+        }
+
+        @Override
+        public void setAddressBook(ReadOnlyAddressBook newData) {
+        }
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            return null;
+        }
+
+        @Override
+        public Path getAddressBookFilePath() {
+            return null;
+        }
+
+        @Override
+        public void setAddressBookFilePath(Path addressBookFilePath) {
+        }
+
+        @Override
+        public void deletePerson(Person target) {
+        }
+
+        @Override
+        public void deleteTeam(Team target) {
+        }
+
+        @Override
+        public void setPerson(Person target, Person editedPerson) {
+        }
+
+        @Override
+        public void setTeam(Team target, Team editedTeam) {
+        }
+
+        @Override
+        public ObservableList<Person> getFilteredPersonList() {
+            return null;
+        }
+
+        @Override
+        public ObservableList<Team> getFilteredTeamList() {
+            return null;
+        }
+
+        @Override
+        public void updateFilteredPersonList(Predicate<Person> predicate) {
+        }
+
+        @Override
+        public void updateFilteredTeamList(Predicate<Team> predicate) {
+        }
     }
 
     private class ModelStubAcceptingTeamAdded extends ModelStub {
