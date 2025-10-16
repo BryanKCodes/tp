@@ -107,6 +107,16 @@ public class Team {
         return new ArrayList<>(persons);
     }
 
+    /**
+     * Returns a formatted string representation of the team for display purposes.
+     * Shows team members in the format: Name1 (Role1), Name2 (Role2), ...
+     */
+    public String toDisplayString() {
+        return persons.stream()
+                .map(person -> String.format("%s (%s)", person.getName(), person.getRole()))
+                .collect(java.util.stream.Collectors.joining(", "));
+    }
+
 
     /**
      * Returns true if this team contains the specified person.

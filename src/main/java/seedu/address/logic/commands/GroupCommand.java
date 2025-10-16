@@ -81,7 +81,7 @@ public class GroupCommand extends Command {
         }
 
         // Calculate remaining unassigned players
-        int playersUsed = teams.size() * 5; // Each team has 5 players
+        int playersUsed = teams.size() * Team.TEAM_SIZE;
         int remainingPlayers = initialUnassignedCount - playersUsed;
 
         // Format the success message
@@ -91,18 +91,12 @@ public class GroupCommand extends Command {
     }
 
     /**
-     * Formats the list of teams for display using functional programming style.
-     * Displays team members in a concise, readable format.
+     * Formats the list of teams for display.
+     * Each team is displayed on a separate line with its number and members.
      */
     private String formatTeams(List<Team> teams) {
         return IntStream.range(0, teams.size())
-                .mapToObj(i -> {
-                    String members = teams.get(i).getPersons().stream()
-                            .map(person -> String.format("%s (%s)",
-                                    person.getName(), person.getRole()))
-                            .collect(Collectors.joining(", "));
-                    return String.format("Team %d: %s", i + 1, members);
-                })
+                .mapToObj(i -> String.format("Team %d: %s", i + 1, teams.get(i).toDisplayString()))
                 .collect(Collectors.joining("\n"));
     }
 

@@ -56,9 +56,7 @@ public class Messages {
      * Formats the {@code team} for display to the user.
      */
     public static String format(Team team) {
-        return team.getPersons().stream()
-                .map(person -> String.format("%s (%s)", person.getName(), person.getRole()))
-                .collect(Collectors.joining(", "));
+        return team.toDisplayString();
     }
 
 }
