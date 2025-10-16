@@ -200,6 +200,11 @@ public class AddCommandTest {
         public Optional<Person> findPersonByName(Name name) {
             return Optional.empty(); // default stub returns empty
         }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**

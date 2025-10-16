@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
@@ -104,6 +105,13 @@ public class ModelManager implements Model {
     public boolean isPersonInAnyTeam(Person person) {
         requireNonNull(person);
         return addressBook.isPersonInAnyTeam(person);
+    }
+
+    @Override
+    public ObservableList<Person> getUnassignedPersons() {
+        return FXCollections.unmodifiableObservableList(
+                FXCollections.observableArrayList(addressBook.getUnassignedPersons())
+        );
     }
 
     @Override

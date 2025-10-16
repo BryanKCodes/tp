@@ -265,6 +265,11 @@ public class MakeGroupCommandTest {
         @Override
         public void updateFilteredTeamList(Predicate<Team> predicate) {
         }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            return null;
+        }
     }
 
     private class ModelStubAcceptingTeamAdded extends ModelStub {
