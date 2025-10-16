@@ -3,10 +3,12 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.exceptions.PersonInTeamException;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.team.Team;
@@ -123,6 +125,21 @@ public class AddressBook implements ReadOnlyAddressBook {
         requireNonNull(editedPerson);
         requirePersonNotInTeam(target);
         persons.setPerson(target, editedPerson);
+    }
+
+    /**
+     * Returns an {@code Optional<Person>} containing the person with the given {@code Name}, if present
+     * in the address book.
+     *
+     * @param name The name of the person to find.
+     * @return An {@code Optional<Person>} containing the matching person, or an empty {@code Optional} if not found.
+     */
+    public Optional<Person> findPersonByName(Name name) {
+        requireNonNull(name);
+        return persons.asUnmodifiableObservableList()
+                .stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst();
     }
 
     /**

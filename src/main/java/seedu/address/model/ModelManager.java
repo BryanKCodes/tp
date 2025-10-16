@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
@@ -120,6 +122,19 @@ public class ModelManager implements Model {
         requireAllNonNull(target, editedPerson);
 
         addressBook.setPerson(target, editedPerson);
+    }
+
+    /**
+     * Returns an {@code Optional<Person>} containing the person with the given {@code Name}, if present.
+     * Delegates the search to the underlying {@code AddressBook}.
+     *
+     * @param name The name of the person to find.
+     * @return An {@code Optional<Person>} containing the matching person, or an empty {@code Optional} if not found.
+     */
+    @Override
+    public Optional<Person> findPersonByName(Name name) {
+        requireNonNull(name);
+        return addressBook.findPersonByName(name);
     }
 
     //=========== Team-level Operations ======================================================================
