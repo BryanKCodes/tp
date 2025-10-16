@@ -7,6 +7,10 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_CHAMPION_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
+import static seedu.address.testutil.TypicalPersons.ELLE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalTeams.TEAM_A;
 import static seedu.address.testutil.TypicalTeams.TEAM_B;
@@ -20,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.exceptions.PersonInTeamException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.team.Team;
@@ -153,6 +158,23 @@ public class AddressBookTest {
     }
 
     @Test
+    public void findPersonByName_personExists_returnsPerson() {
+        addressBook.addPerson(ALICE);
+        assertTrue(addressBook.findPersonByName(ALICE.getName()).isPresent());
+        assertEquals(ALICE, addressBook.findPersonByName(ALICE.getName()).get());
+    }
+
+    @Test
+    public void findPersonByName_personDoesNotExist_returnsEmptyOptional() {
+        assertFalse(addressBook.findPersonByName(ALICE.getName()).isPresent());
+    }
+
+    @Test
+    public void findPersonByName_nullName_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> addressBook.findPersonByName(null));
+    }
+
+    @Test
     public void equals() {
         // same object -> returns true
         assertTrue(addressBook.equals(addressBook));
@@ -176,6 +198,41 @@ public class AddressBookTest {
         AddressBook differentTeamsAddressBook = new AddressBook();
         differentTeamsAddressBook.addTeam(TEAM_A);
         assertFalse(addressBook.equals(differentTeamsAddressBook));
+    }
+
+    @Test
+    public void setPerson_personInTeam_throwsPersonInTeamException() {
+        // Add persons to address book
+        addressBook.addPerson(ALICE);
+        addressBook.addPerson(BENSON);
+        addressBook.addPerson(CARL);
+        addressBook.addPerson(DANIEL);
+        addressBook.addPerson(ELLE);
+
+        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        addressBook.addTeam(team);
+
+        // Try to edit ALICE who is in the team
+        Person editedAlice = new PersonBuilder(ALICE).withChampion(VALID_CHAMPION_BOB).build();
+        assertThrows(PersonInTeamException.class, () -> addressBook.setPerson(ALICE, editedAlice));
+    }
+
+    @Test
+    public void removePerson_personInTeam_throwsPersonInTeamException() {
+        // Add persons to address book
+        addressBook.addPerson(ALICE);
+        addressBook.addPerson(BENSON);
+        addressBook.addPerson(CARL);
+        addressBook.addPerson(DANIEL);
+        addressBook.addPerson(ELLE);
+
+        // Create a team with ALICE, BENSON, CARL, DANIEL, ELLE
+        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        addressBook.addTeam(team);
+
+        // Try to remove ALICE who is in the team
+        assertThrows(PersonInTeamException.class, () -> addressBook.removePerson(ALICE));
     }
 
     @Test

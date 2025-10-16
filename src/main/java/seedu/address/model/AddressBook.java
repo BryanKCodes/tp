@@ -3,9 +3,12 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.exceptions.PersonInTeamException;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.team.Team;
@@ -89,6 +92,25 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
+     * Returns true if the given person is currently in any team.
+     */
+    public boolean isPersonInAnyTeam(Person person) {
+        requireNonNull(person);
+        return teams.isPersonInAnyTeam(person);
+    }
+
+    /**
+     * Returns a list of persons who are not currently in any team.
+     * @return List of unassigned persons.
+     */
+    public List<Person> getUnassignedPersons() {
+        return persons.asUnmodifiableObservableList()
+                .stream()
+                .filter(person -> !teams.isPersonInAnyTeam(person))
+                .toList();
+    }
+
+    /**
      * Adds a person to the address book.
      * The person must not already exist in the address book.
      */
@@ -108,11 +130,27 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Replaces the given person {@code target} in the list with {@code editedPerson}.
      * {@code target} must exist in the address book.
      * The person identity of {@code editedPerson} must not be the same as another existing person in the address book.
+     * @throws PersonInTeamException if the person is currently in a team.
      */
     public void setPerson(Person target, Person editedPerson) {
         requireNonNull(editedPerson);
-
+        requirePersonNotInTeam(target);
         persons.setPerson(target, editedPerson);
+    }
+
+    /**
+     * Returns an {@code Optional<Person>} containing the person with the given {@code Name}, if present
+     * in the address book.
+     *
+     * @param name The name of the person to find.
+     * @return An {@code Optional<Person>} containing the matching person, or an empty {@code Optional} if not found.
+     */
+    public Optional<Person> findPersonByName(Name name) {
+        requireNonNull(name);
+        return persons.asUnmodifiableObservableList()
+                .stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst();
     }
 
     /**
@@ -129,8 +167,10 @@ public class AddressBook implements ReadOnlyAddressBook {
     /**
      * Removes {@code key} from this {@code AddressBook}.
      * {@code key} must exist in the address book.
+     * @throws PersonInTeamException if the person is currently in a team.
      */
     public void removePerson(Person key) {
+        requirePersonNotInTeam(key);
         persons.remove(key);
     }
 
@@ -140,6 +180,18 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void removeTeam(Team key) {
         teams.remove(key);
+    }
+
+    /**
+     * Ensures that the person is not in any team.
+     * @param person The person to check.
+     * @throws PersonInTeamException if the person is currently in a team.
+     */
+    private void requirePersonNotInTeam(Person person) {
+        Team team = teams.getTeamContainingPerson(person);
+        if (team != null) {
+            throw new PersonInTeamException(person, team);
+        }
     }
 
     //// util methods
