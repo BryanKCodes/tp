@@ -22,7 +22,9 @@ import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
@@ -86,6 +88,26 @@ public class AddressBookParserTest {
     public void parseCommand_list() throws Exception {
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD) instanceof ListCommand);
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3") instanceof ListCommand);
+    }
+
+    @Test
+    public void parseCommand_makeGroupValid_success() throws Exception {
+        String input = "makegroup n/Alice n/Bob n/Cathy n/Derek n/Ella";
+        List<Name> expectedNames = Arrays.asList(
+                new Name("Alice"), new Name("Bob"), new Name("Cathy"), new Name("Derek"), new Name("Ella")
+        );
+        MakeGroupCommand expectedCommand = new MakeGroupCommand(expectedNames);
+
+        assertEquals(expectedCommand, parser.parseCommand(input));
+    }
+
+    @Test
+    public void parseCommand_makeGroupInvalidNumber_throwsParseException() {
+        String input = "makegroup n/Alice n/Bob"; // fewer than 5 names
+        assertThrows(ParseException.class,
+                String.format(
+                        MESSAGE_INVALID_COMMAND_FORMAT,
+                        MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
     }
 
     @Test

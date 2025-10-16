@@ -153,6 +153,23 @@ public class AddressBookTest {
     }
 
     @Test
+    public void findPersonByName_personExists_returnsPerson() {
+        addressBook.addPerson(ALICE);
+        assertTrue(addressBook.findPersonByName(ALICE.getName()).isPresent());
+        assertEquals(ALICE, addressBook.findPersonByName(ALICE.getName()).get());
+    }
+
+    @Test
+    public void findPersonByName_personDoesNotExist_returnsEmptyOptional() {
+        assertFalse(addressBook.findPersonByName(ALICE.getName()).isPresent());
+    }
+
+    @Test
+    public void findPersonByName_nullName_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> addressBook.findPersonByName(null));
+    }
+
+    @Test
     public void equals() {
         // same object -> returns true
         assertTrue(addressBook.equals(addressBook));

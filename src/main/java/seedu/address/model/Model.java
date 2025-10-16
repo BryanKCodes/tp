@@ -1,10 +1,12 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
@@ -81,6 +83,14 @@ public interface Model {
      * {@code person} must not already exist in the address book.
      */
     void addPerson(Person person);
+
+    /**
+     * Returns an {@code Optional<Person>} containing the person with the given {@code Name}, if present.
+     *
+     * @param name The name of the person to find.
+     * @return An {@code Optional<Person>} containing the matching person, or an empty {@code Optional} if not found.
+     */
+    Optional<Person> findPersonByName(Name name);
 
     /**
      * Adds the given team.
