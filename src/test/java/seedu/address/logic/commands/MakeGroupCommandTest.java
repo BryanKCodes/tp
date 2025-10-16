@@ -128,6 +128,11 @@ public class MakeGroupCommandTest {
     private class ModelStub implements Model {
 
         @Override
+        public boolean isPersonInAnyTeam(Person person) {
+            return false;
+        }
+
+        @Override
         public Optional<Person> findPersonByName(Name name) {
             return Optional.empty();
         }

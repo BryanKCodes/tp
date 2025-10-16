@@ -101,6 +101,12 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public boolean isPersonInAnyTeam(Person person) {
+        requireNonNull(person);
+        return addressBook.isPersonInAnyTeam(person);
+    }
+
+    @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
     }

@@ -77,6 +77,11 @@ public class EditCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+
+        if (model.isPersonInAnyTeam(personToEdit)) {
+            throw new CommandException(Messages.MESSAGE_PERSON_IN_TEAM);
+        }
+
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {

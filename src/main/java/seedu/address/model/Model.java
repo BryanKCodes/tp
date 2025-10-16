@@ -67,6 +67,11 @@ public interface Model {
     boolean hasTeam(Team team);
 
     /**
+     * Returns true if the given person is currently in any team.
+     */
+    boolean isPersonInAnyTeam(Person person);
+
+    /**
      * Deletes the given person.
      * The person must exist in the address book.
      */
