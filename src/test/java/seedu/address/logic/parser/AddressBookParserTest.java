@@ -22,6 +22,7 @@ import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.ListTeamCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
@@ -91,6 +92,12 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_listteam_returnsListTeamCommand() throws Exception {
+        assertTrue(parser.parseCommand(ListTeamCommand.COMMAND_WORD) instanceof ListTeamCommand);
+        assertTrue(parser.parseCommand(ListTeamCommand.COMMAND_WORD + " 3") instanceof ListTeamCommand);
+    }
+
+    @Test
     public void parseCommand_makeGroupValid_success() throws Exception {
         String input = "makegroup n/Alice n/Bob n/Cathy n/Derek n/Ella";
         List<Name> expectedNames = Arrays.asList(
@@ -113,7 +120,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_unrecognisedInput_throwsParseException() {
         assertThrows(ParseException.class, String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE), ()
-            -> parser.parseCommand(""));
+                -> parser.parseCommand(""));
     }
 
     @Test
