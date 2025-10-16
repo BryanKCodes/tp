@@ -104,6 +104,45 @@ public class MakeGroupCommandTest {
     }
 
     @Test
+    public void execute_duplicateRole_throwsCommandException() {
+        // Create two players with the same role (both mid)
+        Person alice2 = new PersonBuilder()
+                .withName("Alice2").withRole("mid").withRank("Gold").withChampion("Zed").build();
+
+        List<Person> players = Arrays.asList(alice, alice2, bob, cathy, derek);
+        List<Name> playerNames = new ArrayList<>();
+        players.forEach(p -> playerNames.add(p.getName()));
+
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(players);
+        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+
+        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        assertTrue(thrown.getMessage().contains("duplicate roles"));
+        assertTrue(thrown.getMessage().contains("Alice"));
+        assertTrue(thrown.getMessage().contains("Alice2"));
+    }
+
+    @Test
+    public void execute_duplicateChampion_throwsCommandException() {
+        // Create two players with the same champion (both Ahri)
+        Person alice2 = new PersonBuilder()
+                .withName("Alice2").withRole("support").withRank("Gold").withChampion("Ahri").build();
+
+        List<Person> players = Arrays.asList(alice, alice2, bob, cathy, derek);
+        List<Name> playerNames = new ArrayList<>();
+        players.forEach(p -> playerNames.add(p.getName()));
+
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(players);
+        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+
+        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        assertTrue(thrown.getMessage().contains("duplicate champions"));
+        assertTrue(thrown.getMessage().contains("Alice"));
+        assertTrue(thrown.getMessage().contains("Alice2"));
+        assertTrue(thrown.getMessage().contains("Ahri"));
+    }
+
+    @Test
     public void equals() {
         List<Name> names1 = Arrays.asList(
                 alice.getName(), bob.getName(), cathy.getName(), derek.getName(), ella.getName()

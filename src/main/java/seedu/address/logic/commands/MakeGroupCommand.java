@@ -15,6 +15,9 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
+import seedu.address.model.team.exceptions.DuplicateChampionException;
+import seedu.address.model.team.exceptions.DuplicateRoleException;
+import seedu.address.model.team.exceptions.InvalidTeamSizeException;
 
 /**
  * Creates a team consisting of 5 existing players, manually provided by the user
@@ -80,7 +83,12 @@ public class MakeGroupCommand extends Command {
         }
 
         // Construct and check for duplicates
-        Team newTeam = new Team(new ArrayList<>(teamMembers)); // Team handles role/rank validation
+        Team newTeam;
+        try {
+            newTeam = new Team(new ArrayList<>(teamMembers)); // Team handles role/rank validation
+        } catch (InvalidTeamSizeException | DuplicateRoleException | DuplicateChampionException e) {
+            throw new CommandException(e.getMessage());
+        }
 
         if (model.hasTeam(newTeam)) {
             throw new CommandException(MESSAGE_DUPLICATE_TEAM);
