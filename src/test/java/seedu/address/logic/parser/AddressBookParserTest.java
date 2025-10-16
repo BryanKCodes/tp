@@ -20,6 +20,7 @@ import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.GroupCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListTeamCommand;
@@ -115,6 +116,11 @@ public class AddressBookParserTest {
                 String.format(
                         MESSAGE_INVALID_COMMAND_FORMAT,
                         MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
+    }
+
+    @Test
+    public void parseCommand_group_returnsGroupCommand() throws Exception {
+        assertTrue(parser.parseCommand(GroupCommand.COMMAND_WORD) instanceof GroupCommand);
     }
 
     @Test

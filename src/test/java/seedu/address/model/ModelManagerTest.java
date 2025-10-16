@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Person;
 import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.PersonBuilder;
 
 public class ModelManagerTest {
 
@@ -144,6 +146,36 @@ public class ModelManagerTest {
     @Test
     public void getFilteredTeamList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredTeamList().remove(0));
+    }
+
+    @Test
+    public void getUnassignedPersons_noTeams_returnsAllPersons() {
+        modelManager.addPerson(ALICE);
+        modelManager.addPerson(BENSON);
+
+        assertEquals(2, modelManager.getUnassignedPersons().size());
+        assertTrue(modelManager.getUnassignedPersons().contains(ALICE));
+        assertTrue(modelManager.getUnassignedPersons().contains(BENSON));
+    }
+
+    @Test
+    public void getUnassignedPersons_someInTeam_returnsOnlyUnassigned() {
+        // Add all persons for TEAM_A (ALICE, BENSON, CARL, DANIEL, ELLE)
+        modelManager.addPerson(ALICE);
+        modelManager.addPerson(BENSON);
+
+        // Add person not in any team
+        Person george = new PersonBuilder().withName("George Best").build();
+        modelManager.addPerson(george);
+
+        // Add team containing ALICE and BENSON (but not george)
+        modelManager.addTeam(TEAM_A);
+
+        // Only george should be unassigned
+        assertEquals(1, modelManager.getUnassignedPersons().size());
+        assertTrue(modelManager.getUnassignedPersons().contains(george));
+        assertFalse(modelManager.getUnassignedPersons().contains(ALICE));
+        assertFalse(modelManager.getUnassignedPersons().contains(BENSON));
     }
 
     @Test
