@@ -28,9 +28,12 @@ public class ParserUtilTest {
     private static final String INVALID_TAG = "#friend";
 
     private static final String VALID_NAME = "Rachel Walker";
-    private static final String VALID_ROLE = "Mid";
-    private static final String VALID_RANK = "Gold";
-    private static final String VALID_CHAMPION = "Ahri";
+    private static final String VALID_ROLE_1 = "Mid";
+    private static final String VALID_ROLE_2 = "top";
+    private static final String VALID_RANK_1 = "Gold";
+    private static final String VALID_RANK_2 = "diamond";
+    private static final String VALID_CHAMPION_1 = "Ahri";
+    private static final String VALID_CHAMPION_2 = "Garen";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
 
@@ -91,15 +94,41 @@ public class ParserUtilTest {
 
     @Test
     public void parseRole_validValueWithoutWhitespace_returnsRole() throws Exception {
-        Role expectedRole = new Role(VALID_ROLE);
-        assertEquals(expectedRole, ParserUtil.parseRole(VALID_ROLE));
+        Role expectedRole = new Role(VALID_ROLE_1);
+        assertEquals(expectedRole, ParserUtil.parseRole(VALID_ROLE_1));
     }
 
     @Test
     public void parseRole_validValueWithWhitespace_returnsTrimmedRole() throws Exception {
-        String roleWithWhitespace = WHITESPACE + VALID_ROLE + WHITESPACE;
-        Role expectedRole = new Role(VALID_ROLE);
+        String roleWithWhitespace = WHITESPACE + VALID_ROLE_1 + WHITESPACE;
+        Role expectedRole = new Role(VALID_ROLE_1);
         assertEquals(expectedRole, ParserUtil.parseRole(roleWithWhitespace));
+    }
+
+    @Test
+    public void parseRoles_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRoles(null));
+    }
+
+    @Test
+    public void parseRoles_collectionWithInvalidRoles_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRoles(
+                Arrays.asList(VALID_ROLE_1, INVALID_ROLE)));
+    }
+
+    @Test
+    public void parseRoles_emptyCollection_returnsEmptySet() throws Exception {
+        assertTrue(ParserUtil.parseRoles(Collections.emptyList()).isEmpty());
+    }
+
+    @Test
+    public void parseRoles_collectionWithValidRoles_returnsRoleset() throws Exception {
+        Set<Role> actualRoleset = ParserUtil.parseRoles(
+                Arrays.asList(VALID_ROLE_1, VALID_ROLE_2));
+        Set<Role> expectedRoleset = new HashSet<Role>(
+                Arrays.asList(new Role(VALID_ROLE_1), new Role(VALID_ROLE_2)));
+
+        assertEquals(expectedRoleset, actualRoleset);
     }
 
     @Test
@@ -114,15 +143,41 @@ public class ParserUtilTest {
 
     @Test
     public void parseRank_validValueWithoutWhitespace_returnsRank() throws Exception {
-        Rank expectedRank = new Rank(VALID_RANK);
-        assertEquals(expectedRank, ParserUtil.parseRank(VALID_RANK));
+        Rank expectedRank = new Rank(VALID_RANK_1);
+        assertEquals(expectedRank, ParserUtil.parseRank(VALID_RANK_1));
     }
 
     @Test
     public void parseRank_validValueWithWhitespace_returnsTrimmedRank() throws Exception {
-        String rankWithWhitespace = WHITESPACE + VALID_RANK + WHITESPACE;
-        Rank expectedRank = new Rank(VALID_RANK);
+        String rankWithWhitespace = WHITESPACE + VALID_RANK_1 + WHITESPACE;
+        Rank expectedRank = new Rank(VALID_RANK_1);
         assertEquals(expectedRank, ParserUtil.parseRank(rankWithWhitespace));
+    }
+
+    @Test
+    public void parseRanks_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseRanks(null));
+    }
+
+    @Test
+    public void parseRanks_collectionWithInvalidRanks_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseRanks(
+                Arrays.asList(VALID_RANK_1, INVALID_RANK)));
+    }
+
+    @Test
+    public void parseRanks_emptyCollection_returnsEmptySet() throws Exception {
+        assertTrue(ParserUtil.parseRanks(Collections.emptyList()).isEmpty());
+    }
+
+    @Test
+    public void parseRanks_collectionWithValidRanks_returnsRankset() throws Exception {
+        Set<Rank> actualRankset = ParserUtil.parseRanks(
+                Arrays.asList(VALID_RANK_1, VALID_RANK_2));
+        Set<Rank> expectedRankset = new HashSet<Rank>(
+                Arrays.asList(new Rank(VALID_RANK_1), new Rank(VALID_RANK_2)));
+
+        assertEquals(expectedRankset, actualRankset);
     }
 
     @Test
@@ -137,15 +192,41 @@ public class ParserUtilTest {
 
     @Test
     public void parseChampion_validValueWithoutWhitespace_returnsChampion() throws Exception {
-        Champion expectedEmail = new Champion(VALID_CHAMPION);
-        assertEquals(expectedEmail, ParserUtil.parseChampion(VALID_CHAMPION));
+        Champion expectedEmail = new Champion(VALID_CHAMPION_1);
+        assertEquals(expectedEmail, ParserUtil.parseChampion(VALID_CHAMPION_1));
     }
 
     @Test
     public void parseChampion_validValueWithWhitespace_returnsTrimmedChampion() throws Exception {
-        String championWithWhitespace = WHITESPACE + VALID_CHAMPION + WHITESPACE;
-        Champion expectedChampion = new Champion(VALID_CHAMPION);
+        String championWithWhitespace = WHITESPACE + VALID_CHAMPION_1 + WHITESPACE;
+        Champion expectedChampion = new Champion(VALID_CHAMPION_1);
         assertEquals(expectedChampion, ParserUtil.parseChampion(championWithWhitespace));
+    }
+
+    @Test
+    public void parseChampions_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseChampions(null));
+    }
+
+    @Test
+    public void parseChampions_collectionWithInvalidChampions_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseChampions(
+                Arrays.asList(VALID_CHAMPION_1, INVALID_CHAMPION)));
+    }
+
+    @Test
+    public void parseChampions_emptyCollection_returnsEmptySet() throws Exception {
+        assertTrue(ParserUtil.parseChampions(Collections.emptyList()).isEmpty());
+    }
+
+    @Test
+    public void parseChampions_collectionWithValidChampions_returnsChampionset() throws Exception {
+        Set<Champion> actualChampionset = ParserUtil.parseChampions(
+                Arrays.asList(VALID_CHAMPION_1, VALID_CHAMPION_2));
+        Set<Champion> expectedChampionset = new HashSet<Champion>(
+                Arrays.asList(new Champion(VALID_CHAMPION_1), new Champion(VALID_CHAMPION_2)));
+
+        assertEquals(expectedChampionset, actualChampionset);
     }
 
     @Test
