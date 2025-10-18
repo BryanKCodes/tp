@@ -45,7 +45,7 @@ public class MakeGroupCommand extends Command {
     public static final String MESSAGE_INSUFFICIENT_PLAYERS = "Exactly 5 player names must be provided.";
     public static final String MESSAGE_DUPLICATE_NAMES = "Duplicate player names found in the input.";
     public static final String MESSAGE_PLAYER_NOT_FOUND = "Player '%1$s' does not exist in SummonersBook.";
-    public static final String MESSAGE_DUPLICATE_TEAM = "A team with these players already exists.";
+    public static final String MESSAGE_REUSED_PLAYERS = "Some players are already in other teams.";
 
     private final List<Name> playerNames;
 
@@ -79,6 +79,9 @@ public class MakeGroupCommand extends Command {
             if (personOpt.isEmpty()) {
                 throw new CommandException(String.format(MESSAGE_PLAYER_NOT_FOUND, name.fullName));
             }
+            if (model.isPersonInAnyTeam(personOpt.get())) {
+                throw new CommandException(String.format(MESSAGE_REUSED_PLAYERS, name.fullName));
+            }
             teamMembers.add(personOpt.get());
         }
 
@@ -90,9 +93,6 @@ public class MakeGroupCommand extends Command {
             throw new CommandException(e.getMessage());
         }
 
-        if (model.hasTeam(newTeam)) {
-            throw new CommandException(MESSAGE_DUPLICATE_TEAM);
-        }
         model.addTeam(newTeam);
         return new CommandResult(String.format(MESSAGE_SUCCESS, newTeam));
     }
