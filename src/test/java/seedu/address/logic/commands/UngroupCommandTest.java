@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TEAM;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_TEAM;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -17,10 +17,13 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
@@ -161,64 +164,56 @@ public class UngroupCommandTest {
     }
 
     /**
-     * A Model stub that contains teams.
+     * A default model stub that have all of the methods failing.
      */
-    private class ModelStubWithTeams implements Model {
-        private final List<Team> teams = new ArrayList<>();
+    private class ModelStub implements Model {
+        @Override
+        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyUserPrefs getUserPrefs() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public GuiSettings getGuiSettings() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setGuiSettings(GuiSettings guiSettings) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Path getAddressBookFilePath() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setAddressBookFilePath(Path addressBookFilePath) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addPerson(Person person) {
+            throw new AssertionError("This method should not be called.");
+        }
 
         @Override
         public void addTeam(Team team) {
-            teams.add(team);
-        }
-
-        @Override
-        public ObservableList<Team> getFilteredTeamList() {
-            return FXCollections.observableArrayList(teams);
-        }
-
-        @Override
-        public void deleteTeam(Team target) {
-            teams.remove(target);
-        }
-
-        // Unused methods
-        @Override
-        public void setUserPrefs(seedu.address.model.ReadOnlyUserPrefs userPrefs) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public seedu.address.model.ReadOnlyUserPrefs getUserPrefs() {
+        public void setAddressBook(ReadOnlyAddressBook newData) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public seedu.address.commons.core.GuiSettings getGuiSettings() {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setGuiSettings(seedu.address.commons.core.GuiSettings guiSettings) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public java.nio.file.Path getAddressBookFilePath() {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setAddressBookFilePath(java.nio.file.Path addressBookFilePath) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setAddressBook(seedu.address.model.ReadOnlyAddressBook addressBook) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public seedu.address.model.ReadOnlyAddressBook getAddressBook() {
+        public ReadOnlyAddressBook getAddressBook() {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -238,22 +233,12 @@ public class UngroupCommandTest {
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersons() {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
         public void deletePerson(Person target) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void addPerson(Person person) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public Optional<Person> findPersonByName(Name name) {
+        public void deleteTeam(Team target) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -273,6 +258,11 @@ public class UngroupCommandTest {
         }
 
         @Override
+        public ObservableList<Team> getFilteredTeamList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void updateFilteredPersonList(Predicate<Person> predicate) {
             throw new AssertionError("This method should not be called.");
         }
@@ -280,6 +270,38 @@ public class UngroupCommandTest {
         @Override
         public void updateFilteredTeamList(Predicate<Team> predicate) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findPersonByName(Name name) {
+            return Optional.empty(); // default stub returns empty
+        }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            throw new AssertionError("This method should not be called.");
+        }
+    }
+
+    /**
+     * A Model stub that contains teams.
+     */
+    private class ModelStubWithTeams extends ModelStub {
+        final ArrayList<Team> teams = new ArrayList<>();
+
+        @Override
+        public void addTeam(Team team) {
+            teams.add(team);
+        }
+
+        @Override
+        public ObservableList<Team> getFilteredTeamList() {
+            return FXCollections.observableArrayList(teams);
+        }
+
+        @Override
+        public void deleteTeam(Team target) {
+            teams.remove(target);
         }
     }
 }

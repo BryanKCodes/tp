@@ -123,45 +123,72 @@ public class GroupCommandTest {
     }
 
     /**
-     * A Model stub that always provides unassigned players and tracks teams.
+     * A default model stub that has all of the methods failing.
      */
-    private class ModelStubWithUnassignedPlayers implements Model {
-        private final List<Person> unassignedPlayers;
-        private final List<Team> teamsAdded = new ArrayList<>();
-
-        ModelStubWithUnassignedPlayers(List<Person> unassignedPlayers) {
-            requireNonNull(unassignedPlayers);
-            this.unassignedPlayers = new ArrayList<>(unassignedPlayers);
+    private class ModelStub implements Model {
+        @Override
+        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersons() {
-            return FXCollections.observableArrayList(unassignedPlayers);
+        public ReadOnlyUserPrefs getUserPrefs() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public GuiSettings getGuiSettings() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setGuiSettings(GuiSettings guiSettings) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Path getAddressBookFilePath() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setAddressBookFilePath(Path addressBookFilePath) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addPerson(Person person) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public void addTeam(Team team) {
-            teamsAdded.add(team);
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public boolean hasTeam(Team team) {
-            return teamsAdded.contains(team);
+        public void setAddressBook(ReadOnlyAddressBook newData) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public boolean isPersonInAnyTeam(Person person) {
-            return false;
-        }
-
-        @Override
-        public Optional<Person> findPersonByName(Name name) {
-            return Optional.empty();
+        public ReadOnlyAddressBook getAddressBook() {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public boolean hasPerson(Person person) {
-            return false;
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasTeam(Team team) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean isPersonInAnyTeam(Person person) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -171,11 +198,6 @@ public class GroupCommandTest {
 
         @Override
         public void deleteTeam(Team target) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void addPerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -190,53 +212,13 @@ public class GroupCommandTest {
         }
 
         @Override
-        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public ReadOnlyUserPrefs getUserPrefs() {
-            return null;
-        }
-
-        @Override
-        public GuiSettings getGuiSettings() {
-            return null;
-        }
-
-        @Override
-        public void setGuiSettings(GuiSettings guiSettings) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public Path getAddressBookFilePath() {
-            return null;
-        }
-
-        @Override
-        public void setAddressBookFilePath(Path addressBookFilePath) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setAddressBook(ReadOnlyAddressBook addressBook) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
-            return null;
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
-            return null;
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public ObservableList<Team> getFilteredTeamList() {
-            return null;
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -247,6 +229,40 @@ public class GroupCommandTest {
         @Override
         public void updateFilteredTeamList(Predicate<Team> predicate) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findPersonByName(Name name) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            throw new AssertionError("This method should not be called.");
+        }
+    }
+
+    /**
+     * A Model stub that always provides unassigned players and tracks teams.
+     */
+    private class ModelStubWithUnassignedPlayers extends ModelStub {
+        final ArrayList<Team> teamsAdded = new ArrayList<>();
+        private final List<Person> unassignedPlayers;
+
+        ModelStubWithUnassignedPlayers(List<Person> unassignedPlayers) {
+            requireNonNull(unassignedPlayers);
+            this.unassignedPlayers = new ArrayList<>(unassignedPlayers);
+        }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            return FXCollections.observableArrayList(unassignedPlayers);
+        }
+
+        @Override
+        public void addTeam(Team team) {
+            requireNonNull(team);
+            teamsAdded.add(team);
         }
     }
 }
