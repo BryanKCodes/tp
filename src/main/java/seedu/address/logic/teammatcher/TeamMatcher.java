@@ -158,4 +158,19 @@ public class TeamMatcher {
         return selectedMembers.stream()
                 .anyMatch(member -> candidate.getChampion().equals(member.getChampion()));
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        // All TeamMatcher instances are equal since they have no state
+        return other instanceof TeamMatcher;
+    }
+
+    @Override
+    public int hashCode() {
+        // All instances return the same hash code since they're stateless
+        return TeamMatcher.class.hashCode();
+    }
 }
