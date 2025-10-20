@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
 import seedu.address.model.team.exceptions.DuplicateRoleException;
@@ -179,8 +180,11 @@ public class Team {
     @Override
     public String toString() {
         String personsString = persons.stream()
-                .map(p -> String.format("%s (%s)", p.getName().fullName, p.getRole()))
+                .map(Person::toDisplayString)
                 .collect(java.util.stream.Collectors.joining(", "));
-        return String.format("[%s]", personsString);
+        return new ToStringBuilder(this.getClass().getSimpleName())
+                .add("id", id)
+                .add("persons", personsString)
+                .toString();
     }
 }
