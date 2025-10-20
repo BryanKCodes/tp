@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
 import seedu.address.model.team.exceptions.DuplicateRoleException;
@@ -43,7 +42,7 @@ public class Team {
      * Constructor for creating a Team with an explicit ID.
      * This is used for deserialization from JSON to preserve the original ID.
      *
-     * @param id Unique identifier for the team.
+     * @param id      Unique identifier for the team.
      * @param persons List of 5 persons for the team.
      */
     public Team(String id, List<Person> persons) {
@@ -57,8 +56,8 @@ public class Team {
      * Validates that the team has exactly 5 persons with unique roles and unique champions.
      *
      * @param persons List of persons to validate.
-     * @throws InvalidTeamSizeException if team does not have exactly 5 players.
-     * @throws DuplicateRoleException if team has duplicate roles.
+     * @throws InvalidTeamSizeException   if team does not have exactly 5 players.
+     * @throws DuplicateRoleException     if team has duplicate roles.
      * @throws DuplicateChampionException if team has duplicate champions.
      */
     private void validateTeamComposition(List<Person> persons) {
@@ -79,9 +78,9 @@ public class Team {
      * Checks if two persons have a conflict for team composition.
      * A conflict occurs when two persons have the same role or the same champion.
      *
-     * @param firstPerson First person to check.
+     * @param firstPerson  First person to check.
      * @param secondPerson Second person to check.
-     * @throws DuplicateRoleException if both persons have the same role.
+     * @throws DuplicateRoleException     if both persons have the same role.
      * @throws DuplicateChampionException if both persons have the same champion.
      */
     private void checkConflict(Person firstPerson, Person secondPerson) {
@@ -180,11 +179,8 @@ public class Team {
     @Override
     public String toString() {
         String personsString = persons.stream()
-                                     .map(Person::toString)
-                                     .collect(java.util.stream.Collectors.joining(", "));
-        return new ToStringBuilder(this)
-                .add("id", id)
-                .add("persons", personsString)
-                .toString();
+                .map(p -> String.format("%s (%s)", p.getName().fullName, p.getRole()))
+                .collect(java.util.stream.Collectors.joining(", "));
+        return String.format("[%s]", personsString);
     }
 }
