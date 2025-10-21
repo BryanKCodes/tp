@@ -5,7 +5,9 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
@@ -170,13 +172,16 @@ public class Team {
             return false;
         }
 
-        for (int i = 0; i < this.persons.size(); i++) {
-            if (!this.persons.get(i).getId().equals(otherTeam.persons.get(i).getId())) {
-                return false;
-            }
-        }
+        // Compare members by ID, ignoring order
+        Set<String> thisIds = this.persons.stream()
+                .map(p -> p.getId().toString())
+                .collect(Collectors.toSet());
 
-        return true;
+        Set<String> otherIds = otherTeam.persons.stream()
+                .map(p -> p.getId().toString())
+                .collect(Collectors.toSet());
+
+        return thisIds.equals(otherIds);
     }
 
     /**
