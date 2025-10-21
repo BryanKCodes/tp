@@ -23,6 +23,15 @@ public class Team {
     public static final int TEAM_SIZE = 5;
     public static final String MESSAGE_CONSTRAINTS =
             "A team must have exactly 5 persons with unique roles and unique champions.";
+    private static final java.util.Map<String, Integer> ROLE_ORDER = new java.util.LinkedHashMap<>();
+
+    static {
+        ROLE_ORDER.put("top", 0);
+        ROLE_ORDER.put("jungle", 1);
+        ROLE_ORDER.put("mid", 2);
+        ROLE_ORDER.put("adc", 3);
+        ROLE_ORDER.put("support", 4);
+    }
 
     // Identity fields
     private final String id;
@@ -43,7 +52,7 @@ public class Team {
      * Constructor for creating a Team with an explicit ID.
      * This is used for deserialization from JSON to preserve the original ID.
      *
-     * @param id Unique identifier for the team.
+     * @param id      Unique identifier for the team.
      * @param persons List of 5 persons for the team.
      */
     public Team(String id, List<Person> persons) {
@@ -54,11 +63,28 @@ public class Team {
     }
 
     /**
+     * Returns the numeric index of a person's role based on a fixed lane order
+     * (Top → Jungle → Mid → Adc → Support).
+     * <p>
+     * Used to sort team members consistently in {@link #toDisplayString()}.
+     * Roles not found in {@link #ROLE_ORDER} are assigned a high index (999)
+     * so they appear last in the sorted order.
+     *
+     * @param p The person whose role index to retrieve.
+     * @return An integer representing the role's position in the fixed order.
+     */
+    private static int roleIndex(seedu.address.model.person.Person p) {
+        String roleStr = p.getRole().toString();
+        return ROLE_ORDER.getOrDefault(roleStr.toLowerCase(), 999);
+    }
+
+
+    /**
      * Validates that the team has exactly 5 persons with unique roles and unique champions.
      *
      * @param persons List of persons to validate.
-     * @throws InvalidTeamSizeException if team does not have exactly 5 players.
-     * @throws DuplicateRoleException if team has duplicate roles.
+     * @throws InvalidTeamSizeException   if team does not have exactly 5 players.
+     * @throws DuplicateRoleException     if team has duplicate roles.
      * @throws DuplicateChampionException if team has duplicate champions.
      */
     private void validateTeamComposition(List<Person> persons) {
@@ -79,9 +105,9 @@ public class Team {
      * Checks if two persons have a conflict for team composition.
      * A conflict occurs when two persons have the same role or the same champion.
      *
-     * @param firstPerson First person to check.
+     * @param firstPerson  First person to check.
      * @param secondPerson Second person to check.
-     * @throws DuplicateRoleException if both persons have the same role.
+     * @throws DuplicateRoleException     if both persons have the same role.
      * @throws DuplicateChampionException if both persons have the same champion.
      */
     private void checkConflict(Person firstPerson, Person secondPerson) {
@@ -113,6 +139,7 @@ public class Team {
      */
     public String toDisplayString() {
         return persons.stream()
+                .sorted(java.util.Comparator.comparingInt(Team::roleIndex))
                 .map(person -> String.format("%s (%s)", person.getName(), person.getRole()))
                 .collect(java.util.stream.Collectors.joining(", "));
     }
@@ -180,9 +207,9 @@ public class Team {
     @Override
     public String toString() {
         String personsString = persons.stream()
-                                     .map(Person::toString)
-                                     .collect(java.util.stream.Collectors.joining(", "));
-        return new ToStringBuilder(this)
+                .map(Person::toString)
+                .collect(java.util.stream.Collectors.joining(", "));
+        return new ToStringBuilder(this.getClass().getSimpleName())
                 .add("id", id)
                 .add("persons", personsString)
                 .toString();

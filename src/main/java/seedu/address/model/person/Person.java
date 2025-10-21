@@ -31,11 +31,11 @@ public class Person {
      * Constructor for creating a new Person with specified role, rank, and champion.
      * Generates a random UUID for the person.
      *
-     * @param name Name of the person.
-     * @param role Role of the person.
-     * @param rank Rank of the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
      * @param champion Champion of the person.
-     * @param tags Set of tags associated with the person.
+     * @param tags     Set of tags associated with the person.
      */
     public Person(Name name, Role role, Rank rank, Champion champion, Set<Tag> tags) {
         this(UUID.randomUUID().toString(), name, role, rank, champion, tags);
@@ -45,12 +45,12 @@ public class Person {
      * Constructor for creating a Person with an explicit ID.
      * This is used for deserialization from JSON to preserve the original ID.
      *
-     * @param id Unique identifier for the person.
-     * @param name Name of the person.
-     * @param role Role of the person.
-     * @param rank Rank of the person.
+     * @param id       Unique identifier for the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
      * @param champion Champion of the person.
-     * @param tags Set of tags associated with the person.
+     * @param tags     Set of tags associated with the person.
      */
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags) {
         requireAllNonNull(id, name, role, rank, champion, tags);
