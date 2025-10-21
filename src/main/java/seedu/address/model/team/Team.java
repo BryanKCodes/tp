@@ -23,6 +23,15 @@ public class Team {
     public static final int TEAM_SIZE = 5;
     public static final String MESSAGE_CONSTRAINTS =
             "A team must have exactly 5 persons with unique roles and unique champions.";
+    private static final java.util.Map<String, Integer> ROLE_ORDER = new java.util.LinkedHashMap<>();
+
+    static {
+        ROLE_ORDER.put("top", 0);
+        ROLE_ORDER.put("jungle", 1);
+        ROLE_ORDER.put("mid", 2);
+        ROLE_ORDER.put("adc", 3);
+        ROLE_ORDER.put("support", 4);
+    }
 
     // Identity fields
     private final String id;
@@ -52,6 +61,23 @@ public class Team {
         this.id = id;
         this.persons = new ArrayList<>(persons);
     }
+
+    /**
+     * Returns the numeric index of a person's role based on a fixed lane order
+     * (Top → Jungle → Mid → Adc → Support).
+     * <p>
+     * Used to sort team members consistently in {@link #toDisplayString()}.
+     * Roles not found in {@link #ROLE_ORDER} are assigned a high index (999)
+     * so they appear last in the sorted order.
+     *
+     * @param p The person whose role index to retrieve.
+     * @return An integer representing the role's position in the fixed order.
+     */
+    private static int roleIndex(seedu.address.model.person.Person p) {
+        String roleStr = p.getRole().toString();
+        return ROLE_ORDER.getOrDefault(roleStr.toLowerCase(), 999);
+    }
+
 
     /**
      * Validates that the team has exactly 5 persons with unique roles and unique champions.
@@ -113,6 +139,7 @@ public class Team {
      */
     public String toDisplayString() {
         return persons.stream()
+                .sorted(java.util.Comparator.comparingInt(Team::roleIndex))
                 .map(person -> String.format("%s (%s)", person.getName(), person.getRole()))
                 .collect(java.util.stream.Collectors.joining(", "));
     }
