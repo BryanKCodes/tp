@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Name;
@@ -94,7 +95,7 @@ public class MakeGroupCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_TEAM);
         }
         model.addTeam(newTeam);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, newTeam));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(newTeam)));
     }
 
     @Override

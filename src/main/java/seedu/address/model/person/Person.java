@@ -143,11 +143,4 @@ public class Person {
                 .toString();
     }
 
-    /**
-     * Returns a short string representation for user-facing displays.
-     */
-    public String toDisplayString() {
-        return String.format("%s (%s)", name.fullName, role);
-    }
-
 }

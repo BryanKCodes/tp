@@ -180,7 +180,7 @@ public class Team {
     @Override
     public String toString() {
         String personsString = persons.stream()
-                .map(Person::toDisplayString)
+                .map(Person::toString)
                 .collect(java.util.stream.Collectors.joining(", "));
         return new ToStringBuilder(this.getClass().getSimpleName())
                 .add("id", id)
