@@ -6,6 +6,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TEAM;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,8 @@ import seedu.address.logic.commands.GroupCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListTeamCommand;
+import seedu.address.logic.commands.LoseCommand;
+import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
@@ -126,6 +129,20 @@ public class AddressBookParserTest {
                 String.format(
                         MESSAGE_INVALID_COMMAND_FORMAT,
                         MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
+    }
+
+    @Test
+    public void parseCommand_winCommand() throws Exception {
+        WinCommand command = (WinCommand) parser.parseCommand(
+                WinCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new WinCommand(INDEX_FIRST_TEAM), command);
+    }
+
+    @Test
+    public void parseCommand_loseCommand() throws Exception {
+        LoseCommand command = (LoseCommand) parser.parseCommand(
+                LoseCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new LoseCommand(INDEX_FIRST_TEAM), command);
     }
 
     @Test

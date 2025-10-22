@@ -96,14 +96,16 @@ public class EditCommand extends Command {
             Team teamToEdit = teamOptional.get();
             try {
                 Team editedTeam = createEditedTeam(teamToEdit, personToEdit, editedPerson);
+
+                model.setPerson(personToEdit, editedPerson);
                 model.setTeam(teamToEdit, editedTeam);
             } catch (DuplicateRoleException | DuplicateChampionException e) {
                 throw new CommandException(e.getMessage());
             }
+        } else {
+            model.setPerson(personToEdit, editedPerson);
         }
 
-
-        model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
@@ -124,7 +126,7 @@ public class EditCommand extends Command {
         int wins = personToEdit.getWins();
         int losses = personToEdit.getLosses();
 
-        // Preserve role, rank, and champion from the original person
+        // Preserve id from the original person
         return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, wins, losses);
     }
 
@@ -135,8 +137,8 @@ public class EditCommand extends Command {
         List<Person> updatedPersonList = new ArrayList<>(teamToEdit.getPersons());
         int personIndex = updatedPersonList.indexOf(personToEdit);
         updatedPersonList.set(personIndex, editedPerson);
-        int wins = personToEdit.getWins();
-        int losses = personToEdit.getLosses();
+        int wins = teamToEdit.getWins();
+        int losses = teamToEdit.getLosses();
 
         return new Team(id, updatedPersonList, wins, losses);
     }

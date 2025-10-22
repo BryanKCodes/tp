@@ -53,7 +53,7 @@ public class Rank implements Comparable<Rank> {
     public Rank(String rank) {
         requireNonNull(rank);
         checkArgument(isValidRank(rank), MESSAGE_CONSTRAINTS);
-        this.value = rank.substring(0, 1).toUpperCase() + rank.substring(1).toLowerCase();;
+        this.value = rank.substring(0, 1).toUpperCase() + rank.substring(1).toLowerCase();
     }
 
     /**
