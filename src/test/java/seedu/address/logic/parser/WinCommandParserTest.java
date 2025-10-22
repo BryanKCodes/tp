@@ -1,13 +1,12 @@
 package seedu.address.logic.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.WinCommand;
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.WinCommand;
 
 /**
  * Tests for {@code WinCommandParser}.

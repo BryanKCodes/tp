@@ -49,7 +49,8 @@ public class LoseCommandTest {
     @Test
     public void execute_invalidIndex_throwsCommandException() {
         int outOfBoundsIndex = model.getFilteredTeamList().size() + 1;
-        LoseCommand loseCommand = new LoseCommand(seedu.address.commons.core.index.Index.fromOneBased(outOfBoundsIndex));
+        LoseCommand loseCommand = new LoseCommand(seedu.address.commons.core.index.Index
+                .fromOneBased(outOfBoundsIndex));
         assertCommandFailure(loseCommand, model, seedu.address.logic.Messages.MESSAGE_INVALID_TEAM_DISPLAYED_INDEX);
     }
 

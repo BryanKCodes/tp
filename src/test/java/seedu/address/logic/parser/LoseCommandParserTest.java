@@ -5,8 +5,8 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.LoseCommand;
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.LoseCommand;
 
 /**
  * Tests for {@code LoseCommandParser}.
