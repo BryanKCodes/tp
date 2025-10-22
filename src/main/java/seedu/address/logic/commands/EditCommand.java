@@ -106,9 +106,11 @@ public class EditCommand extends Command {
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Champion updatedChampion = editPersonDescriptor.getChampion().orElse(personToEdit.getChampion());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        int wins = personToEdit.getWins();
+        int losses = personToEdit.getLosses();
 
         // Preserve role, rank, and champion from the original person
-        return new Person(personToEdit.getId(), updatedName, updatedRole, updatedRank, updatedChampion, updatedTags);
+        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, wins, losses);
     }
 
     @Override

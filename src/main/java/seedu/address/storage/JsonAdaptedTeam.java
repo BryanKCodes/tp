@@ -19,16 +19,23 @@ public class JsonAdaptedTeam {
 
     private final String teamId;
     private final List<String> personIds = new ArrayList<>();
+    private final int wins;
+    private final int losses;
 
     /**
      * Constructs a {@code JsonAdaptedTeam} with the given team details.
      */
     @JsonCreator
-    public JsonAdaptedTeam(@JsonProperty("teamId") String teamId, @JsonProperty("personIds") List<String> personIds) {
+    public JsonAdaptedTeam(@JsonProperty("teamId") String teamId,
+                           @JsonProperty("personIds") List<String> personIds,
+                           @JsonProperty("wins") int wins,
+                           @JsonProperty("losses") int losses) {
         this.teamId = teamId;
         if (personIds != null) {
             this.personIds.addAll(personIds);
         }
+        this.wins = wins;
+        this.losses = losses;
     }
 
     /**
@@ -39,6 +46,8 @@ public class JsonAdaptedTeam {
         this.personIds.addAll(source.getPersons().stream()
                 .map(Person::getId)
                 .collect(Collectors.toList()));
+        this.wins = source.getWins();
+        this.losses = source.getLosses();
     }
 
     /**
@@ -59,6 +68,6 @@ public class JsonAdaptedTeam {
                     .orElseThrow(() -> new IllegalValueException("Invalid Person ID in Team: " + personId));
             teamPersons.add(person);
         }
-        return new Team(teamId, teamPersons);
+        return new Team(teamId, teamPersons, wins, losses);
     }
 }
