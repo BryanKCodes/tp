@@ -17,32 +17,171 @@
             --callout-bg: #121622;
             --callout-border: #28304a;
         }
-        html, body { margin: 0; background: var(--bg); color: var(--text);
-          font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-                       "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          line-height: 1.6; scroll-behavior: smooth; }
-        .container { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
-        h1, h2, h3 { line-height: 1.25; margin: 2rem 0 0.75rem; font-weight: 700; }
-        h1 { font-size: 2rem; } h2 { font-size: 1.5rem; color: #dfe3ff; } h3 { font-size: 1.15rem; color: #cbd5ff; }
-        p { margin: 0.75rem 0; color: var(--text); }
-        a { color: var(--accent-2); text-decoration: none; } a:hover { text-decoration: underline; }
-        hr { border: 0; border-top: 1px solid var(--table-border); margin: 2rem 0; }
-        .panel { background: var(--panel); border: 1px solid var(--table-border); border-radius: 14px; padding: 1rem 1.25rem; }
-        .callout { background: var(--callout-bg); border: 1px solid var(--callout-border); border-radius: 12px; padding: 1rem 1.25rem; margin: 1rem 0 1.5rem; }
-        .callout strong { color: #dfe3ff; }
-        ul, ol { padding-left: 1.35rem; }
-        code, pre, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-        code { background: var(--code-bg); padding: 0.15rem 0.35rem; border-radius: 6px; border: 1px solid #1e2330; }
-        pre { background: var(--code-bg); border: 1px solid #1e2330; border-radius: 10px; padding: 1rem; overflow: auto; }
-        table { border-collapse: collapse; width: 100%; margin: 1rem 0; background: var(--panel); border: 1px solid var(--table-border); border-radius: 10px; overflow: hidden; }
-        th, td { border-bottom: 1px solid var(--table-border); padding: 0.75rem 0.75rem; text-align: left; vertical-align: top; }
-        th { background: #1b1f2a; color: #e9ecff; font-weight: 600; } tr:last-child td { border-bottom: 0; }
-        .small { color: var(--muted); font-size: 0.95rem; }
-        .hero { background: linear-gradient(135deg, rgba(138, 99, 255, 0.12), rgba(55, 192, 255, 0.08)); border: 1px solid rgba(138, 99, 255, 0.25); padding: 1rem 1.25rem; border-radius: 16px; }
-        .toc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; margin-top: 0.75rem; }
-        @media (max-width: 720px) { .toc { grid-template-columns: 1fr; } }
-        .toc a { display: block; padding: 0.5rem 0.6rem; border: 1px solid var(--table-border); border-radius: 10px; background: #13161c; }
-        .toc a code { background: transparent; border: 0; padding: 0; color: #cfe5ff; }
+
+        html, body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+
+        h1, h2, h3 {
+            line-height: 1.25;
+            margin: 2rem 0 0.75rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #dfe3ff;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            color: #cbd5ff;
+        }
+
+        p {
+            margin: 0.75rem 0;
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent-2);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--table-border);
+            margin: 2rem 0;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--table-border);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+        }
+
+        .callout {
+            background: var(--callout-bg);
+            border: 1px solid var(--callout-border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0 1.5rem;
+        }
+
+        .callout strong {
+            color: #dfe3ff;
+        }
+
+        ul, ol {
+            padding-left: 1.35rem;
+        }
+
+        code, pre, kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.15rem 0.35rem;
+            border-radius: 6px;
+            border: 1px solid #1e2330;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid #1e2330;
+            border-radius: 10px;
+            padding: 1rem;
+            overflow: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+            background: var(--panel);
+            border: 1px solid var(--table-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--table-border);
+            padding: 0.75rem 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #1b1f2a;
+            color: #e9ecff;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .small {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(138, 99, 255, 0.12), rgba(55, 192, 255, 0.08));
+            border: 1px solid rgba(138, 99, 255, 0.25);
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem 1rem;
+            margin-top: 0.75rem;
+        }
+
+        @media (max-width: 720px) {
+            .toc {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toc a {
+            display: block;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid var(--table-border);
+            border-radius: 10px;
+            background: #13161c;
+        }
+
+        .toc a code {
+            background: transparent;
+            border: 0;
+            padding: 0;
+            color: #cfe5ff;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +230,9 @@
         <ul>
             <li>Parameters in <code>UPPER_CASE</code> are supplied by the user.</li>
             <li>Optional items are in square brackets, e.g., <code>find [n/NAME] [rl/ROLE]</code>.</li>
-            <li>Items with <code>…</code> after them can be used multiple times or not at all, e.g., <code>[t/TAG]…</code>.</li>
+            <li>Items with <code>…</code> after them can be used multiple times or not at all, e.g.,
+                <code>[t/TAG]…</code>.
+            </li>
             <li>Parameters can be in any order. e.g., <code>add rk/RANK n/NAME rl/ROLE c/CHAMPION</code>.</li>
             <li>Indices start from 1, referring to the currently displayed list.</li>
             <li>Players already in a team cannot be edited.</li>
@@ -161,22 +302,29 @@
         <li>The index must be a positive integer 1, 2, 3, …</li>
     </ul>
     <p><strong>Example:</strong> <code>delete 3</code></p>
-    <p><strong>Success output:</strong> <code>Deleted Player: &lt;NAME&gt;.</code></p>
-    <p><strong>Failure outputs:</strong></p>
-    <ul>
-        <li><code>The player index provided is invalid.</code></li>
-        <li><code>Cannot delete player. &lt;NAME&gt; is currently on team '&lt;TEAM NAME&gt;'.</code></li>
-    </ul>
+    <p><strong>Success example:</strong> <code>Deleted Player: Bernice Yu; Rank: Gold; Role: Mid; Champion: Ahri; Tags:
+        [colleagues][friends].</code></p>
+    <p><strong>Failure output:</strong></p>
+    <code>
+        Invalid command format!<br>
+        delete: Deletes the player identified by the index number used in the displayed player list.<br>
+        Parameters: INDEX (must be a positive integer)<br>
+        Example: delete 1
+    </code>
 
     <a id="cmd-find"></a>
     <h3>Finding players by keyword : <code>find</code></h3>
-    <p>Searches for players by <strong>keyword(s)</strong> in their <strong>name</strong>. Matching is case-insensitive and based on whole words only.</p>
+    <p>Searches for players by <strong>keyword(s)</strong> in their <strong>name</strong>. Matching is case-insensitive
+        and based on whole words only.</p>
     <p><strong>Format:</strong> <code>find KEYWORD [MORE_KEYWORDS...]</code></p>
     <p><strong>Examples:</strong></p>
     <ul>
-        <li><code>find joanne lim</code> — finds <strong>Joanne Koh</strong>, <strong>Joanne Lim</strong>, and <strong>June Lim</strong>, but <strong>not</strong> <strong>John Kim</strong>.</li>
+        <li><code>find joanne lim</code> — finds <strong>Joanne Koh</strong>, <strong>Joanne Lim</strong>, and <strong>June
+            Lim</strong>, but <strong>not</strong> <strong>John Kim</strong>.
+        </li>
         <li><code>find john</code> — finds <strong>John Doe</strong> and <strong>John Smith</strong>.</li>
-        <li><code>find jo</code> — finds <strong>Jo Lin</strong>, but <strong>not</strong> “John Doe” or “John Smith”.</li>
+        <li><code>find jo</code> — finds <strong>Jo Lin</strong>, but <strong>not</strong> “John Doe” or “John Smith”.
+        </li>
     </ul>
 
     <a id="cmd-filter"></a>
@@ -190,15 +338,21 @@
     <p><strong>Format (any order, at least one filter):</strong> <code>filter [rl/ROLE ...] [rk/RANK ...]</code></p>
     <p><strong>How filtering works:</strong></p>
     <ul>
-        <li>Filters of <strong>different types</strong> (e.g. <code>rl/</code> and <code>rk/</code>) are combined with <strong>AND</strong>.</li>
-        <li>Filters <strong>within the same type</strong> (e.g. multiple <code>rl/</code> values) are combined with <strong>OR</strong>.</li>
+        <li>Filters of <strong>different types</strong> (e.g. <code>rl/</code> and <code>rk/</code>) are combined with
+            <strong>AND</strong>.
+        </li>
+        <li>Filters <strong>within the same type</strong> (e.g. multiple <code>rl/</code> values) are combined with
+            <strong>OR</strong>.
+        </li>
         <li>Matching is <strong>case-insensitive</strong> and <strong>exact</strong>.</li>
     </ul>
     <p><strong>Examples:</strong></p>
     <ul>
         <li><code>filter rl/Mid Jungle</code> — players who are <strong>Mid OR Jungle</strong>.</li>
         <li><code>filter rl/Mid rk/Gold</code> — players who are <strong>Mid AND Gold</strong>.</li>
-        <li><code>filter rl/Mid Jungle rk/Gold Silver</code> — players who are <strong>(Mid OR Jungle) AND (Gold OR Silver)</strong>.</li>
+        <li><code>filter rl/Mid Jungle rk/Gold Silver</code> — players who are <strong>(Mid OR Jungle) AND (Gold OR
+            Silver)</strong>.
+        </li>
     </ul>
 
     <a id="cmd-edit"></a>
@@ -207,10 +361,13 @@
     <p><strong>Format:</strong> <code>edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]</code></p>
     <p><strong>Notes:</strong></p>
     <ul>
-        <li><code>INDEX</code> refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).</li>
+        <li><code>INDEX</code> refers to the number shown in the current displayed player list. Must be a positive
+            integer (1, 2, 3…).
+        </li>
         <li>At least one field to edit must be provided.</li>
         <li>Existing values are <strong>overwritten</strong> by the new input.</li>
-        <li>Tags are <strong>replaced</strong>, not added. To clear all tags, type <code>t/</code> with no tag values.</li>
+        <li>Tags are <strong>replaced</strong>, not added. To clear all tags, type <code>t/</code> with no tag values.
+        </li>
     </ul>
     <p><strong>Examples:</strong></p>
     <ul>
@@ -233,7 +390,8 @@
 
     <a id="cmd-makegroup"></a>
     <h3>Manually creating a team : <code>makegroup</code></h3>
-    <p>Creates a team manually by specifying <strong>exactly five players</strong> by name. Each player must already exist and must not belong to any other team.</p>
+    <p>Creates a team manually by specifying <strong>exactly five players</strong> by name. Each player must already
+        exist and must not belong to any other team.</p>
 
     <p><strong>Format:</strong> <code>makegroup n/PLAYER1 n/PLAYER2 n/PLAYER3 n/PLAYER4 n/PLAYER5</code></p>
 
@@ -319,48 +477,61 @@
     <h2>Command summary — SummonersBook</h2>
     <table>
         <thead>
-        <tr><th>Action</th><th>Format / Examples</th></tr>
+        <tr>
+            <th>Action</th>
+            <th>Format / Examples</th>
+        </tr>
         </thead>
         <tbody>
-        <tr><td><strong>Help</strong></td><td><code>help</code></td></tr>
-        <tr><td><strong>Add player</strong></td>
+        <tr>
+            <td><strong>Help</strong></td>
+            <td><code>help</code></td>
+        </tr>
+        <tr>
+            <td><strong>Add player</strong></td>
             <td>
                 <code>add n/NAME rk/RANK rl/ROLE c/CHAMPION</code><br>
                 <em>Example:</em> <code>add n/Faker rk/Grandmaster rl/Bottom c/Sivir</code><br>
                 <em>Note:</em> Parameters can be in any order.
             </td>
         </tr>
-        <tr><td><strong>List all players</strong></td><td><code>list</code></td></tr>
-        <tr><td><strong>List all teams</strong></td><td><code>listteam</code></td></tr>
-        <tr><td><strong>Delete player</strong></td>
+        <tr>
+            <td><strong>List all players</strong></td>
+            <td><code>list</code></td>
+        </tr>
+        <tr>
+            <td><strong>List all teams</strong></td>
+            <td><code>listteam</code></td>
+        </tr>
+        <tr>
+            <td><strong>Delete player</strong></td>
             <td>
                 <code>delete INDEX</code><br>
-                <em>Success:</em> <code>Deleted Player: &lt;NAME&gt;.</code><br>
-                <em>Failure examples:</em>
-                <ul>
-                    <li><code>The player index provided is invalid.</code></li>
-                    <li><code>Cannot delete player. &lt;NAME&gt; is currently on team '&lt;TEAM NAME&gt;'.</code></li>
-                </ul>
+                <em>Success example:</em> <code>Deleted Player: Bernice Yu; Rank: Gold; Role: Mid; Champion: Ahri; Tags:
+                [colleagues][friends]</code><br>
             </td>
         </tr>
-        <tr><td><strong>Find players</strong></td>
+        <tr>
+            <td><strong>Find players</strong></td>
             <td>
                 <code>find KEYWORD [MORE_KEYWORDS...]</code><br>
                 <em>Case-insensitive, matches whole words only.</em><br>
                 <em>Example:</em> <code>find joanne lim</code>
             </td>
         </tr>
-        <tr><td><strong>Filter players</strong></td>
+        <tr>
+            <td><strong>Filter players</strong></td>
             <td>
                 <code>filter [rl/ROLE ...] [rk/RANK ...]</code><br>
                 <em>Examples:</em>
                 <ul>
-                    <li><code>filter rl/Mid Jungle</code> — Mid OR Jungle</li>
+                    <li><code>filter rl/Mid rl/Jungle</code> — Mid OR Jungle</li>
                     <li><code>filter rl/Mid rk/Gold</code> — Mid AND Gold</li>
                 </ul>
             </td>
         </tr>
-        <tr><td><strong>Edit player</strong></td>
+        <tr>
+            <td><strong>Edit player</strong></td>
             <td>
                 <code>edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]</code><br>
                 <em>Examples:</em>
@@ -370,27 +541,36 @@
                 </ul>
             </td>
         </tr>
-        <tr><td><strong>Auto-group teams</strong></td>
+        <tr>
+            <td><strong>Auto-group teams</strong></td>
             <td>
                 <code>group</code><br>
                 <em>Forms balanced teams of 5 from unassigned players.</em>
             </td>
         </tr>
-        <tr><td><strong>Manually create team</strong></td>
+        <tr>
+            <td><strong>Manually create team</strong></td>
             <td>
                 <code>makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5</code><br>
                 <em>Example:</em> <code>makegroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria</code><br>
                 <em>Note:</em> Players must exist, have unique roles, and not already be in a team.
             </td>
         </tr>
-        <tr><td><strong>Ungroup teams</strong></td>
+        <tr>
+            <td><strong>Ungroup teams</strong></td>
             <td>
                 <code>ungroup TEAM_INDEX</code> · <code>ungroup all</code><br>
                 <em>Example:</em> <code>ungroup 1</code> or <code>ungroup all</code>
             </td>
         </tr>
-        <tr><td><strong>Clear all entries</strong></td><td><code>clear</code></td></tr>
-        <tr><td><strong>Exit</strong></td><td><code>exit</code></td></tr>
+        <tr>
+            <td><strong>Clear all entries</strong></td>
+            <td><code>clear</code></td>
+        </tr>
+        <tr>
+            <td><strong>Exit</strong></td>
+            <td><code>exit</code></td>
+        </tr>
         </tbody>
     </table>
 
