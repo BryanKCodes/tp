@@ -25,6 +25,7 @@ import seedu.address.logic.commands.ListTeamCommand;
 import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.commands.UngroupCommand;
+import seedu.address.logic.commands.ViewTeamCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -106,6 +107,10 @@ public class AddressBookParser {
 
         case ImportCommand.COMMAND_WORD:
             return new ImportCommandParser().parse(arguments);
+
+        case ViewTeamCommand.COMMAND_WORD:
+            return new ViewTeamCommandParser().parse(arguments);
+
         case WinCommand.COMMAND_WORD:
             return new WinCommandParser().parse(arguments);
 
