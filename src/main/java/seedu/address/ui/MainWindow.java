@@ -16,6 +16,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Person;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -35,6 +36,7 @@ public class MainWindow extends UiPart<Stage> {
     private TeamListPanel teamListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private PersonDetailWindow personDetailWindow;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -70,6 +72,7 @@ public class MainWindow extends UiPart<Stage> {
         setAccelerators();
 
         helpWindow = new HelpWindow();
+        personDetailWindow = new PersonDetailWindow();
     }
 
     public Stage getPrimaryStage() {
@@ -154,6 +157,18 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
+    /**
+     * Opens the person detail window for the specified person or focuses on it if it's already opened.
+     */
+    public void handlePersonDetail(Person person) {
+        personDetailWindow.setPerson(person);
+        if (!personDetailWindow.isShowing()) {
+            personDetailWindow.show();
+        } else {
+            personDetailWindow.focus();
+        }
+    }
+
     void show() {
         primaryStage.show();
     }
@@ -167,6 +182,7 @@ public class MainWindow extends UiPart<Stage> {
                 (int) primaryStage.getX(), (int) primaryStage.getY());
         logic.setGuiSettings(guiSettings);
         helpWindow.hide();
+        personDetailWindow.hide();
         primaryStage.hide();
     }
 
@@ -187,6 +203,10 @@ public class MainWindow extends UiPart<Stage> {
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
+            }
+
+            if (commandResult.isShowPersonDetail()) {
+                handlePersonDetail(commandResult.getPersonToShow());
             }
 
             if (commandResult.isExit()) {
