@@ -7,7 +7,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_RANK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TEAMS;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +29,9 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.team.Team;
+import seedu.address.model.team.exceptions.DuplicateChampionException;
+import seedu.address.model.team.exceptions.DuplicateRoleException;
 
 /**
  * Edits the details of an existing person in the address book.
@@ -70,26 +75,45 @@ public class EditCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
+        List<Person> lastShownPersonList = model.getFilteredPersonList();
+        List<Team> lastShownTeamList = model.getFilteredTeamList();
 
-        if (index.getZeroBased() >= lastShownList.size()) {
+        if (index.getZeroBased() >= lastShownPersonList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
-        Person personToEdit = lastShownList.get(index.getZeroBased());
-
-        if (model.isPersonInAnyTeam(personToEdit)) {
-            throw new CommandException(Messages.MESSAGE_PERSON_IN_TEAM);
-        }
-
+        Person personToEdit = lastShownPersonList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        model.setPerson(personToEdit, editedPerson);
+        Optional<Team> teamToEditOptional = lastShownTeamList.stream()
+                .filter(team -> team.hasPerson(personToEdit))
+                .findFirst();
+
+        if (teamToEditOptional.isPresent()) {
+            Team teamToEdit = teamToEditOptional.get();
+
+            // Tries to create an updated team that includes the edited person.
+            // This step validates that no duplicate roles or champions exist.
+            // If validation fails, an exception is thrown and no model updates occur.
+            try {
+                Team editedTeam = createEditedTeam(teamToEdit, personToEdit, editedPerson);
+
+                // Apply the updates only after successful validation.
+                model.setPerson(personToEdit, editedPerson);
+                model.setTeam(teamToEdit, editedTeam);
+            } catch (DuplicateRoleException | DuplicateChampionException e) {
+                throw new CommandException(e.getMessage());
+            }
+        } else {
+            model.setPerson(personToEdit, editedPerson);
+        }
+
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredTeamList(PREDICATE_SHOW_ALL_TEAMS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 
@@ -106,9 +130,24 @@ public class EditCommand extends Command {
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Champion updatedChampion = editPersonDescriptor.getChampion().orElse(personToEdit.getChampion());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        int wins = personToEdit.getWins();
+        int losses = personToEdit.getLosses();
 
-        // Preserve role, rank, and champion from the original person
-        return new Person(personToEdit.getId(), updatedName, updatedRole, updatedRank, updatedChampion, updatedTags);
+        // Preserve id from the original person
+        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, wins, losses);
+    }
+
+    private static Team createEditedTeam(Team teamToEdit, Person personToEdit, Person editedPerson) {
+        assert teamToEdit.hasPerson(personToEdit);
+
+        String id = teamToEdit.getId();
+        List<Person> updatedPersonList = new ArrayList<>(teamToEdit.getPersons());
+        int personIndex = updatedPersonList.indexOf(personToEdit);
+        updatedPersonList.set(personIndex, editedPerson);
+        int wins = teamToEdit.getWins();
+        int losses = teamToEdit.getLosses();
+
+        return new Team(id, updatedPersonList, wins, losses);
     }
 
     @Override

@@ -30,6 +30,8 @@ class JsonAdaptedPerson {
     private final String rank;
     private final String champion;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final int wins;
+    private final int losses;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -40,7 +42,9 @@ class JsonAdaptedPerson {
                              @JsonProperty("role") String role,
                              @JsonProperty("rank") String rank,
                              @JsonProperty("champion") String champion,
-                             @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+                             @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("wins") int wins,
+                             @JsonProperty("losses") int losses) {
         this.id = id;
         this.name = name;
         this.role = role;
@@ -49,6 +53,8 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.wins = wins;
+        this.losses = losses;
     }
 
     /**
@@ -63,6 +69,8 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        wins = source.getWins();
+        losses = source.getLosses();
     }
 
     /**
@@ -115,7 +123,8 @@ class JsonAdaptedPerson {
         final Champion modelChampion = new Champion(champion);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags);
+
+        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags, wins, losses);
     }
 
 }

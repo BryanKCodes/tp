@@ -13,17 +13,24 @@ import seedu.address.model.team.Team;
  */
 public class TeamBuilder {
 
-    public static final String DEFAULT_ID = UUID.randomUUID().toString();
+    public static final String DUMMY_ID = "";
+
+    public static final int DEFAULT_WINS = 0;
+    public static final int DEFAULT_LOSSES = 0;
 
     private String id;
     private List<Person> persons;
+    private int wins;
+    private int losses;
 
     /**
      * Creates a {@code TeamBuilder} with the default details.
      */
     public TeamBuilder() {
-        id = DEFAULT_ID;
+        id = UUID.randomUUID().toString();
         persons = new ArrayList<>();
+        wins = DEFAULT_WINS;
+        losses = DEFAULT_LOSSES;
     }
 
     /**
@@ -32,14 +39,8 @@ public class TeamBuilder {
     public TeamBuilder(Team teamToCopy) {
         id = teamToCopy.getId();
         persons = new ArrayList<>(teamToCopy.getPersons());
-    }
-
-    /**
-     * Sets the {@code id} of the {@code Team} that we are building.
-     */
-    public TeamBuilder withId(String id) {
-        this.id = id;
-        return this;
+        wins = teamToCopy.getWins();
+        losses = teamToCopy.getLosses();
     }
 
     /**
@@ -50,7 +51,21 @@ public class TeamBuilder {
         return this;
     }
 
+    /**
+     * Replaces the target {@code Person} in the team with the {@code editedPerson}.
+     * If the target person does not exist in the team, the team remains unchanged.
+     */
+    public TeamBuilder replacePerson(Person target, Person editedPerson) {
+        List<Person> updatedPersons = new ArrayList<>(persons);
+        int index = updatedPersons.indexOf(target);
+        if (index != -1) {
+            updatedPersons.set(index, editedPerson);
+        }
+        this.persons = updatedPersons;
+        return this;
+    }
+
     public Team build() {
-        return new Team(id, persons);
+        return new Team(id, persons, wins, losses);
     }
 }
