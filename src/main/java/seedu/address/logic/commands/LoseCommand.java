@@ -15,14 +15,14 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
 /**
- * Records a loss for a team and all its members.
+ * Records a loss for a team and all its persons.
  */
 public class LoseCommand extends Command {
 
     public static final String COMMAND_WORD = "lose";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Records a loss for the team and its players identified by the index used in the displayed team list.\n"
+            + ": Records a loss for the team and its persons identified by the index used in the displayed team list.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
@@ -45,18 +45,24 @@ public class LoseCommand extends Command {
         }
 
         Team teamToLose = lastShownList.get(targetIndex.getZeroBased());
-        List<Person> originalPlayers = teamToLose.getPersons();
-        List<Person> updatedPlayers = new ArrayList<>();
+        List<Person> originalPersons = teamToLose.getPersons();
+        List<Person> updatedPersons = new ArrayList<>();
 
-        // Update each player in the team
-        for (Person player : originalPlayers) {
-            Person updatedPlayer = createPersonWithNewLoss(player);
-            updatedPlayers.add(updatedPlayer);
-            model.setPerson(player, updatedPlayer);
+        // Update each person in the team
+        for (Person person : originalPersons) {
+            Person updatedPerson = createPersonWithNewLoss(person);
+            updatedPersons.add(updatedPerson);
         }
 
-        // Create the updated team with the new players and stats
-        Team updatedTeam = createTeamWithNewLoss(teamToLose, updatedPlayers);
+        // Create the updated team with the new persons and stats
+        Team updatedTeam = createTeamWithNewLoss(teamToLose, updatedPersons);
+
+        // Apply all updates to the model
+        for (int i = 0; i < originalPersons.size(); i++) {
+            Person originalPerson = originalPersons.get(i);
+            Person updatedPerson = updatedPersons.get(i);
+            model.setPerson(originalPerson, updatedPerson);
+        }
         model.setTeam(teamToLose, updatedTeam);
 
         return new CommandResult(String.format(MESSAGE_LOSE_TEAM_SUCCESS, targetIndex.getOneBased(),
@@ -83,11 +89,11 @@ public class LoseCommand extends Command {
     /**
      * Creates and returns a {@code Team} with an incremented loss count and updated player list.
      */
-    private Team createTeamWithNewLoss(Team teamToEdit, List<Person> updatedPlayers) {
-        requireAllNonNull(teamToEdit, updatedPlayers);
+    private Team createTeamWithNewLoss(Team teamToEdit, List<Person> updatedPersons) {
+        requireAllNonNull(teamToEdit, updatedPersons);
         return new Team(
                 teamToEdit.getId(),
-                updatedPlayers,
+                updatedPersons,
                 teamToEdit.getWins(),
                 teamToEdit.getLosses() + 1);
     }

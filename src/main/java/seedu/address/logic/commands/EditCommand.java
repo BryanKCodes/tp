@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_RANK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TEAMS;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,15 +89,20 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        Optional<Team> teamOptional = model.getFilteredTeamList().stream()
+        Optional<Team> teamToEditOptional = lastShownTeamList.stream()
                 .filter(team -> team.hasPerson(personToEdit))
                 .findFirst();
 
-        if (teamOptional.isPresent()) {
-            Team teamToEdit = teamOptional.get();
+        if (teamToEditOptional.isPresent()) {
+            Team teamToEdit = teamToEditOptional.get();
+
+            // Tries to create an updated team that includes the edited person.
+            // This step validates that no duplicate roles or champions exist.
+            // If validation fails, an exception is thrown and no model updates occur.
             try {
                 Team editedTeam = createEditedTeam(teamToEdit, personToEdit, editedPerson);
 
+                // Apply the updates only after successful validation.
                 model.setPerson(personToEdit, editedPerson);
                 model.setTeam(teamToEdit, editedTeam);
             } catch (DuplicateRoleException | DuplicateChampionException e) {
@@ -107,6 +113,7 @@ public class EditCommand extends Command {
         }
 
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredTeamList(PREDICATE_SHOW_ALL_TEAMS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 

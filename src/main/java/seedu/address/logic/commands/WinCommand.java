@@ -15,14 +15,14 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
 /**
- * Records a win for a team and all its members.
+ * Records a win for a team and all its persons.
  */
 public class WinCommand extends Command {
 
     public static final String COMMAND_WORD = "win";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Records a win for the team and its players identified by the index used in the displayed team list.\n"
+            + ": Records a win for the team and its persons identified by the index used in the displayed team list.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
@@ -45,18 +45,24 @@ public class WinCommand extends Command {
         }
 
         Team teamToWin = lastShownList.get(targetIndex.getZeroBased());
-        List<Person> originalPlayers = teamToWin.getPersons();
-        List<Person> updatedPlayers = new ArrayList<>();
+        List<Person> originalPersons = teamToWin.getPersons();
+        List<Person> updatedPersons = new ArrayList<>();
 
-        // Update each player in the team
-        for (Person player : originalPlayers) {
-            Person updatedPlayer = createPersonWithNewWin(player);
-            updatedPlayers.add(updatedPlayer);
-            model.setPerson(player, updatedPlayer);
+        // Update each person in the team
+        for (Person person : originalPersons) {
+            Person updatedPerson = createPersonWithNewWin(person);
+            updatedPersons.add(updatedPerson);
         }
 
-        // Create the updated team with the new players and stats
-        Team updatedTeam = createTeamWithNewWin(teamToWin, updatedPlayers);
+        // Create the updated team with the new persons and stats
+        Team updatedTeam = createTeamWithNewWin(teamToWin, updatedPersons);
+
+        // Apply all updates to the model
+        for (int i = 0; i < originalPersons.size(); i++) {
+            Person originalPerson = originalPersons.get(i);
+            Person updatedPerson = updatedPersons.get(i);
+            model.setPerson(originalPerson, updatedPerson);
+        }
         model.setTeam(teamToWin, updatedTeam);
 
         return new CommandResult(String.format(MESSAGE_WIN_TEAM_SUCCESS, targetIndex.getOneBased(),
@@ -81,13 +87,13 @@ public class WinCommand extends Command {
     }
 
     /**
-     * Creates and returns a {@code Team} with an incremented win count and updated player list.
+     * Creates and returns a {@code Team} with an incremented win count and updated person list.
      */
-    private Team createTeamWithNewWin(Team teamToEdit, List<Person> updatedPlayers) {
-        requireAllNonNull(teamToEdit, updatedPlayers);
+    private Team createTeamWithNewWin(Team teamToEdit, List<Person> updatedPersons) {
+        requireAllNonNull(teamToEdit, updatedPersons);
         return new Team(
                 teamToEdit.getId(),
-                updatedPlayers,
+                updatedPersons,
                 teamToEdit.getWins() + 1,
                 teamToEdit.getLosses());
     }
