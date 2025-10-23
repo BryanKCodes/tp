@@ -99,6 +99,6 @@ public class TeamCard extends UiPart<Region> {
         nameLabel.setText(name);
         rankLabel.setText(rank);
         roleLabel.getStyleClass().add("role_" + role.toLowerCase());
-        rankLabel.getStyleClass().add("rank_" + rank.toLowerCase());
+        rankLabel.getStyleClass().add(rank.toLowerCase() + "_rank");
     }
 }
