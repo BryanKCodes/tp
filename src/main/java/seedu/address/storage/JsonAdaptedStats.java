@@ -17,7 +17,7 @@ public class JsonAdaptedStats {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Stats' %s field is missing!";
 
     /** Historical list of CS per minute values recorded. */
-    private final List<Integer> csPerMinute = new ArrayList<>();
+    private final List<Float> csPerMinute = new ArrayList<>();
 
     /** Historical list of gold difference at 15-minute values recorded. */
     private final List<Integer> goldDiffAt15 = new ArrayList<>();
@@ -32,7 +32,7 @@ public class JsonAdaptedStats {
      * Constructs a {@code JsonAdaptedStats} with the given stat details.
      */
     @JsonCreator
-    public JsonAdaptedStats(@JsonProperty("csPerMinute") List<Integer> csPerMinute,
+    public JsonAdaptedStats(@JsonProperty("csPerMinute") List<Float> csPerMinute,
                             @JsonProperty("goldDiffAt15") List<Integer> goldDiffAt15,
                             @JsonProperty("kdaScores") List<Float> kdaScores,
                             @JsonProperty("scores") List<Double> scores) {

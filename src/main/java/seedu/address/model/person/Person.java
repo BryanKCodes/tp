@@ -25,7 +25,7 @@ public class Person {
     private final Role role;
     private final Rank rank;
     private final Champion champion;
-    private final Stats stats; // dummy data
+    private final Stats stats;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
@@ -40,6 +40,21 @@ public class Person {
      */
     public Person(Name name, Role role, Rank rank, Champion champion, Set<Tag> tags) {
         this(UUID.randomUUID().toString(), name, role, rank, champion, tags);
+    }
+
+    /**
+     * Constructor for creating a new Person with specified role, rank, and champion.
+     * Generates a random UUID for the person.
+     *
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
+     * @param champion Champion of the person.
+     * @param tags     Set of tags associated with the person.
+     * @param stats    Performance stats of the person.
+     */
+    public Person(Name name, Role role, Rank rank, Champion champion, Set<Tag> tags, Stats stats) {
+        this(UUID.randomUUID().toString(), name, role, rank, champion, tags, stats);
     }
 
     /**
@@ -61,10 +76,7 @@ public class Person {
         this.rank = rank;
         this.champion = champion;
         this.tags.addAll(tags);
-        this.stats = new Stats()
-                .updateStats("7", "1000", "2.2")
-                .updateStats("4", "-200", "0.7")
-                .updateStats("9", "1200", "2.0");
+        this.stats = new Stats();
     }
 
     /**
@@ -77,7 +89,7 @@ public class Person {
      * @param rank     Rank of the person.
      * @param champion Champion of the person.
      * @param tags     Set of tags associated with the person.
-     * @param stats    Performance stats associated with the person.
+     * @param stats    Performance stats of the person.
      */
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags, Stats stats) {
         requireAllNonNull(id, name, role, rank, champion, tags);
@@ -154,7 +166,8 @@ public class Person {
                 && role.equals(otherPerson.role)
                 && rank.equals(otherPerson.rank)
                 && champion.equals(otherPerson.champion)
-                && tags.equals(otherPerson.tags);
+                && tags.equals(otherPerson.tags)
+                && stats.equals(otherPerson.stats);
     }
 
     @Override

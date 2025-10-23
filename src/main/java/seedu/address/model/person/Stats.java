@@ -34,7 +34,7 @@ public class Stats {
     public final String value;
 
     /** Historical list of CS per minute values recorded. */
-    public final ArrayList<Integer> csPerMinute;
+    public final ArrayList<Float> csPerMinute;
 
     /** Historical list of gold difference at 15-minute values recorded. */
     public final ArrayList<Integer> goldDiffAt15;
@@ -60,7 +60,7 @@ public class Stats {
     /**
      * Constructor used for updating stats immutably.
      */
-    public Stats(ArrayList<Integer> csPerMinute,
+    public Stats(ArrayList<Float> csPerMinute,
                   ArrayList<Integer> goldDiffAt15,
                   ArrayList<Float> kdaScores,
                   ArrayList<Double> scores) {
@@ -81,20 +81,45 @@ public class Stats {
      * @return a new {@code Stats} object with updated lists and average
      * @throws IllegalArgumentException if any of the values are invalid
      */
-    public Stats updateStats(String cpm, String gd15, String kda) {
+    public Stats addLatestStats(String cpm, String gd15, String kda) {
         requireAllNonNull(cpm, gd15, kda);
         checkArgument(isValidStats(cpm, gd15, kda), MESSAGE_CONSTRAINTS);
         // Already checked conversion
-        int intCpm = Integer.parseInt(cpm);
+        float floatCpm = Float.parseFloat(cpm);
         int intGd15 = Integer.parseInt(gd15);
         float floatKda = Float.parseFloat(kda);
+        double newScore = calculateScore(floatCpm, intGd15, floatKda);
 
-        this.csPerMinute.add(intCpm);
-        this.goldDiffAt15.add(intGd15);
-        this.kdaScores.add(floatKda);
-        double newScore = calculateScore(intCpm, intGd15, floatKda);
-        this.scores.add(newScore);
-        return new Stats(csPerMinute, goldDiffAt15, kdaScores, scores);
+        var cs = new ArrayList<>(this.csPerMinute);
+        var gd = new ArrayList<>(this.goldDiffAt15);
+        var kd = new ArrayList<>(this.kdaScores);
+        var sc = new ArrayList<>(this.scores);
+
+        cs.add(floatCpm);
+        gd.add(intGd15);
+        kd.add(floatKda);
+        sc.add(newScore);
+
+        return new Stats(cs, gd, kd, sc);
+    }
+
+    /**
+     * @return a new {@code Stats} object with lists where the last element is removed
+     */
+    public Stats deleteLatestStats() {
+        var cs = new ArrayList<>(this.csPerMinute);
+        var gd = new ArrayList<>(this.goldDiffAt15);
+        var kd = new ArrayList<>(this.kdaScores);
+        var sc = new ArrayList<>(this.scores);
+
+        if (!cs.isEmpty()) {
+            cs.remove(cs.size() - 1);
+            gd.remove(gd.size() - 1);
+            kd.remove(kd.size() - 1);
+            sc.remove(sc.size() - 1);
+        }
+
+        return new Stats(cs, gd, kd, sc);
     }
 
     /**
@@ -104,7 +129,7 @@ public class Stats {
         return this.value;
     }
 
-    public ArrayList<Integer> getCsPerMinute() {
+    public ArrayList<Float> getCsPerMinute() {
         return new ArrayList<>(csPerMinute);
     }
 
@@ -129,11 +154,11 @@ public class Stats {
      * @return true if all values are within valid ranges; false otherwise
      */
     public static boolean isValidStats(String cpm, String gd15, String kda) {
-        int x;
+        float x;
         int y;
         float z;
         try {
-            x = Integer.parseInt(cpm);
+            x = Float.parseFloat(cpm);
             y = Integer.parseInt(gd15);
             z = Float.parseFloat(kda);
         } catch (NumberFormatException e) {
@@ -191,7 +216,7 @@ public class Stats {
      * The score uses normalized KDA, CS/min, and gold difference values with
      * logistic scaling for smoother distribution.
      */
-    private double calculateScore(int cpm, int gd15, float kda) {
+    private double calculateScore(float cpm, int gd15, float kda) {
         // Normalize each metric
         double kdaNorm = Math.min(kda / 8.0, 1.0);
         double csNorm = Math.min(cpm / 10.0, 1.0);
