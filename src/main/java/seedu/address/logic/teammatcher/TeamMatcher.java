@@ -115,6 +115,8 @@ public class TeamMatcher {
             }
 
             // Successfully formed a team
+            assert teamMembers.size() == TEAM_SIZE
+                : "Team should have exactly " + TEAM_SIZE + " members before creation";
             teams.add(new Team(teamMembers));
         }
 

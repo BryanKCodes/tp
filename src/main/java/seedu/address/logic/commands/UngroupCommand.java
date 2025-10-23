@@ -60,8 +60,10 @@ public class UngroupCommand extends Command {
         }
 
         if (removeAll) {
+            assert targetIndex == null : "Target index should be null when removing all teams.";
             return executeRemoveAll(model, lastShownList);
         } else {
+            assert targetIndex != null : "Target index should not be null when removing a single team.";
             return executeRemoveSingle(model, lastShownList);
         }
     }
