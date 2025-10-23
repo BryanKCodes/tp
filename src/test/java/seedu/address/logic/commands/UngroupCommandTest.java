@@ -263,6 +263,11 @@ public class UngroupCommandTest {
         }
 
         @Override
+        public ObservableList<Person> getUnassignedPersonList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void updateFilteredPersonList(Predicate<Person> predicate) {
             throw new AssertionError("This method should not be called.");
         }
@@ -277,10 +282,6 @@ public class UngroupCommandTest {
             return Optional.empty(); // default stub returns empty
         }
 
-        @Override
-        public ObservableList<Person> getUnassignedPersons() {
-            throw new AssertionError("This method should not be called.");
-        }
     }
 
     /**
