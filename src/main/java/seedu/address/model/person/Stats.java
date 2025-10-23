@@ -30,8 +30,8 @@ public class Stats {
                     + "Gold difference at 15m must be between -10,000 and 10,000; "
                     + "KDA must be between 0 and 200.";
 
-    /** The textual representation of the average score (formatted as 0.0). */
-    public final String value;
+    /** The average score. */
+    public final float value;
 
     /** Historical list of CS per minute values recorded. */
     public final ArrayList<Float> csPerMinute;
@@ -125,7 +125,7 @@ public class Stats {
     /**
      * Returns the current average performance score as a string formatted to one decimal place.
      */
-    public String getValue() {
+    public float getValue() {
         return this.value;
     }
 
@@ -185,7 +185,7 @@ public class Stats {
 
     @Override
     public String toString() {
-        return value;
+        return String.format("%.1f", value);
     }
 
     @Override
@@ -203,12 +203,12 @@ public class Stats {
         return csPerMinute.equals(otherStats.csPerMinute)
                 && goldDiffAt15.equals(otherStats.goldDiffAt15)
                 && kdaScores.equals(otherStats.kdaScores)
-                && value.equals(otherStats.value);
+                && Float.compare(value, otherStats.value) == 0;
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Float.hashCode(value);
     }
 
     /**
@@ -234,14 +234,14 @@ public class Stats {
     /**
      * Computes the average of all recorded scores and returns it formatted to one decimal place.
      */
-    private String calculateAverageScore() {
+    private float calculateAverageScore() {
         if (scores.isEmpty()) {
-            return "0.0";
+            return 0.0F;
         }
         double total = scores.stream()
                 .reduce(0.0, Double::sum);
 
         double avg = total / scores.size();
-        return String.format("%.1f", avg);
+        return (float) avg;
     }
 }

@@ -30,7 +30,7 @@ public class StatsTest {
     @Test
     void defaultConstructor_initialState() {
         Stats stats = new Stats();
-        assertEquals("0.0", stats.getValue());
+        assertEquals(0.0, stats.getValue());
         assertTrue(stats.getCsPerMinute().isEmpty());
         assertTrue(stats.getGoldDiffAt15().isEmpty());
         assertTrue(stats.getKdaScores().isEmpty());
@@ -76,14 +76,14 @@ public class StatsTest {
         assertEquals(1, s1.getKdaScores().size());
         assertEquals(1, s1.getScores().size());
         double e1 = expectedScore(7, 1000, 2.2f);
-        assertEquals(fmt1(e1), s1.getValue());
+        assertEquals((float) e1, s1.getValue());
 
         // Second record
         Stats s2 = s1.addLatestStats("4", "-200", "0.7");
         assertNotEquals(s1, s2);
         assertEquals(2, s2.getCsPerMinute().size());
         double e2avg = (e1 + expectedScore(4, -200, 0.7f)) / 2.0;
-        assertEquals(fmt1(e2avg), s2.getValue());
+        assertEquals((float) e2avg, s2.getValue());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class StatsTest {
         Stats s1 = s0.deleteLatestStats();
         // Equal by content; toString/value should match; equals compares lists+value
         assertEquals(s0, s1);
-        assertEquals("0.0", s1.getValue());
+        assertEquals(0.0, s1.getValue());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class StatsTest {
         Stats s3 = s2.deleteLatestStats(); // should remove e2
         assertEquals(1, s3.getScores().size());
         double e1 = expectedScore(7, 1000, 2.2f);
-        assertEquals(fmt1(e1), s3.getValue());
+        assertEquals((float) e1, s3.getValue());
     }
 
     // Getters (defensive copies)

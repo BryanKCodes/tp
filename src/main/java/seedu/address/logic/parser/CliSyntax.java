@@ -14,5 +14,5 @@ public class CliSyntax {
     public static final Prefix PREFIX_CPM = new Prefix("cpm/");
     public static final Prefix PREFIX_GD15 = new Prefix("gd15/");
     public static final Prefix PREFIX_KDA = new Prefix("kda/");
-
+    public static final Prefix PREFIX_SCORE = new Prefix("s/");
 }
