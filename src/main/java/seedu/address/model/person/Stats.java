@@ -58,9 +58,9 @@ public class Stats {
     }
 
     /**
-     * Internal constructor used for updating stats immutably.
+     * Constructor used for updating stats immutably.
      */
-    private Stats(ArrayList<Integer> csPerMinute,
+    public Stats(ArrayList<Integer> csPerMinute,
                   ArrayList<Integer> goldDiffAt15,
                   ArrayList<Float> kdaScores,
                   ArrayList<Double> scores) {
@@ -146,7 +146,7 @@ public class Stats {
         }
 
         // Check gd15 constraint
-        if (y < -10.000 || y > 10.000) {
+        if (y < -10000 || y > 10000) {
             return false;
         }
 

@@ -25,7 +25,7 @@ public class Person {
     private final Role role;
     private final Rank rank;
     private final Champion champion;
-    private final Stats stats = new Stats(); // no need to initialize
+    private final Stats stats; // dummy data
     private final Set<Tag> tags = new HashSet<>();
 
     /**
@@ -61,8 +61,22 @@ public class Person {
         this.rank = rank;
         this.champion = champion;
         this.tags.addAll(tags);
+        this.stats = new Stats()
+                .updateStats("7", "1000", "2.2")
+                .updateStats("4", "-200", "0.7")
+                .updateStats("9", "1200", "2.0");
     }
 
+    public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags, Stats stats) {
+        requireAllNonNull(id, name, role, rank, champion, tags);
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.rank = rank;
+        this.champion = champion;
+        this.tags.addAll(tags);
+        this.stats = stats;
+    }
     public String getId() {
         return id;
     }
@@ -89,6 +103,10 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    public Stats getStats() {
+        return this.stats;
     }
 
     /**
