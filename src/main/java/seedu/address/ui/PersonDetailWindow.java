@@ -95,6 +95,7 @@ public class PersonDetailWindow extends UiPart<Stage> {
      * @param person The person to display.
      */
     public void setPerson(Person person) {
+        assert person != null;
         this.person = person;
         loadPersonDetails();
     }
@@ -103,10 +104,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
      * Loads and displays the person's details.
      */
     private void loadPersonDetails() {
-        if (person == null) {
-            return;
-        }
-
         // Display basic information
         nameLabel.setText(person.getName().fullName);
         roleLabel.setText("Role: " + person.getRole().value);
