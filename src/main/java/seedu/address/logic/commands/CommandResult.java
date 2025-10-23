@@ -3,7 +3,6 @@ package seedu.address.logic.commands;
 import java.util.Objects;
 import java.util.Optional;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.team.Team;
 
 /**
@@ -37,7 +36,15 @@ public class CommandResult {
         this(feedbackToUser, false, false, false, null);
     }
 
-
+    /**
+     * Full constructor used internally.
+     *
+     * @param feedbackToUser message for the result display
+     * @param showHelp whether to show help window
+     * @param exit whether to exit the app
+     * @param showTeamStats whether to show team stats window
+     * @param teamToShow team entity to display (nullable)
+     */
     public CommandResult(String feedbackToUser,
                          boolean showHelp,
                          boolean exit,
@@ -50,7 +57,13 @@ public class CommandResult {
         this.teamToShow = teamToShow;
     }
 
-    // NEW helper factory for team stats
+    /**
+     * Factory method to create a result that opens the Team stats window.
+     *
+     * @param message feedback line for the result display
+     * @param team team to show
+     * @return a {@code CommandResult} configured to show the Team stats window
+     */
     public static CommandResult showTeamStats(String message, Team team) {
         return new CommandResult(message, false, false, true, team);
     }
@@ -101,11 +114,9 @@ public class CommandResult {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("feedbackToUser", feedbackToUser)
-                .add("showHelp", showHelp)
-                .add("exit", exit)
-                .toString();
+        return CommandResult.class.getCanonicalName()
+                + "{feedbackToUser=" + feedbackToUser
+                + ", showHelp=" + showHelp
+                + ", exit=" + exit + "}";
     }
-
 }
