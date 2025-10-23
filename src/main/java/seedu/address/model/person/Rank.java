@@ -118,8 +118,7 @@ public class Rank implements Comparable<Rank> {
                 return rankName.getOrder();
             }
         }
-        assert false : "Valid rank should always be found in RankName enum";
-        return 0; // Default to lowest if not found
+        throw new AssertionError("Valid rank should always be found in RankName enum");
     }
 
 }
