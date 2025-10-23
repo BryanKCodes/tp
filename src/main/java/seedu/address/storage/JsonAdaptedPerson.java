@@ -15,6 +15,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -32,6 +33,7 @@ class JsonAdaptedPerson {
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final int wins;
     private final int losses;
+    private final JsonAdaptedStats stats;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -44,7 +46,8 @@ class JsonAdaptedPerson {
                              @JsonProperty("champion") String champion,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags,
                              @JsonProperty("wins") int wins,
-                             @JsonProperty("losses") int losses) {
+                             @JsonProperty("losses") int losses,
+                             @JsonProperty("stats") JsonAdaptedStats stats) {
         this.id = id;
         this.name = name;
         this.role = role;
@@ -55,6 +58,7 @@ class JsonAdaptedPerson {
         }
         this.wins = wins;
         this.losses = losses;
+        this.stats = stats;
     }
 
     /**
@@ -71,6 +75,7 @@ class JsonAdaptedPerson {
                 .collect(Collectors.toList()));
         wins = source.getWins();
         losses = source.getLosses();
+        stats = new JsonAdaptedStats(source.getStats());
     }
 
     /**
@@ -124,7 +129,9 @@ class JsonAdaptedPerson {
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
-        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags, wins, losses);
+        Stats modelStats = stats != null ? stats.toModelType() : new Stats();
+
+        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags, wins, losses, modelStats);
     }
 
 }
