@@ -72,6 +72,18 @@ public class ImportCommand extends Command {
             throw new CommandException("Failed to import: " + e.getMessage());
         }
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof ImportCommand)) {
+            return false;
+        }
+        ImportCommand o = (ImportCommand) other;
+        return path.equals(o.path);
+    }
 }
 
 
