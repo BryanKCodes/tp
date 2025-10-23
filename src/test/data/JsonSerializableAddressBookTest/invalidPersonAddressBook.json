@@ -5,7 +5,13 @@
       "name": "Person with invalid name field: Ha!ns Mu@ster",
       "role": "jungle",
       "rank": "iron",
-      "champion": "Vi"
+      "champion": "Vi",
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     }
   ],
   "teams": []

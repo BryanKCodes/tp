@@ -115,6 +115,8 @@ public class TeamMatcher {
             }
 
             // Successfully formed a team
+            assert teamMembers.size() == TEAM_SIZE
+                : "Team should have exactly " + TEAM_SIZE + " members before creation";
             teams.add(new Team(teamMembers));
         }
 
@@ -157,5 +159,20 @@ public class TeamMatcher {
     private boolean hasChampionConflict(Person candidate, List<Person> selectedMembers) {
         return selectedMembers.stream()
                 .anyMatch(member -> candidate.getChampion().equals(member.getChampion()));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        // All TeamMatcher instances are equal since they have no state
+        return other instanceof TeamMatcher;
+    }
+
+    @Override
+    public int hashCode() {
+        // All instances return the same hash code since they're stateless
+        return TeamMatcher.class.hashCode();
     }
 }

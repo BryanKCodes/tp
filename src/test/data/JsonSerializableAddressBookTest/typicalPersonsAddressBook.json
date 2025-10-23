@@ -7,7 +7,13 @@
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
-      "tags": [ "friends" ]
+      "tags": [ "friends" ],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "5fd80efe-a7b4-4ed4-bbd1-f48e30bcac58",
@@ -15,7 +21,13 @@
       "role": "top",
       "rank": "silver",
       "champion": "Garen",
-      "tags": [ "owesMoney", "friends" ]
+      "tags": [ "owesMoney", "friends" ],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "ff55a1bb-7c29-49fa-9931-06483207fe23",
@@ -23,7 +35,13 @@
       "role": "jungle",
       "rank": "platinum",
       "champion": "Lee Sin",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "04ea32c7-9bce-460d-b42b-3fbaa6e0578c",
@@ -31,7 +49,13 @@
       "role": "adc",
       "rank": "gold",
       "champion": "Caitlyn",
-      "tags": [ "friends" ]
+      "tags": [ "friends" ],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "a2485a46-04ae-4cc0-b4a4-45444ed5ed94",
@@ -39,7 +63,13 @@
       "role": "support",
       "rank": "diamond",
       "champion": "Lulu",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "e861f4b6-9102-4665-9bc6-5d1d52c708e8",
@@ -47,7 +77,13 @@
       "role": "mid",
       "rank": "master",
       "champion": "Zed",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "59d18342-58f7-4708-a333-7860c4ab16d9",
@@ -55,7 +91,13 @@
       "role": "top",
       "rank": "iron",
       "champion": "Darius",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "ad25fd23-bd20-4dac-8365-db573c9b5ff4",
@@ -63,7 +105,13 @@
       "role": "support",
       "rank": "silver",
       "champion": "Leona",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     }
   ],
   "teams": []

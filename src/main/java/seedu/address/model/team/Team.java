@@ -18,7 +18,7 @@ import seedu.address.model.team.exceptions.InvalidTeamSizeException;
 /**
  * Represents a Team in the summoners book.
  * Guarantees: details are present and not null, field values are validated, immutable.
- * A team must have exactly 5 persons with unique roles (Top, Jungle, Mid, Bottom, Support).
+ * A team must have exactly 5 persons with unique roles (Top, Jungle, Mid, ADC, Support).
  */
 public class Team {
 
@@ -41,13 +41,17 @@ public class Team {
     // Data fields
     private final List<Person> persons;
 
+    // Stat fields
+    private final int wins;
+    private final int losses;
+
     /**
      * Constructor for creating a new Team with a randomly generated unique ID.
      *
      * @param persons List of 5 persons for the team.
      */
     public Team(List<Person> persons) {
-        this(UUID.randomUUID().toString(), persons);
+        this(UUID.randomUUID().toString(), persons, 0, 0);
     }
 
     /**
@@ -57,11 +61,13 @@ public class Team {
      * @param id      Unique identifier for the team.
      * @param persons List of 5 persons for the team.
      */
-    public Team(String id, List<Person> persons) {
+    public Team(String id, List<Person> persons, int wins, int losses) {
         requireAllNonNull(id, persons);
         validateTeamComposition(persons);
         this.id = id;
         this.persons = new ArrayList<>(persons);
+        this.wins = wins;
+        this.losses = losses;
     }
 
     /**
@@ -133,6 +139,14 @@ public class Team {
      */
     public List<Person> getPersons() {
         return new ArrayList<>(persons);
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getLosses() {
+        return losses;
     }
 
     /**
@@ -215,7 +229,6 @@ public class Team {
                 .map(Person::toString)
                 .collect(java.util.stream.Collectors.joining(", "));
         return new ToStringBuilder(this.getClass().getSimpleName())
-                .add("id", id)
                 .add("persons", personsString)
                 .toString();
     }

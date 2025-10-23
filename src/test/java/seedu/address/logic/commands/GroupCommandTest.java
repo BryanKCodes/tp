@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.teammatcher.TeamMatcher;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
@@ -122,46 +124,202 @@ public class GroupCommandTest {
         assertTrue(result.getFeedbackToUser().contains("Successfully created 2 team"));
     }
 
-    /**
-     * A Model stub that always provides unassigned players and tracks teams.
-     */
-    private class ModelStubWithUnassignedPlayers implements Model {
-        private final List<Person> unassignedPlayers;
-        private final List<Team> teamsAdded = new ArrayList<>();
+    @Test
+    public void constructor_withTeamMatcher_success() {
+        TeamMatcher teamMatcher = new TeamMatcher();
+        GroupCommand command = new GroupCommand(teamMatcher);
 
-        ModelStubWithUnassignedPlayers(List<Person> unassignedPlayers) {
-            requireNonNull(unassignedPlayers);
-            this.unassignedPlayers = new ArrayList<>(unassignedPlayers);
+        // Verify the command was created successfully
+        assertEquals(new GroupCommand(), command);
+    }
+
+    @Test
+    public void constructor_nullTeamMatcher_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new GroupCommand(null));
+    }
+
+    @Test
+    public void equals_sameObject_returnsTrue() {
+        GroupCommand command = new GroupCommand();
+        assertTrue(command.equals(command));
+    }
+
+    @Test
+    public void equals_null_returnsFalse() {
+        GroupCommand command = new GroupCommand();
+        assertFalse(command.equals(null));
+    }
+
+    @Test
+    public void equals_differentType_returnsFalse() {
+        GroupCommand command = new GroupCommand();
+        assertFalse(command.equals("not a command"));
+    }
+
+    @Test
+    public void equals_differentCommand_returnsFalse() {
+        GroupCommand command = new GroupCommand();
+        DeleteCommand deleteCommand = new DeleteCommand(null);
+        assertFalse(command.equals(deleteCommand));
+    }
+
+    @Test
+    public void equals_sameTeamMatcher_returnsTrue() {
+        TeamMatcher teamMatcher = new TeamMatcher();
+        GroupCommand command1 = new GroupCommand(teamMatcher);
+        GroupCommand command2 = new GroupCommand(teamMatcher);
+
+        assertTrue(command1.equals(command2));
+    }
+
+    @Test
+    public void equals_differentTeamMatcherInstances_returnsTrue() {
+        // Since TeamMatcher is stateless, different instances should be equal
+        TeamMatcher teamMatcher1 = new TeamMatcher();
+        TeamMatcher teamMatcher2 = new TeamMatcher();
+        GroupCommand command1 = new GroupCommand(teamMatcher1);
+        GroupCommand command2 = new GroupCommand(teamMatcher2);
+
+        assertTrue(command1.equals(command2));
+    }
+
+    @Test
+    public void hashCode_sameTeamMatcher_returnsSameHashCode() {
+        TeamMatcher teamMatcher = new TeamMatcher();
+        GroupCommand command1 = new GroupCommand(teamMatcher);
+        GroupCommand command2 = new GroupCommand(teamMatcher);
+
+        assertEquals(command1.hashCode(), command2.hashCode());
+    }
+
+    @Test
+    public void hashCode_differentTeamMatcherInstances_returnsSameHashCode() {
+        // Since TeamMatcher instances are equal (stateless), hashCodes should match
+        TeamMatcher teamMatcher1 = new TeamMatcher();
+        TeamMatcher teamMatcher2 = new TeamMatcher();
+        GroupCommand command1 = new GroupCommand(teamMatcher1);
+        GroupCommand command2 = new GroupCommand(teamMatcher2);
+
+        assertEquals(command1.hashCode(), command2.hashCode());
+    }
+
+    @Test
+    public void hashCode_consistentAcrossMultipleCalls_returnsTrue() {
+        GroupCommand command = new GroupCommand();
+        int firstHashCode = command.hashCode();
+        int secondHashCode = command.hashCode();
+
+        assertEquals(firstHashCode, secondHashCode);
+    }
+
+    @Test
+    public void execute_noTeamsFormed_throwsCommandException() {
+        // Create players but use a TeamMatcher that returns empty teams list
+        Person top = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Lee Sin").build();
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        List<Person> unassignedPlayers = Arrays.asList(top, jungle, mid, adc, support);
+        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(unassignedPlayers);
+
+        // Use a TeamMatcher that returns no teams
+        TeamMatcherStub teamMatcherStub = new TeamMatcherStub(new ArrayList<>());
+        GroupCommand command = new GroupCommand(teamMatcherStub);
+
+        CommandException exception = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        assertEquals(GroupCommand.MESSAGE_NO_TEAMS_FORMED, exception.getMessage());
+    }
+
+    /**
+     * A TeamMatcher stub that returns a predefined list of teams.
+     */
+    private class TeamMatcherStub extends TeamMatcher {
+        private final List<Team> teamsToReturn;
+
+        TeamMatcherStub(List<Team> teamsToReturn) {
+            this.teamsToReturn = teamsToReturn;
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersonList() {
-            return FXCollections.observableArrayList(unassignedPlayers);
+        public List<Team> matchTeams(List<Person> unassignedPersons) {
+            return teamsToReturn;
+        }
+    }
+
+    /**
+     * A default model stub that has all of the methods failing.
+     */
+    private class ModelStub implements Model {
+        @Override
+        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyUserPrefs getUserPrefs() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public GuiSettings getGuiSettings() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setGuiSettings(GuiSettings guiSettings) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Path getAddressBookFilePath() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setAddressBookFilePath(Path addressBookFilePath) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addPerson(Person person) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public void addTeam(Team team) {
-            teamsAdded.add(team);
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public boolean hasTeam(Team team) {
-            return teamsAdded.contains(team);
+        public void setAddressBook(ReadOnlyAddressBook newData) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public boolean isPersonInAnyTeam(Person person) {
-            return false;
-        }
-
-        @Override
-        public Optional<Person> findPersonByName(Name name) {
-            return Optional.empty();
+        public ReadOnlyAddressBook getAddressBook() {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public boolean hasPerson(Person person) {
-            return false;
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasTeam(Team team) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean isPersonInAnyTeam(Person person) {
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -171,11 +329,6 @@ public class GroupCommandTest {
 
         @Override
         public void deleteTeam(Team target) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void addPerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -190,53 +343,13 @@ public class GroupCommandTest {
         }
 
         @Override
-        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public ReadOnlyUserPrefs getUserPrefs() {
-            return null;
-        }
-
-        @Override
-        public GuiSettings getGuiSettings() {
-            return null;
-        }
-
-        @Override
-        public void setGuiSettings(GuiSettings guiSettings) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public Path getAddressBookFilePath() {
-            return null;
-        }
-
-        @Override
-        public void setAddressBookFilePath(Path addressBookFilePath) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setAddressBook(ReadOnlyAddressBook addressBook) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
-            return null;
-        }
-
-        @Override
         public ObservableList<Person> getFilteredPersonList() {
-            return null;
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public ObservableList<Team> getFilteredTeamList() {
-            return null;
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -247,6 +360,40 @@ public class GroupCommandTest {
         @Override
         public void updateFilteredTeamList(Predicate<Team> predicate) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findPersonByName(Name name) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            throw new AssertionError("This method should not be called.");
+        }
+    }
+
+    /**
+     * A Model stub that always provides unassigned players and tracks teams.
+     */
+    private class ModelStubWithUnassignedPlayers extends ModelStub {
+        final ArrayList<Team> teamsAdded = new ArrayList<>();
+        private final List<Person> unassignedPlayers;
+
+        ModelStubWithUnassignedPlayers(List<Person> unassignedPlayers) {
+            requireNonNull(unassignedPlayers);
+            this.unassignedPlayers = new ArrayList<>(unassignedPlayers);
+        }
+
+        @Override
+        public ObservableList<Person> getUnassignedPersons() {
+            return FXCollections.observableArrayList(unassignedPlayers);
+        }
+
+        @Override
+        public void addTeam(Team team) {
+            requireNonNull(team);
+            teamsAdded.add(team);
         }
     }
 }

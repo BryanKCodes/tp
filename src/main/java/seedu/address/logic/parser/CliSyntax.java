@@ -11,5 +11,8 @@ public class CliSyntax {
     public static final Prefix PREFIX_ROLE = new Prefix("rl/");
     public static final Prefix PREFIX_CHAMPION = new Prefix("c/");
     public static final Prefix PREFIX_TAG = new Prefix("t/");
+    public static final Prefix PREFIX_CPM = new Prefix("cpm/");
+    public static final Prefix PREFIX_GD15 = new Prefix("gd15/");
+    public static final Prefix PREFIX_KDA = new Prefix("kda/");
 
 }
