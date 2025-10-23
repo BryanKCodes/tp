@@ -36,7 +36,6 @@ public class MainWindow extends UiPart<Stage> {
     private TeamListPanel teamListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
-    private PersonDetailWindow personDetailWindow;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -72,7 +71,6 @@ public class MainWindow extends UiPart<Stage> {
         setAccelerators();
 
         helpWindow = new HelpWindow();
-        personDetailWindow = new PersonDetailWindow();
     }
 
     public Stage getPrimaryStage() {
@@ -158,15 +156,15 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Opens the person detail window for the specified person or focuses on it if it's already opened.
+     * Opens a new person detail window for the specified person.
+     * A new window is created for each call to ensure a clean UI state.
+     * This prevents UI issues that may arise from reusing the same window instance.
      */
     public void handlePersonDetail(Person person) {
-        personDetailWindow.setPerson(person);
-        if (!personDetailWindow.isShowing()) {
-            personDetailWindow.show();
-        } else {
-            personDetailWindow.focus();
-        }
+        // Create a new instance each time the command is called.
+        PersonDetailWindow newPersonDetailWindow = new PersonDetailWindow();
+        newPersonDetailWindow.setPerson(person);
+        newPersonDetailWindow.show(); // This will show the new stage.
     }
 
     void show() {
@@ -182,7 +180,6 @@ public class MainWindow extends UiPart<Stage> {
                 (int) primaryStage.getX(), (int) primaryStage.getY());
         logic.setGuiSettings(guiSettings);
         helpWindow.hide();
-        personDetailWindow.hide();
         primaryStage.hide();
     }
 
