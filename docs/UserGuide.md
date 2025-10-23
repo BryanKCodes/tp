@@ -295,7 +295,7 @@ Action               | Format
 **Filter players**   | `filter [rl/ROLE ...] [rk/RANK ...]`
 **Edit player**      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
 **Auto-group teams** | `group`
-**Manually create team** | `makegroup tn/TEAM_NAME n/PLAYER_1 ... n/PLAYER_5` 
+**Manually create team** | `makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
 **Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
 **Clear all entries**| `clear`
 **Exit**             | `exit`
