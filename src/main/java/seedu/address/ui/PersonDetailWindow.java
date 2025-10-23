@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -20,6 +19,37 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     private static final Logger logger = LogsCenter.getLogger(PersonDetailWindow.class);
     private static final String FXML = "PersonDetailWindow.fxml";
+
+    // Display constants
+    private static final int MAX_DISPLAYED_MATCHES = 10;
+    private static final int CHART_TITLE_FONT_SIZE = 14;
+    private static final int LINE_STROKE_WIDTH = 2;
+    private static final int DATA_POINT_INSET = 2;
+
+    // Color constants
+    private static final String COLOR_PERFORMANCE = "#4CAF50"; // Green - success/progress
+    private static final String COLOR_CS = "#2196F3"; // Blue - neutral/farming
+    private static final String COLOR_KDA = "#f44336"; // Red - kills/combat
+    private static final String COLOR_GOLD = "#FFD700"; // Gold/Yellow - intuitive for gold
+    private static final String COLOR_WHITE = "white";
+
+    // CSS style constants
+    private static final String STYLE_TEXT_FILL_WHITE = "-fx-text-fill: white;";
+    private static final String STYLE_TICK_LABEL_FILL_WHITE = "-fx-tick-label-fill: white;";
+    private static final String STYLE_BACKGROUND_TRANSPARENT = "-fx-background-color: transparent;";
+
+    // CSS selector constants
+    private static final String CSS_CHART_TITLE = ".chart-title";
+    private static final String CSS_AXIS_LABEL = ".axis-label";
+    private static final String CSS_CHART_SERIES_LINE = ".chart-series-line";
+    private static final String CSS_CHART_PLOT_BACKGROUND = ".chart-plot-background";
+
+    // Chart title constants
+    private static final String TITLE_NO_DATA = "No performance data available";
+    private static final String TITLE_PERFORMANCE = "Performance Score Over Time (Latest %d)";
+    private static final String TITLE_CS = "CS per Minute Over Time (Latest %d)";
+    private static final String TITLE_KDA = "KDA Over Time (Latest %d)";
+    private static final String TITLE_GOLD = "Gold Diff @15 Over Time (Latest %d)";
 
     @FXML
     private Label nameLabel;
@@ -111,6 +141,7 @@ public class PersonDetailWindow extends UiPart<Stage> {
      * Loads the stats graphs with the person's historical performance data.
      * Creates separate graphs for Performance Score, CS/min, KDA, and Gold Diff @15.
      * Each graph has an intuitive color: green for performance, blue for CS, red for KDA, yellow for gold.
+     * Only displays the latest matches (defined by MAX_DISPLAYED_MATCHES) for better readability.
      */
     private void loadStatsGraph() {
         ArrayList<Float> csPerMinute = person.getStats().getCsPerMinute();
@@ -119,75 +150,94 @@ public class PersonDetailWindow extends UiPart<Stage> {
         ArrayList<Double> scores = person.getStats().getScores();
 
         if (scores.isEmpty()) {
-            // No data to display
-            performanceChart.setTitle("No performance data available");
+            performanceChart.setTitle(TITLE_NO_DATA);
             return;
         }
 
-        // Load Performance Score chart (Green - success/progress)
-        performanceChart.getData().clear();
-        performanceChart.setTitle("Performance Score Over Time");
-        performanceChart.setLegendVisible(false);
-        XYChart.Series<Number, Number> scoreSeries = new XYChart.Series<>();
-        for (int i = 0; i < scores.size(); i++) {
-            scoreSeries.getData().add(new XYChart.Data<>(i + 1, scores.get(i)));
-        }
-        performanceChart.getData().add(scoreSeries);
-        applySeriesColor(performanceChart, "#4CAF50"); // Green
-        applyWhiteTextStyling(performanceChart);
+        int startIndex = calculateStartIndex(scores.size());
 
-        // Load CS per Minute chart (Blue - neutral/farming)
-        csChart.getData().clear();
-        csChart.setTitle("CS per Minute Over Time");
-        csChart.setLegendVisible(false);
-        XYChart.Series<Number, Number> csSeries = new XYChart.Series<>();
-        for (int i = 0; i < csPerMinute.size(); i++) {
-            csSeries.getData().add(new XYChart.Data<>(i + 1, csPerMinute.get(i)));
-        }
-        csChart.getData().add(csSeries);
-        applySeriesColor(csChart, "#2196F3"); // Blue
-        applyWhiteTextStyling(csChart);
+        loadChart(performanceChart, scores, startIndex, TITLE_PERFORMANCE, COLOR_PERFORMANCE);
+        loadChart(csChart, csPerMinute, startIndex, TITLE_CS, COLOR_CS);
+        loadChart(kdaChart, kdaScores, startIndex, TITLE_KDA, COLOR_KDA);
+        loadChart(goldChart, goldDiffAt15, startIndex, TITLE_GOLD, COLOR_GOLD);
+    }
 
-        // Load KDA chart (Red - kills/combat)
-        kdaChart.getData().clear();
-        kdaChart.setTitle("KDA Over Time");
-        kdaChart.setLegendVisible(false);
-        XYChart.Series<Number, Number> kdaSeries = new XYChart.Series<>();
-        for (int i = 0; i < kdaScores.size(); i++) {
-            kdaSeries.getData().add(new XYChart.Data<>(i + 1, kdaScores.get(i)));
-        }
-        kdaChart.getData().add(kdaSeries);
-        applySeriesColor(kdaChart, "#f44336"); // Red
-        applyWhiteTextStyling(kdaChart);
+    /**
+     * Calculates the starting index for displaying the last N matches.
+     *
+     * @param totalMatches The total number of matches available.
+     * @return The starting index for the data to display.
+     */
+    private static int calculateStartIndex(int totalMatches) {
+        return Math.max(0, totalMatches - MAX_DISPLAYED_MATCHES);
+    }
 
-        // Load Gold Diff @15 chart (Yellow/Gold - intuitive for gold)
-        goldChart.getData().clear();
-        goldChart.setTitle("Gold Diff @15 Over Time");
-        goldChart.setLegendVisible(false);
-        XYChart.Series<Number, Number> goldSeries = new XYChart.Series<>();
-        for (int i = 0; i < goldDiffAt15.size(); i++) {
-            goldSeries.getData().add(new XYChart.Data<>(i + 1, goldDiffAt15.get(i)));
+    /**
+     * Loads a chart with data, title, and color styling.
+     * This method consolidates all chart loading operations for better maintainability.
+     *
+     * @param chart The LineChart to populate.
+     * @param data The data to display in the chart.
+     * @param startIndex The starting index for data to display.
+     * @param titleFormat The title format string (should contain %d for MAX_DISPLAYED_MATCHES).
+     * @param color The color to apply to the chart line.
+     * @param <T> The type of data in the list (extends Number).
+     */
+    private static <T extends Number> void loadChart(
+            LineChart<Number, Number> chart,
+            ArrayList<T> data,
+            int startIndex,
+            String titleFormat,
+            String color) {
+        chart.getData().clear();
+        chart.setTitle(String.format(titleFormat, MAX_DISPLAYED_MATCHES));
+        chart.setLegendVisible(false);
+
+        XYChart.Series<Number, Number> series = createSeriesFromData(data, startIndex);
+        chart.getData().add(series);
+
+        applySeriesColor(chart, color);
+        applyWhiteTextStyling(chart);
+    }
+
+    /**
+     * Creates a chart series from the given data list starting from the specified index.
+     * This static utility method extracts the last N data points for visualization.
+     *
+     * @param dataList The list containing the data to be displayed.
+     * @param startIndex The starting index for extracting data.
+     * @param <T> The type of data in the list (extends Number).
+     * @return A new XYChart.Series populated with the data.
+     */
+    private static <T extends Number> XYChart.Series<Number, Number> createSeriesFromData(
+            ArrayList<T> dataList, int startIndex) {
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        for (int i = startIndex; i < dataList.size(); i++) {
+            series.getData().add(new XYChart.Data<>(i + 1, dataList.get(i)));
         }
-        goldChart.getData().add(goldSeries);
-        applySeriesColor(goldChart, "#FFD700"); // Gold/Yellow
-        applyWhiteTextStyling(goldChart);
+        return series;
     }
 
     /**
      * Applies a custom color to the line in a chart.
+     * This static utility method styles both the line and data points with the specified color.
      *
      * @param chart The LineChart to style.
      * @param color The hex color code (e.g., "#FFD700").
      */
-    private void applySeriesColor(LineChart<Number, Number> chart, String color) {
+    private static void applySeriesColor(LineChart<Number, Number> chart, String color) {
         chart.applyCss();
         chart.layout();
         for (XYChart.Series<Number, Number> series : chart.getData()) {
-            series.getNode().lookup(".chart-series-line").setStyle("-fx-stroke: " + color + "; -fx-stroke-width: 2px;");
+            String lineStyle = String.format("-fx-stroke: %s; -fx-stroke-width: %dpx;", color, LINE_STROKE_WIDTH);
+            series.getNode().lookup(CSS_CHART_SERIES_LINE).setStyle(lineStyle);
+
             // Style the data points (circles)
             for (XYChart.Data<Number, Number> data : series.getData()) {
                 if (data.getNode() != null) {
-                    data.getNode().setStyle("-fx-background-color: " + color + ", white; -fx-background-insets: 0, 2;");
+                    String pointStyle = String.format("-fx-background-color: %s, %s; -fx-background-insets: 0, %d;",
+                            color, COLOR_WHITE, DATA_POINT_INSET);
+                    data.getNode().setStyle(pointStyle);
                 }
             }
         }
@@ -195,32 +245,35 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Applies white text styling to chart title, axis labels, and tick labels.
+     * This static utility method ensures all text elements are visible on dark backgrounds.
      *
      * @param chart The LineChart to style.
      */
-    private void applyWhiteTextStyling(LineChart<Number, Number> chart) {
+    private static void applyWhiteTextStyling(LineChart<Number, Number> chart) {
         chart.applyCss();
         chart.layout();
 
         // Style the chart title
-        if (chart.lookup(".chart-title") != null) {
-            chart.lookup(".chart-title").setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        if (chart.lookup(CSS_CHART_TITLE) != null) {
+            String titleStyle = String.format("%s -fx-font-size: %dpx;",
+                    STYLE_TEXT_FILL_WHITE, CHART_TITLE_FONT_SIZE);
+            chart.lookup(CSS_CHART_TITLE).setStyle(titleStyle);
         }
 
-        // Style the X axis label
-        if (chart.lookup(".axis-label") != null) {
-            chart.getXAxis().lookup(".axis-label").setStyle("-fx-text-fill: white;");
-            chart.getYAxis().lookup(".axis-label").setStyle("-fx-text-fill: white;");
+        // Style the axis labels
+        if (chart.lookup(CSS_AXIS_LABEL) != null) {
+            chart.getXAxis().lookup(CSS_AXIS_LABEL).setStyle(STYLE_TEXT_FILL_WHITE);
+            chart.getYAxis().lookup(CSS_AXIS_LABEL).setStyle(STYLE_TEXT_FILL_WHITE);
         }
 
         // Style all tick labels on both axes
-        chart.getXAxis().setStyle("-fx-tick-label-fill: white;");
-        chart.getYAxis().setStyle("-fx-tick-label-fill: white;");
+        chart.getXAxis().setStyle(STYLE_TICK_LABEL_FILL_WHITE);
+        chart.getYAxis().setStyle(STYLE_TICK_LABEL_FILL_WHITE);
 
         // Style axis lines and tick marks
-        chart.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent;");
-        chart.getXAxis().setStyle(chart.getXAxis().getStyle() + "-fx-tick-label-fill: white;");
-        chart.getYAxis().setStyle(chart.getYAxis().getStyle() + "-fx-tick-label-fill: white;");
+        chart.lookup(CSS_CHART_PLOT_BACKGROUND).setStyle(STYLE_BACKGROUND_TRANSPARENT);
+        chart.getXAxis().setStyle(chart.getXAxis().getStyle() + STYLE_TICK_LABEL_FILL_WHITE);
+        chart.getYAxis().setStyle(chart.getYAxis().getStyle() + STYLE_TICK_LABEL_FILL_WHITE);
     }
 
     /**
