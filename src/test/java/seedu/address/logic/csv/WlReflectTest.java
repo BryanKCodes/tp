@@ -8,7 +8,7 @@ class WlReflectTest {
 
     static class NoStats { } // no getWins()/getLosses()
 
-    static class WithStats {
+    static class WithStatsInt {
         public Integer getWins() {
             return 3;
         }
@@ -17,19 +17,28 @@ class WlReflectTest {
         }
     }
 
+    static class WithStatsString {
+        public String getWins() {
+            return "3";
+        } // not Integer -> default
+        public String getLosses() {
+            return "1";
+        } // not Integer -> default
+    }
+
     @Test
     void wins_missingMethod_returnsZero() {
         assertEquals(0, WlReflect.wins(new NoStats()));
     }
 
     @Test
-    void wins_presentMethod_returnsValue() {
-        assertEquals(3, WlReflect.wins(new WithStats()));
+    void wins_presentInteger_returnsValue() {
+        assertEquals(3, WlReflect.wins(new WithStatsInt()));
     }
 
     @Test
-    void losses_presentMethod_returnsValue() {
-        assertEquals(1, WlReflect.losses(new WithStats()));
+    void wins_presentNonInteger_returnsDefaultZero() {
+        assertEquals(0, WlReflect.wins(new WithStatsString()));
     }
 }
 

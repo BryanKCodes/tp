@@ -3,6 +3,8 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.nio.file.Paths;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.ExportCommand;
@@ -21,14 +23,26 @@ public class ExportCommandParserTest {
     }
 
     @Test
-    public void parse_teamsWithPath_success() throws Exception {
-        ExportCommand cmd = parser.parse("teams to/data/teams.csv");
-        assertEquals(new ExportCommand(Target.TEAMS, java.nio.file.Paths.get("data/teams.csv")), cmd);
-    }
-
-    @Test
     public void parse_invalidArg_throwsParseException() {
         assertThrows(ParseException.class, () -> parser.parse("invalid"));
     }
+
+    @Test
+    public void parse_playersUpperCase_success() throws Exception {
+        ExportCommand cmd = parser.parse("PLAYERS");
+        assertEquals(new ExportCommand(Target.PLAYERS, null), cmd);
+    }
+
+    @Test
+    public void parse_invalidExtraToken_throwsParseException() {
+        assertThrows(ParseException.class, () -> parser.parse("players somethingElse"));
+    }
+
+    @Test
+    public void parse_teamsWithPath_success() throws Exception {
+        ExportCommand cmd = parser.parse("teams to/data/t.csv");
+        assertEquals(new ExportCommand(Target.TEAMS, Paths.get("data/t.csv")), cmd);
+    }
+
 }
 

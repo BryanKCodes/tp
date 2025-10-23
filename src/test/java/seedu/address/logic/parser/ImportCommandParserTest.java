@@ -21,6 +21,12 @@ public class ImportCommandParserTest {
     }
 
     @Test
+    public void parse_validCaseInsensitive_success() throws Exception {
+        ImportCommand cmd = parser.parse("PLAYERS FROM data/players.csv");
+        assertEquals(new ImportCommand(Paths.get("data/players.csv")), cmd);
+    }
+
+    @Test
     public void parse_invalid_throwsParseException() {
         assertThrows(ParseException.class, () -> parser.parse("players data/players.csv"));
     }
