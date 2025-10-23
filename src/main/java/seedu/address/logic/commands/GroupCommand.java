@@ -56,7 +56,7 @@ public class GroupCommand extends Command {
         requireNonNull(model);
 
         // Get all unassigned persons
-        List<Person> unassignedPersons = model.getUnassignedPersons();
+        List<Person> unassignedPersons = model.getUnassignedPersonList();
         int initialUnassignedCount = unassignedPersons.size();
 
         if (unassignedPersons.isEmpty()) {

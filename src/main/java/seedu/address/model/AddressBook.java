@@ -99,17 +99,6 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Returns a list of persons who are not currently in any team.
-     * @return List of unassigned persons.
-     */
-    public List<Person> getUnassignedPersons() {
-        return persons.asUnmodifiableObservableList()
-                .stream()
-                .filter(person -> !teams.isPersonInAnyTeam(person))
-                .toList();
-    }
-
-    /**
      * Adds a person to the address book.
      * The person must not already exist in the address book.
      */
@@ -195,6 +184,16 @@ public class AddressBook implements ReadOnlyAddressBook {
     public ObservableList<Team> getTeamList() {
         return teams.asUnmodifiableObservableList();
     }
+
+    /**
+     * Returns an observable list of persons who are not currently in any team.
+     * @return Observable list of unassigned persons.
+     */
+    public ObservableList<Person> getUnassignedPersonList() {
+        return persons.asUnmodifiableObservableList()
+                .filtered(person -> !teams.isPersonInAnyTeam(person));
+    }
+
 
     @Override
     public boolean equals(Object other) {
