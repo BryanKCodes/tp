@@ -8,6 +8,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -26,6 +27,7 @@ public class PersonBuilder {
     private Rank rank;
     private Champion champion;
     private Set<Tag> tags;
+    private Stats stats;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -36,6 +38,7 @@ public class PersonBuilder {
         rank = new Rank(DEFAULT_RANK);
         champion = new Champion(DEFAULT_CHAMPION);
         tags = new HashSet<>();
+        stats = new Stats();
     }
 
     /**
@@ -86,6 +89,14 @@ public class PersonBuilder {
      */
     public PersonBuilder withChampion(String champion) {
         this.champion = new Champion(champion);
+        return this;
+    }
+
+    /**
+     * Sets the {@code Stats} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withStats(Stats stats) {
+        this.stats = stats;
         return this;
     }
 

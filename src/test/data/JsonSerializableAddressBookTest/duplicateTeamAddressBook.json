@@ -6,7 +6,13 @@
       "role": "top",
       "rank": "gold",
       "champion": "Garen",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "b2f3d4e5-f6a7-4890-bcde-2345678901bc",
@@ -14,7 +20,13 @@
       "role": "jungle",
       "rank": "platinum",
       "champion": "Lee Sin",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "c3f4e5d6-a7b8-4901-cdef-3456789012cd",
@@ -22,7 +34,13 @@
       "role": "mid",
       "rank": "diamond",
       "champion": "Ahri",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "d4f5e6c7-b8c9-5012-def0-4567890123de",
@@ -30,7 +48,13 @@
       "role": "adc",
       "rank": "gold",
       "champion": "Jinx",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "e5f6d7b8-c9d0-5123-ef01-5678901234ef",
@@ -38,7 +62,13 @@
       "role": "support",
       "rank": "platinum",
       "champion": "Thresh",
-      "tags": []
+      "tags": [],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     }
   ],
   "teams": [ {

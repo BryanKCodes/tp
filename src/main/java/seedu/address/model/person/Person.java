@@ -67,6 +67,18 @@ public class Person {
                 .updateStats("9", "1200", "2.0");
     }
 
+    /**
+     * Constructor for creating a Person with an explicit ID.
+     * This is used for deserialization from JSON to preserve the original ID.
+     *
+     * @param id       Unique identifier for the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
+     * @param champion Champion of the person.
+     * @param tags     Set of tags associated with the person.
+     * @param stats    Performance stats associated with the person.
+     */
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags, Stats stats) {
         requireAllNonNull(id, name, role, rank, champion, tags);
         this.id = id;
@@ -148,7 +160,7 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, role, rank, champion, tags);
+        return Objects.hash(name, role, rank, champion, tags, stats);
     }
 
     @Override
