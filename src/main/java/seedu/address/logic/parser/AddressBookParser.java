@@ -25,6 +25,7 @@ import seedu.address.logic.commands.ListTeamCommand;
 import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.commands.UngroupCommand;
+import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -111,6 +112,9 @@ public class AddressBookParser {
 
         case LoseCommand.COMMAND_WORD:
             return new LoseCommandParser().parse(arguments);
+
+        case ViewCommand.COMMAND_WORD:
+            return new ViewCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);
