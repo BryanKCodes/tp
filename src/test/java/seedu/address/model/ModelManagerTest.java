@@ -149,17 +149,17 @@ public class ModelManagerTest {
     }
 
     @Test
-    public void getUnassignedPersons_noTeams_returnsAllPersons() {
+    public void getUnassignedPersonList_noTeams_returnsAllPersons() {
         modelManager.addPerson(ALICE);
         modelManager.addPerson(BENSON);
 
-        assertEquals(2, modelManager.getUnassignedPersons().size());
-        assertTrue(modelManager.getUnassignedPersons().contains(ALICE));
-        assertTrue(modelManager.getUnassignedPersons().contains(BENSON));
+        assertEquals(2, modelManager.getUnassignedPersonList().size());
+        assertTrue(modelManager.getUnassignedPersonList().contains(ALICE));
+        assertTrue(modelManager.getUnassignedPersonList().contains(BENSON));
     }
 
     @Test
-    public void getUnassignedPersons_someInTeam_returnsOnlyUnassigned() {
+    public void getUnassignedPersonList_someInTeam_returnsOnlyUnassigned() {
         // Add all persons for TEAM_A (ALICE, BENSON, CARL, DANIEL, ELLE)
         modelManager.addPerson(ALICE);
         modelManager.addPerson(BENSON);
@@ -172,10 +172,10 @@ public class ModelManagerTest {
         modelManager.addTeam(TEAM_A);
 
         // Only george should be unassigned
-        assertEquals(1, modelManager.getUnassignedPersons().size());
-        assertTrue(modelManager.getUnassignedPersons().contains(george));
-        assertFalse(modelManager.getUnassignedPersons().contains(ALICE));
-        assertFalse(modelManager.getUnassignedPersons().contains(BENSON));
+        assertEquals(1, modelManager.getUnassignedPersonList().size());
+        assertTrue(modelManager.getUnassignedPersonList().contains(george));
+        assertFalse(modelManager.getUnassignedPersonList().contains(ALICE));
+        assertFalse(modelManager.getUnassignedPersonList().contains(BENSON));
     }
 
     @Test

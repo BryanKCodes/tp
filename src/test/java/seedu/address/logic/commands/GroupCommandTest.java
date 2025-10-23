@@ -135,7 +135,7 @@ public class GroupCommandTest {
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersons() {
+        public ObservableList<Person> getUnassignedPersonList() {
             return FXCollections.observableArrayList(unassignedPlayers);
         }
 
