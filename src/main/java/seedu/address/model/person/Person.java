@@ -25,6 +25,7 @@ public class Person {
     private final Role role;
     private final Rank rank;
     private final Champion champion;
+    private final Stats stats = new Stats(); // no need to initialize
     private final Set<Tag> tags = new HashSet<>();
 
     /**
