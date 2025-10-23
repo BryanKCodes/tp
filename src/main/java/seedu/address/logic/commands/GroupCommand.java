@@ -82,6 +82,7 @@ public class GroupCommand extends Command {
 
         // Calculate remaining unassigned players
         int playersUsed = teams.size() * Team.TEAM_SIZE;
+        assert playersUsed <= initialUnassignedCount : "Matcher should not use more players than available";
         int remainingPlayers = initialUnassignedCount - playersUsed;
 
         // Format the success message
@@ -95,6 +96,7 @@ public class GroupCommand extends Command {
      * Each team is displayed on a separate line with its number and members.
      */
     private String formatTeams(List<Team> teams) {
+        assert !teams.isEmpty() : "formatTeams should only be called with non-empty teams list";
         return IntStream.range(0, teams.size())
                 .mapToObj(i -> String.format("Team %d: %s", i + 1, teams.get(i).toDisplayString()))
                 .collect(Collectors.joining("\n"));

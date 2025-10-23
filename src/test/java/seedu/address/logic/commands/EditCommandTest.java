@@ -15,12 +15,8 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
-import static seedu.address.testutil.TypicalPersons.CARL;
-import static seedu.address.testutil.TypicalPersons.DANIEL;
-import static seedu.address.testutil.TypicalPersons.ELLE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
-
-import java.util.Arrays;
+import static seedu.address.testutil.TypicalTeams.getTypicalAddressBookWithTeams;
 
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +31,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TeamBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditCommand.
@@ -155,16 +152,87 @@ public class EditCommandTest {
     }
 
     @Test
-    public void execute_personInTeam_throwsCommandException() {
-        Model modelWithTeam = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-        Team team = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
-        modelWithTeam.addTeam(team);
+    public void execute_editPersonInTeam_updatesTeamAndPersonSuccessfully() {
+        Model modelWithTeams = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
 
-        // ALICE is at index 0 in the typical address book, try to edit her name
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        Person personToEdit = ALICE;
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withName("Alice Edited")
+                .withRank("Diamond")
+                .build();
 
-        assertCommandFailure(editCommand, modelWithTeam, Messages.MESSAGE_PERSON_IN_TEAM);
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        EditCommand editCommand = new EditCommand(Index.fromOneBased(1), descriptor);
+
+        Team originalTeam = modelWithTeams.getFilteredTeamList().get(0);
+        Team expectedTeam = new TeamBuilder(originalTeam)
+                .replacePerson(personToEdit, editedPerson)
+                .build();
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+                Messages.format(editedPerson));
+
+        Model expectedModel = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
+        expectedModel.setPerson(personToEdit, editedPerson);
+        expectedModel.setTeam(originalTeam, expectedTeam);
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+
+        assertCommandSuccess(editCommand, modelWithTeams, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editPersonInTeamWithDuplicateRole_throwsCommandException() {
+        Model modelWithTeams = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
+
+        Person personToEdit = ALICE;
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withRole(BENSON.getRole().toString())
+                .build();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        EditCommand editCommand = new EditCommand(Index.fromOneBased(1), descriptor);
+        String expectedMessage = "Operation would result in duplicate roles in the team. "
+                + ALICE.getName() + " and " + BENSON.getName() + " both have the role: "
+                + editedPerson.getRole();
+
+        assertCommandFailure(editCommand, modelWithTeams, expectedMessage);
+    }
+
+    @Test
+    public void execute_editPersonInTeamWithDuplicateChampion_throwsCommandException() {
+        Model modelWithTeams = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
+
+        Person personToEdit = ALICE;
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withChampion(BENSON.getChampion().toString())
+                .build();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        EditCommand editCommand = new EditCommand(Index.fromOneBased(1), descriptor);
+        String expectedMessage = "Operation would result in duplicate champions in the team. "
+                + ALICE.getName() + " and " + BENSON.getName() + " both play: "
+                + editedPerson.getChampion();
+
+        assertCommandFailure(editCommand, modelWithTeams, expectedMessage);
+    }
+
+    @Test
+    public void execute_editPersonNotInAnyTeam_onlyUpdatesPerson() {
+        Model model = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
+        Person nonTeamPerson = new PersonBuilder().withName("Teamless Player").withRole("mid").withChampion("Ahri")
+                .build();
+        model.addPerson(nonTeamPerson);
+
+        Person editedPerson = new PersonBuilder(nonTeamPerson).withRank("Diamond").build();
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        EditCommand editCommand = new EditCommand(Index.fromOneBased(model.getFilteredPersonList().size()), descriptor);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(nonTeamPerson, editedPerson);
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
 
     @Test

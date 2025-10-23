@@ -19,6 +19,13 @@ public class JsonAdaptedTeamTest {
     private static final List<Person> ALL_PERSONS = TypicalPersons.getTypicalPersons();
     private static final List<Team> ALL_TEAMS = TypicalTeams.getTypicalTeams();
 
+    private static final String DUMMY_ID = "";
+    private static final int DUMMY_WINS = 0;
+    private static final int DUMMY_LOSSES = 0;
+
+    // Only invalid as it does not match any of the team's player's IDs
+    private static final String INVALID_PERSON_ID = "invalid-id-123";
+
     @Test
     public void toModelType_validTeamDetails_returnsTeam() throws Exception {
         JsonAdaptedTeam team = new JsonAdaptedTeam(TEAM_A);
@@ -30,10 +37,10 @@ public class JsonAdaptedTeamTest {
         List<String> invalidPersonIds = TEAM_A.getPersons().stream()
                 .map(Person::getId)
                 .collect(Collectors.toList());
-        invalidPersonIds.add("invalid-id-123");
+        invalidPersonIds.add(INVALID_PERSON_ID);
 
-        JsonAdaptedTeam team = new JsonAdaptedTeam(TEAM_A.getId(), invalidPersonIds);
-        String expectedMessage = "Invalid Person ID in Team: invalid-id-123";
+        JsonAdaptedTeam team = new JsonAdaptedTeam(DUMMY_ID, invalidPersonIds, DUMMY_WINS, DUMMY_LOSSES);
+        String expectedMessage = "Invalid Person ID in Team: " + INVALID_PERSON_ID;
         assertThrows(IllegalValueException.class, expectedMessage, () -> team.toModelType(ALL_PERSONS));
     }
 }

@@ -25,34 +25,55 @@ public class Person {
     private final Role role;
     private final Rank rank;
     private final Champion champion;
+    private final Stats stats;
     private final Set<Tag> tags = new HashSet<>();
+
+    // Stat fields
+    private final int wins;
+    private final int losses;
 
     /**
      * Constructor for creating a new Person with specified role, rank, and champion.
      * Generates a random UUID for the person.
      *
-     * @param name Name of the person.
-     * @param role Role of the person.
-     * @param rank Rank of the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
      * @param champion Champion of the person.
-     * @param tags Set of tags associated with the person.
+     * @param tags     Set of tags associated with the person.
      */
     public Person(Name name, Role role, Rank rank, Champion champion, Set<Tag> tags) {
-        this(UUID.randomUUID().toString(), name, role, rank, champion, tags);
+        this(UUID.randomUUID().toString(), name, role, rank, champion, tags, 0, 0);
+    }
+
+    /**
+     * Constructor for creating a new Person with specified role, rank, and champion.
+     * Generates a random UUID for the person.
+     *
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
+     * @param champion Champion of the person.
+     * @param tags     Set of tags associated with the person.
+     * @param stats    Performance stats of the person.
+     */
+    public Person(Name name, Role role, Rank rank, Champion champion, Set<Tag> tags,
+                  int wins, int losses, Stats stats) {
+        this(UUID.randomUUID().toString(), name, role, rank, champion, tags, wins, losses, stats);
     }
 
     /**
      * Constructor for creating a Person with an explicit ID.
      * This is used for deserialization from JSON to preserve the original ID.
      *
-     * @param id Unique identifier for the person.
-     * @param name Name of the person.
-     * @param role Role of the person.
-     * @param rank Rank of the person.
+     * @param id       Unique identifier for the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
      * @param champion Champion of the person.
-     * @param tags Set of tags associated with the person.
+     * @param tags     Set of tags associated with the person.
      */
-    public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags) {
+    public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags, int wins, int losses) {
         requireAllNonNull(id, name, role, rank, champion, tags);
         this.id = id;
         this.name = name;
@@ -60,6 +81,35 @@ public class Person {
         this.rank = rank;
         this.champion = champion;
         this.tags.addAll(tags);
+        this.wins = wins;
+        this.losses = losses;
+        this.stats = new Stats();
+    }
+
+    /**
+     * Constructor for creating a Person with an explicit ID.
+     * This is used for deserialization from JSON to preserve the original ID.
+     *
+     * @param id       Unique identifier for the person.
+     * @param name     Name of the person.
+     * @param role     Role of the person.
+     * @param rank     Rank of the person.
+     * @param champion Champion of the person.
+     * @param tags     Set of tags associated with the person.
+     * @param stats    Performance stats of the person.
+     */
+    public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags,
+                  int wins, int losses, Stats stats) {
+        requireAllNonNull(id, name, role, rank, champion, tags);
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.rank = rank;
+        this.champion = champion;
+        this.tags.addAll(tags);
+        this.wins = wins;
+        this.losses = losses;
+        this.stats = stats;
     }
 
     public String getId() {
@@ -88,6 +138,18 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public Stats getStats() {
+        return this.stats;
     }
 
     /**
@@ -129,7 +191,7 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, role, rank, champion, tags);
+        return Objects.hash(name, role, rank, champion, tags, stats);
     }
 
     @Override

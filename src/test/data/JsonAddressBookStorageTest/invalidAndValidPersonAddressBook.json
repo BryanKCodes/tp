@@ -4,13 +4,25 @@
     "role": "mid",
     "rank": "gold",
     "champion": "Ahri",
-    "tags": []
+    "tags": [],
+    "stats" : {
+      "csPerMinute" : [ ],
+      "goldDiffAt15" : [ ],
+      "kdaScores" : [ ],
+      "scores" : [ ]
+    }
   }, {
     "name": "Person With Invalid Phone Field",
     "role": "top",
     "rank": "silver",
     "champion": "Garen",
-    "tags": []
+    "tags": [],
+    "stats" : {
+      "csPerMinute" : [ ],
+      "goldDiffAt15" : [ ],
+      "kdaScores" : [ ],
+      "scores" : [ ]
+    }
   } ],
   "teams": []
 }

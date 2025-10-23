@@ -6,7 +6,13 @@
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
-      "tags": [ "friends" ]
+      "tags": [ "friends" ],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     },
     {
       "id": "6ec2d5ad-b84c-48f1-adc1-cac753f4d961",
@@ -14,7 +20,13 @@
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
-      "tags": [ "friends" ]
+      "tags": [ "friends" ],
+      "stats" : {
+        "csPerMinute" : [ ],
+        "goldDiffAt15" : [ ],
+        "kdaScores" : [ ],
+        "scores" : [ ]
+      }
     }
   ],
   "teams": []

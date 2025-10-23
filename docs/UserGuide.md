@@ -34,7 +34,7 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
    open the help window.<br>
    Some example commands you can try:
 
-    * `add n/Faker rk/Grandmaster rl/Bottom c/Sivir` — Adds a new player with a specified rank, role and champion.
+    * `add n/Faker rk/Grandmaster rl/ADC c/Sivir` — Adds a new player with a specified rank, role and champion.
     * `find rl/Support` — Filters the player list based on the role "Support".
     * `group` — Auto-creates balanced 5-player teams from unassigned players.
     * `viewteam 1` — Shows full details of the 1st team.
@@ -50,7 +50,7 @@ fast, SummonersBook helps you manage players and form balanced teams faster than
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
-  as `add n/Faker rk/Grandmaster rl/Bottom c/Sivir`.
+  as `add n/Faker rk/Grandmaster rl/ADC c/Sivir`.
 
 * Parameters are _**case-insensitive**_
 
@@ -88,7 +88,7 @@ Format:
 
 Examples:
 
-* `add n/Faker rk/Grandmaster rl/Bottom c/Sivir`
+* `add n/Faker rk/Grandmaster rl/ADC c/Sivir`
 * `add n/Imissher rk/Gold rl/Support c/Thresh`
 
 ### Listing all persons : `list`
@@ -199,6 +199,23 @@ Format:
 * Players are grouped to create teams with **similar ranks** whenever possible, balancing skill across teams.
 * Teams are automatically created until there are fewer than five unassigned players remaining.
 
+### Manually creating a team: `makegroup`
+
+Creates a new team with the specified players.
+
+**Format:**  
+`makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
+
+#### Rules & Notes
+- Each player must **already exist** in the player list.
+- Players **cannot already belong** to another team.
+- All five players must have **unique roles** (no duplicates).
+- If any player name is invalid or unavailable, the command will fail with a clear error message.
+
+#### Examples
+- `makegroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`  
+Creates a new team with those five members.
+
 
 ### Disbanding a team or all teams : `ungroup`
 
@@ -278,6 +295,7 @@ Action               | Format
 **Filter players**   | `filter [rl/ROLE ...] [rk/RANK ...]`
 **Edit player**      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
 **Auto-group teams** | `group`
+**Manually create team** | `makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
 **Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
 **Clear all entries**| `clear`
 **Exit**             | `exit`

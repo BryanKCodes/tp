@@ -51,10 +51,16 @@ public class MakeGroupCommandTest {
         CommandResult result = command.execute(modelStub);
 
         Team actualTeam = modelStub.teamsAdded.get(0); // the team that was added
-        assertEquals(String.format(MakeGroupCommand.MESSAGE_SUCCESS, actualTeam),
-                result.getFeedbackToUser());
+        // 1. Check that feedback to user uses pretty format
+        assertEquals(
+                String.format(MakeGroupCommand.MESSAGE_SUCCESS, seedu.address.logic.Messages.format(actualTeam)),
+                result.getFeedbackToUser()
+        );
 
-        // Compare team members using getPersons()
+        // 2. Check that the team was added to the model correctly
+        assertEquals(1, modelStub.teamsAdded.size());
+
+        // 3. Check that the correct persons were grouped into the team
         List<Person> actualPlayers = actualTeam.getPersons();
         assertTrue(players.containsAll(actualPlayers) && actualPlayers.containsAll(players));
     }
