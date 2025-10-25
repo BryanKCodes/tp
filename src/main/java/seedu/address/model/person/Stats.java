@@ -26,9 +26,9 @@ public class Stats {
      * Constraints message shown when invalid stat values are provided.
      */
     public static final String MESSAGE_CONSTRAINTS =
-            "CS per minute must be between 0 and 40; "
-                    + "Gold difference at 15m must be between -10,000 and 10,000; "
-                    + "KDA must be between 0 and 200.";
+            "CS per minute must be an integer between 0 and 40; "
+                    + "Gold difference at 15m must be a decimal between -10,000 and 10,000; "
+                    + "KDA must be a decimal between 0.0 and 200.0";
 
     /** The average score. */
     public final float value;
@@ -61,9 +61,9 @@ public class Stats {
      * Constructor used for updating stats immutably.
      */
     public Stats(ArrayList<Float> csPerMinute,
-                  ArrayList<Integer> goldDiffAt15,
-                  ArrayList<Float> kdaScores,
-                  ArrayList<Double> scores) {
+                 ArrayList<Integer> goldDiffAt15,
+                 ArrayList<Float> kdaScores,
+                 ArrayList<Double> scores) {
         this.csPerMinute = csPerMinute;
         this.goldDiffAt15 = goldDiffAt15;
         this.kdaScores = kdaScores;
@@ -218,11 +218,11 @@ public class Stats {
      */
     private double calculateScore(float cpm, int gd15, float kda) {
         // Normalize each metric
-        double kdaNorm = Math.min(kda / 8.0, 1.0);
+        double kdaNorm = Math.min(kda / 3.0, 1.0);
         double csNorm = Math.min(cpm / 10.0, 1.0);
 
         // Logistic scaling for gold difference
-        double gdNorm = 1.0 / (1.0 + Math.exp(-gd15 / 800.0));
+        double gdNorm = 1.0 / (1.0 + Math.exp(-gd15 / 500.0));
 
         // Weighted combination
         double score = 10.0 * (0.45 * kdaNorm + 0.35 * csNorm + 0.20 * gdNorm);
@@ -242,6 +242,6 @@ public class Stats {
                 .reduce(0.0, Double::sum);
 
         double avg = total / scores.size();
-        return (float) avg;
+        return (float) (Math.round(avg * 10.0) / 10.0);
     }
 }
