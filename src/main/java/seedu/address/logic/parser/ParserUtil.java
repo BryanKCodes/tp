@@ -175,6 +175,9 @@ public class ParserUtil {
             if (parsedScore <= 0.0f) {
                 throw new ParseException("Score must be a positive number.");
             }
+            if (parsedScore > 10.0f) {
+                throw new ParseException("Score must be at most 10.");
+            }
             return parsedScore;
         } catch (NumberFormatException e) {
             throw new ParseException("Score must be a valid number: " + trimmedScore);
