@@ -125,7 +125,7 @@ public class FilterCommand extends Command {
          * Returns true if at least one field is filtered.
          */
         public boolean isAnyFieldFiltered() {
-            return CollectionUtil.isAnyNonNull(roles, ranks, champions);
+            return CollectionUtil.isAnyNonNull(roles, ranks, champions, scoreThreshold);
         }
 
         /**
