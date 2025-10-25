@@ -202,7 +202,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersons() {
+        public ObservableList<Person> getUnassignedPersonList() {
             throw new AssertionError("This method should not be called.");
         }
     }

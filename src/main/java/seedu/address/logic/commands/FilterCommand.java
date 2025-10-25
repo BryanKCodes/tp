@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_CHAMPION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RANK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SCORE;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import seedu.address.model.person.Rank;
 import seedu.address.model.person.RankContainsKeywordsPredicate;
 import seedu.address.model.person.Role;
 import seedu.address.model.person.RoleContainsKeywordsPredicate;
+import seedu.address.model.person.ScoreInRangePredicate;
 
 /**
  * Edits the details of an existing person in the address book.
@@ -37,15 +39,18 @@ public class FilterCommand extends Command {
             + "[" + PREFIX_RANK + "RANK]... "
             + "[" + PREFIX_ROLE + "ROLE]... "
             + "[" + PREFIX_CHAMPION + "CHAMPION]... "
+            + "[" + PREFIX_SCORE + "SCORE] "
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_RANK + "Diamond "
-            + PREFIX_CHAMPION + "Yasuo";
+            + PREFIX_CHAMPION + "Yasuo"
+            + PREFIX_SCORE + "2.4";
 
     public static final String MESSAGE_NOT_FILTERED = "At least one field to filter must be provided.";
 
     private final RankContainsKeywordsPredicate rankPredicate;
     private final RoleContainsKeywordsPredicate rolePredicate;
     private final ChampionContainsKeywordsPredicate championPredicate;
+    private final ScoreInRangePredicate scorePredicate;
 
     private final FilterPersonDescriptor filterPersonDescriptor;
 
@@ -58,13 +63,14 @@ public class FilterCommand extends Command {
         this.rankPredicate = new RankContainsKeywordsPredicate(List.of(filterPersonDescriptor.getRanks()));
         this.rolePredicate = new RoleContainsKeywordsPredicate(List.of(filterPersonDescriptor.getRoles()));
         this.championPredicate = new ChampionContainsKeywordsPredicate(List.of(filterPersonDescriptor.getChampions()));
+        this.scorePredicate = new ScoreInRangePredicate(filterPersonDescriptor.getScoreThreshold());
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         model.updateFilteredPersonList(
-                rankPredicate.and(rolePredicate).and(championPredicate)
+                rankPredicate.and(rolePredicate).and(championPredicate).and(scorePredicate)
         );
         return new CommandResult(
                 String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, model.getFilteredPersonList().size()));
@@ -100,6 +106,7 @@ public class FilterCommand extends Command {
         private Set<Role> roles;
         private Set<Rank> ranks;
         private Set<Champion> champions;
+        private Float scoreThreshold = 0.0F;
 
         public FilterPersonDescriptor() {}
 
@@ -111,6 +118,7 @@ public class FilterCommand extends Command {
             setRoles(toCopy.roles);
             setRanks(toCopy.ranks);
             setChampions(toCopy.champions);
+            setScoreThreshold(toCopy.scoreThreshold);
         }
 
         /**
@@ -183,6 +191,14 @@ public class FilterCommand extends Command {
                     .toArray(String[]::new);
         }
 
+        public void setScoreThreshold(Float scoreThreshold) {
+            this.scoreThreshold = scoreThreshold;
+        }
+
+        public Float getScoreThreshold() {
+            return scoreThreshold;
+        }
+
         @Override
         public boolean equals(Object other) {
             if (other == this) {
@@ -197,7 +213,8 @@ public class FilterCommand extends Command {
             FilterPersonDescriptor otherFilterPersonDescriptor = (FilterPersonDescriptor) other;
             return Objects.equals(roles, otherFilterPersonDescriptor.roles)
                     && Objects.equals(ranks, otherFilterPersonDescriptor.ranks)
-                    && Objects.equals(champions, otherFilterPersonDescriptor.champions);
+                    && Objects.equals(champions, otherFilterPersonDescriptor.champions)
+                    && Objects.equals(scoreThreshold, otherFilterPersonDescriptor.scoreThreshold);
         }
 
         @Override
@@ -206,6 +223,7 @@ public class FilterCommand extends Command {
                     .add("roles", Arrays.toString(getRoles()))
                     .add("ranks", Arrays.toString(getRanks()))
                     .add("champions", Arrays.toString(getChampions()))
+                    .add("scoreThreshold", scoreThreshold != null ? scoreThreshold.toString() : "0.0")
                     .toString();
         }
     }

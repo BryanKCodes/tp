@@ -6,7 +6,9 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TEAM;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,14 +21,19 @@ import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.ExportCommand;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FilterCommand.FilterPersonDescriptor;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.GroupCommand;
 import seedu.address.logic.commands.HelpCommand;
+import seedu.address.logic.commands.ImportCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListTeamCommand;
+import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
+import seedu.address.logic.commands.ViewTeamCommand;
+import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -76,6 +83,18 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_export() throws Exception {
+        // no path -> default path inside command
+        ExportCommand expected1 = new ExportCommand(ExportCommand.Target.PLAYERS, null);
+        assertEquals(expected1, parser.parseCommand("export players"));
+
+        // with path
+        ExportCommand expected2 =
+                new ExportCommand(ExportCommand.Target.TEAMS, Paths.get("data/teams.csv"));
+        assertEquals(expected2, parser.parseCommand("export teams to/data/teams.csv"));
+    }
+
+    @Test
     public void parseCommand_find() throws Exception {
         List<String> keywords = Arrays.asList("foo", "bar", "baz");
         FindCommand command = (FindCommand) parser.parseCommand(
@@ -87,6 +106,13 @@ public class AddressBookParserTest {
     public void parseCommand_help() throws Exception {
         assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD) instanceof HelpCommand);
         assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD + " 3") instanceof HelpCommand);
+    }
+
+    @Test
+    public void parseCommand_import() throws Exception {
+        ImportCommand expected =
+                new ImportCommand(Paths.get("data/players.csv"));
+        assertEquals(expected, parser.parseCommand("import players from data/players.csv"));
     }
 
     @Test
@@ -126,6 +152,27 @@ public class AddressBookParserTest {
                 String.format(
                         MESSAGE_INVALID_COMMAND_FORMAT,
                         MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
+    }
+
+    @Test
+    public void parseCommand_viewteam_success() throws Exception {
+        ViewTeamCommand command = (ViewTeamCommand) parser.parseCommand(
+                ViewTeamCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new ViewTeamCommand(INDEX_FIRST_TEAM), command);
+    }
+
+    @Test
+    public void parseCommand_winCommand() throws Exception {
+        WinCommand command = (WinCommand) parser.parseCommand(
+                WinCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new WinCommand(INDEX_FIRST_TEAM), command);
+    }
+
+    @Test
+    public void parseCommand_loseCommand() throws Exception {
+        LoseCommand command = (LoseCommand) parser.parseCommand(
+                LoseCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new LoseCommand(INDEX_FIRST_TEAM), command);
     }
 
     @Test

@@ -4,7 +4,13 @@
     "role": "mid",
     "rank": "gold",
     "champion": "Ahri",
-    "tags": []
+    "tags": [],
+    "stats" : {
+      "csPerMinute" : [ ],
+      "goldDiffAt15" : [ ],
+      "kdaScores" : [ ],
+      "scores" : [ ]
+    }
   } ],
   "teams": []
 }
