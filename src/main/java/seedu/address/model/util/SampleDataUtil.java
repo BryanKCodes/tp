@@ -12,6 +12,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.team.Team;
 
@@ -21,214 +22,361 @@ import seedu.address.model.team.Team;
 public class SampleDataUtil {
     public static Person[] getSamplePersons() {
         return new Person[] {
-            new Person(new Name("Alice Pauline"), new Role("Mid"), new Rank("Gold"),
-                    new Champion("Ahri"), getTagSet("friends")),
-            new Person(new Name("Benson Meier"), new Role("Top"), new Rank("Silver"),
-                    new Champion("Garen"), getTagSet("owesMoney", "friends")),
-            new Person(new Name("Carl Kurz"), new Role("Jungle"), new Rank("Platinum"),
-                    new Champion("Lee sin"), getTagSet()),
-            new Person(new Name("Daniel Meier"), new Role("Adc"), new Rank("Gold"),
-                    new Champion("Caitlyn"), getTagSet("friends")),
-            new Person(new Name("Elle Meyer"), new Role("Support"), new Rank("Diamond"),
-                    new Champion("Lulu"), getTagSet()),
-            new Person(new Name("Fiona Kunz"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Zed"), getTagSet()),
-            new Person(new Name("George Best"), new Role("Top"), new Rank("Iron"),
-                    new Champion("Darius"), getTagSet()),
-            new Person(new Name("Hoon Meier"), new Role("Support"), new Rank("Silver"),
-                    new Champion("Leona"), getTagSet()),
-            new Person(new Name("Eva Martinez"), new Role("Jungle"), new Rank("Grandmaster"),
-                    new Champion("Fiora"), getTagSet()),
-            new Person(new Name("Tom Jackson"), new Role("Jungle"), new Rank("Grandmaster"),
-                    new Champion("Fiora"), getTagSet()),
-            new Person(new Name("Olivia Clark"), new Role("Jungle"), new Rank("Bronze"),
-                    new Champion("Cho'gath"), getTagSet()),
-            new Person(new Name("Grace Wilson"), new Role("Mid"), new Rank("Bronze"),
-                    new Champion("Neeko"), getTagSet()),
-            new Person(new Name("Leo Miller"), new Role("Top"), new Rank("Grandmaster"),
-                    new Champion("Brand"), getTagSet()),
-            new Person(new Name("Tina Thompson"), new Role("Mid"), new Rank("Platinum"),
-                    new Champion("Vladimir"), getTagSet()),
-            new Person(new Name("Zoe Moore"), new Role("Mid"), new Rank("Silver"),
-                    new Champion("Shen"), getTagSet()),
-            new Person(new Name("Jack Miller"), new Role("Jungle"), new Rank("Challenger"),
-                    new Champion("Leona"), getTagSet()),
-            new Person(new Name("Eva Miller"), new Role("Mid"), new Rank("Grandmaster"),
-                    new Champion("Braum"), getTagSet()),
-            new Person(new Name("Frank Wilson"), new Role("Adc"), new Rank("Master"),
-                    new Champion("Gnar"), getTagSet()),
-            new Person(new Name("Leo Taylor"), new Role("Mid"), new Rank("Gold"),
-                    new Champion("Jarvan iv"), getTagSet()),
-            new Person(new Name("Penny Thompson"), new Role("Jungle"), new Rank("Diamond"),
-                    new Champion("Yorick"), getTagSet()),
-            new Person(new Name("Alice Jackson"), new Role("Adc"), new Rank("Challenger"),
-                    new Champion("Renekton"), getTagSet()),
-            new Person(new Name("Paul Harris"), new Role("Top"), new Rank("Grandmaster"),
-                    new Champion("Neeko"), getTagSet()),
-            new Person(new Name("Grace Miller"), new Role("Support"), new Rank("Bronze"),
-                    new Champion("Ezreal"), getTagSet()),
-            new Person(new Name("Frank Harris"), new Role("Support"), new Rank("Diamond"),
-                    new Champion("Yuumi"), getTagSet()),
-            new Person(new Name("Penny Martin"), new Role("Adc"), new Rank("Iron"),
-                    new Champion("Milio"), getTagSet()),
-            new Person(new Name("Olivia Moore"), new Role("Jungle"), new Rank("Iron"),
-                    new Champion("Orianna"), getTagSet()),
-            new Person(new Name("Sophia Garcia"), new Role("Adc"), new Rank("Grandmaster"),
-                    new Champion("Rengar"), getTagSet()),
-            new Person(new Name("Lily Harris"), new Role("Mid"), new Rank("Iron"),
-                    new Champion("Rengar"), getTagSet()),
-            new Person(new Name("Ian Wilson"), new Role("Adc"), new Rank("Gold"),
-                    new Champion("Ornn"), getTagSet()),
-            new Person(new Name("Alex Smith"), new Role("Mid"), new Rank("Bronze"),
-                    new Champion("Graves"), getTagSet()),
-            new Person(new Name("Ryan Wilson"), new Role("Jungle"), new Rank("Bronze"),
-                    new Champion("Irelia"), getTagSet()),
-            new Person(new Name("Sophia Martinez"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Kayn"), getTagSet()),
-            new Person(new Name("David Taylor"), new Role("Top"), new Rank("Gold"),
-                    new Champion("Nilah"), getTagSet()),
-            new Person(new Name("Tina White"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Malzahar"), getTagSet()),
-            new Person(new Name("Ian Moore"), new Role("Support"), new Rank("Silver"),
-                    new Champion("Zoe"), getTagSet()),
-            new Person(new Name("Ben Martin"), new Role("Jungle"), new Rank("Gold"),
-                    new Champion("Mel"), getTagSet()),
-            new Person(new Name("Noah Harris"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Ryze"), getTagSet()),
-            new Person(new Name("Daisy Williams"), new Role("Jungle"), new Rank("Silver"),
-                    new Champion("Samira"), getTagSet()),
-            new Person(new Name("Penny Anderson"), new Role("Adc"), new Rank("Bronze"),
-                    new Champion("Urgot"), getTagSet()),
-            new Person(new Name("Ryan Martin"), new Role("Jungle"), new Rank("Silver"),
-                    new Champion("Alistar"), getTagSet()),
-            new Person(new Name("Max Williams"), new Role("Jungle"), new Rank("Diamond"),
-                    new Champion("Taric"), getTagSet()),
-            new Person(new Name("Olivia Brown"), new Role("Support"), new Rank("Iron"),
-                    new Champion("Braum"), getTagSet()),
-            new Person(new Name("Henry Williams"), new Role("Mid"), new Rank("Grandmaster"),
-                    new Champion("Kindred"), getTagSet()),
-            new Person(new Name("George Martinez"), new Role("Support"), new Rank("Gold"),
-                    new Champion("Fiddlesticks"), getTagSet()),
-            new Person(new Name("Kevin Thompson"), new Role("Mid"), new Rank("Challenger"),
-                    new Champion("Braum"), getTagSet()),
-            new Person(new Name("Henry Jackson"), new Role("Support"), new Rank("Silver"),
-                    new Champion("Olaf"), getTagSet()),
-            new Person(new Name("Mia Jackson"), new Role("Support"), new Rank("Challenger"),
-                    new Champion("Zilean"), getTagSet()),
-            new Person(new Name("Bella White"), new Role("Mid"), new Rank("Grandmaster"),
-                    new Champion("Katarina"), getTagSet()),
-            new Person(new Name("Lily Jackson"), new Role("Top"), new Rank("Bronze"),
-                    new Champion("Bel'veth"), getTagSet()),
-            new Person(new Name("Clara Miller"), new Role("Adc"), new Rank("Master"),
-                    new Champion("Aphelios"), getTagSet()),
-            new Person(new Name("Quinn Miller"), new Role("Mid"), new Rank("Grandmaster"),
-                    new Champion("Akali"), getTagSet()),
-            new Person(new Name("George White"), new Role("Top"), new Rank("Platinum"),
-                    new Champion("Sivir"), getTagSet()),
-            new Person(new Name("Oscar Wilson"), new Role("Top"), new Rank("Challenger"),
-                    new Champion("Karma"), getTagSet()),
-            new Person(new Name("Olivia Thompson"), new Role("Adc"), new Rank("Master"),
-                    new Champion("Master yi"), getTagSet()),
-            new Person(new Name("Ethan White"), new Role("Adc"), new Rank("Platinum"),
-                    new Champion("Yuumi"), getTagSet()),
-            new Person(new Name("Ryan White"), new Role("Adc"), new Rank("Iron"),
-                    new Champion("Draven"), getTagSet()),
-            new Person(new Name("Sam Martinez"), new Role("Jungle"), new Rank("Grandmaster"),
-                    new Champion("Yuumi"), getTagSet()),
-            new Person(new Name("Hannah Moore"), new Role("Mid"), new Rank("Silver"),
-                    new Champion("Aphelios"), getTagSet()),
-            new Person(new Name("Kevin Williams"), new Role("Support"), new Rank("Silver"),
-                    new Champion("Veigar"), getTagSet()),
-            new Person(new Name("Tom Wilson"), new Role("Mid"), new Rank("Challenger"),
-                    new Champion("Sona"), getTagSet()),
-            new Person(new Name("Kevin Davis"), new Role("Jungle"), new Rank("Bronze"),
-                    new Champion("Kennen"), getTagSet()),
-            new Person(new Name("Nora Martin"), new Role("Jungle"), new Rank("Grandmaster"),
-                    new Champion("Jax"), getTagSet()),
-            new Person(new Name("George Robinson"), new Role("Top"), new Rank("Platinum"),
-                    new Champion("Ekko"), getTagSet()),
-            new Person(new Name("Zoe Thompson"), new Role("Top"), new Rank("Bronze"),
-                    new Champion("Cassiopeia"), getTagSet()),
-            new Person(new Name("Fiona Miller"), new Role("Adc"), new Rank("Challenger"),
-                    new Champion("Rumble"), getTagSet()),
-            new Person(new Name("Kevin Harris"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Gangplank"), getTagSet()),
-            new Person(new Name("Ivy Davis"), new Role("Jungle"), new Rank("Silver"),
-                    new Champion("Sion"), getTagSet()),
-            new Person(new Name("Zoe Anderson"), new Role("Top"), new Rank("Silver"),
-                    new Champion("Vex"), getTagSet()),
-            new Person(new Name("Grace Martinez"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Vel'koz"), getTagSet()),
-            new Person(new Name("Tom Martinez"), new Role("Top"), new Rank("Bronze"),
-                    new Champion("Sivir"), getTagSet()),
-            new Person(new Name("Noah Davis"), new Role("Adc"), new Rank("Platinum"),
-                    new Champion("Hecarim"), getTagSet()),
-            new Person(new Name("Clara White"), new Role("Support"), new Rank("Gold"),
-                    new Champion("Zac"), getTagSet()),
-            new Person(new Name("Tina Jones"), new Role("Jungle"), new Rank("Silver"),
-                    new Champion("Braum"), getTagSet()),
-            new Person(new Name("Ivy Harris"), new Role("Top"), new Rank("Platinum"),
-                    new Champion("Fiora"), getTagSet()),
-            new Person(new Name("Clara Jones"), new Role("Support"), new Rank("Gold"),
-                    new Champion("Aatrox"), getTagSet()),
-            new Person(new Name("Ivy Wilson"), new Role("Support"), new Rank("Iron"),
-                    new Champion("Cho'gath"), getTagSet()),
-            new Person(new Name("Riley Wilson"), new Role("Support"), new Rank("Platinum"),
-                    new Champion("Sona"), getTagSet()),
-            new Person(new Name("Mia Thompson"), new Role("Jungle"), new Rank("Iron"),
-                    new Champion("Rek'sai"), getTagSet()),
-            new Person(new Name("Penny Jones"), new Role("Mid"), new Rank("Platinum"),
-                    new Champion("Zyra"), getTagSet()),
-            new Person(new Name("Alice Davis"), new Role("Adc"), new Rank("Iron"),
-                    new Champion("Talon"), getTagSet()),
-            new Person(new Name("Ethan Jackson"), new Role("Adc"), new Rank("Master"),
-                    new Champion("Senna"), getTagSet()),
-            new Person(new Name("Tom Davis"), new Role("Mid"), new Rank("Master"),
-                    new Champion("Tristana"), getTagSet()),
-            new Person(new Name("Grace Jackson"), new Role("Jungle"), new Rank("Silver"),
-                    new Champion("Pantheon"), getTagSet()),
-            new Person(new Name("Oscar Harris"), new Role("Jungle"), new Rank("Platinum"),
-                    new Champion("Jax"), getTagSet()),
-            new Person(new Name("Alex Thompson"), new Role("Jungle"), new Rank("Challenger"),
-                    new Champion("Zilean"), getTagSet()),
-            new Person(new Name("Ben Anderson"), new Role("Top"), new Rank("Master"),
-                    new Champion("Kindred"), getTagSet()),
-            new Person(new Name("Eva Jackson"), new Role("Adc"), new Rank("Master"),
-                    new Champion("Illaoi"), getTagSet()),
-            new Person(new Name("David Harris"), new Role("Adc"), new Rank("Silver"),
-                    new Champion("Qiyana"), getTagSet()),
-            new Person(new Name("Kevin Wilson"), new Role("Jungle"), new Rank("Platinum"),
-                    new Champion("Xin zhao"), getTagSet()),
-            new Person(new Name("Mia Garcia"), new Role("Top"), new Rank("Master"),
-                    new Champion("Qiyana"), getTagSet()),
-            new Person(new Name("Eva Clark"), new Role("Adc"), new Rank("Challenger"),
-                    new Champion("Volibear"), getTagSet()),
-            new Person(new Name("Eva Thomas"), new Role("Adc"), new Rank("Challenger"),
-                    new Champion("Vex"), getTagSet()),
-            new Person(new Name("Fiona Anderson"), new Role("Mid"), new Rank("Grandmaster"),
-                    new Champion("Akali"), getTagSet()),
-            new Person(new Name("Julie Smith"), new Role("Adc"), new Rank("Challenger"),
-                    new Champion("Leona"), getTagSet()),
-            new Person(new Name("Ben Jones"), new Role("Top"), new Rank("Diamond"),
-                    new Champion("Udyr"), getTagSet()),
-            new Person(new Name("Penny Smith"), new Role("Support"), new Rank("Iron"),
-                    new Champion("Kha'zix"), getTagSet()),
-            new Person(new Name("Ian Jackson"), new Role("Mid"), new Rank("Platinum"),
-                    new Champion("Azir"), getTagSet()),
-            new Person(new Name("Ethan Smith"), new Role("Top"), new Rank("Grandmaster"),
-                    new Champion("Nasus"), getTagSet()),
-            new Person(new Name("Oscar Williams"), new Role("Jungle"), new Rank("Iron"),
-                    new Champion("Tryndamere"), getTagSet()),
-            new Person(new Name("George Anderson"), new Role("Support"), new Rank("Silver"),
-                    new Champion("Leblanc"), getTagSet()),
-            new Person(new Name("Frank Martin"), new Role("Adc"), new Rank("Platinum"),
-                    new Champion("Bard"), getTagSet()),
-            new Person(new Name("Kate Brown"), new Role("Top"), new Rank("Master"),
-                    new Champion("Warwick"), getTagSet()),
-            new Person(new Name("Lily Anderson"), new Role("Support"), new Rank("Diamond"),
-                    new Champion("Akali"), getTagSet()),
-            new Person(new Name("Ben Brown"), new Role("Support"), new Rank("Gold"),
-                    new Champion("Ziggs"), getTagSet())
+            new Person(new Name("Faker"), new Role("mid"), new Rank("Diamond"),
+                    new Champion("Azir"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.4", "3400", "4.6")
+                            .addLatestStats("4.8", "1100", "4.8")
+                            .addLatestStats("8.9", "1850", "3.9")),
+            new Person(new Name("Oner"), new Role("jungle"), new Rank("Diamond"),
+                    new Champion("Xin zhao"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.5", "-1150", "5.7")
+                            .addLatestStats("7.4", "-3850", "4.8")
+                            .addLatestStats("4.4", "4950", "5.3")),
+            new Person(new Name("Gumayusi"), new Role("adc"), new Rank("Diamond"),
+                    new Champion("Xayah"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.9", "5000", "4.7")
+                            .addLatestStats("9.5", "3350", "6.9")
+                            .addLatestStats("6.5", "-1800", "5.4")),
+            new Person(new Name("Zeus"), new Role("top"), new Rank("Master"),
+                    new Champion("Jayce"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.5", "1600", "5.2")
+                            .addLatestStats("3.7", "2850", "6.3")
+                            .addLatestStats("10.3", "-2750", "3.6")),
+            new Person(new Name("Keria"), new Role("support"), new Rank("Challenger"),
+                    new Champion("Bard"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.5", "-200", "4.0")
+                            .addLatestStats("3.8", "-2450", "5.5")
+                            .addLatestStats("4.7", "1350", "4.7")),
+            new Person(new Name("Deft"), new Role("adc"), new Rank("Master"),
+                    new Champion("Caitlyn"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.8", "-2600", "5.9")
+                            .addLatestStats("10.7", "-2800", "6.5")
+                            .addLatestStats("3.7", "1000", "6.5")),
+            new Person(new Name("Chovy"), new Role("mid"), new Rank("Grandmaster"),
+                    new Champion("Yone"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.8", "-1650", "3.8")
+                            .addLatestStats("4.7", "-3500", "3.4")
+                            .addLatestStats("9.4", "3200", "4.4")),
+            new Person(new Name("ShowMaker"), new Role("mid"), new Rank("Challenger"),
+                    new Champion("Katarina"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.3", "150", "5.0")
+                            .addLatestStats("6.6", "650", "4.1")
+                            .addLatestStats("8.1", "-450", "6.4")),
+            new Person(new Name("Canyon"), new Role("jungle"), new Rank("Emerald"),
+                    new Champion("Aatrox"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.4", "2700", "3.5")
+                            .addLatestStats("3.9", "-250", "4.9")
+                            .addLatestStats("5.6", "2400", "5.7")),
+            new Person(new Name("Ruler"), new Role("adc"), new Rank("Platinum"),
+                    new Champion("Caitlyn"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.7", "3650", "3.9")
+                            .addLatestStats("5.6", "3450", "2.6")
+                            .addLatestStats("9.6", "50", "5.1")),
+            new Person(new Name("Scout"), new Role("mid"), new Rank("Gold"),
+                    new Champion("Kassadin"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("3.6", "-1450", "3.7")
+                            .addLatestStats("7.0", "-3250", "5.1")
+                            .addLatestStats("5.9", "-1400", "4.9")),
+            new Person(new Name("Knight"), new Role("mid"), new Rank("Silver"),
+                    new Champion("Zoe"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("10.1", "2550", "6.2")
+                            .addLatestStats("6.7", "-2900", "8.0")
+                            .addLatestStats("4.0", "-3800", "6.8")),
+            new Person(new Name("Meiko"), new Role("support"), new Rank("Bronze"),
+                    new Champion("Sona"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.3", "3500", "4.4")
+                            .addLatestStats("4.5", "-3650", "4.6")
+                            .addLatestStats("7.9", "900", "4.4")),
+            new Person(new Name("Peanut"), new Role("jungle"), new Rank("Grandmaster"),
+                    new Champion("Teemo"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.3", "1250", "4.7")
+                            .addLatestStats("3.9", "3900", "5.8")
+                            .addLatestStats("7.5", "-850", "6.8")),
+            new Person(new Name("Lehends"), new Role("support"), new Rank("Challenger"),
+                    new Champion("Blitzcrank"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.1", "800", "3.9")
+                            .addLatestStats("5.3", "2400", "3.8")
+                            .addLatestStats("5.1", "-1550", "6.1")),
+            new Person(new Name("Viper"), new Role("adc"), new Rank("Emerald"),
+                    new Champion("Ezreal"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.3", "-1800", "4.1")
+                            .addLatestStats("5.1", "-4750", "5.1")
+                            .addLatestStats("3.6", "3150", "4.4")),
+            new Person(new Name("Tarzan"), new Role("jungle"), new Rank("Platinum"),
+                    new Champion("Nasus"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.5", "50", "4.9")
+                            .addLatestStats("4.0", "1100", "3.9")
+                            .addLatestStats("5.0", "250", "6.5")),
+            new Person(new Name("Doinb"), new Role("mid"), new Rank("Gold"),
+                    new Champion("Yasuo"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.1", "700", "5.3")
+                            .addLatestStats("6.8", "-4450", "3.3")
+                            .addLatestStats("7.3", "-3000", "4.4")),
+            new Person(new Name("TheShy"), new Role("top"), new Rank("Silver"),
+                    new Champion("Darius"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.9", "0", "4.3")
+                            .addLatestStats("6.0", "4900", "5.3")
+                            .addLatestStats("9.3", "-850", "4.4")),
+            new Person(new Name("Rookie"), new Role("mid"), new Rank("Bronze"),
+                    new Champion("Talon"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.7", "-550", "4.5")
+                            .addLatestStats("6.8", "4800", "5.5")
+                            .addLatestStats("9.3", "2750", "5.2")),
+            new Person(new Name("Uzi"), new Role("adc"), new Rank("Iron"),
+                    new Champion("Ashe"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.4", "1300", "4.5")
+                            .addLatestStats("10.7", "2700", "6.0")
+                            .addLatestStats("5.9", "4000", "4.2")),
+            new Person(new Name("JackeyLove"), new Role("adc"), new Rank("Diamond"),
+                    new Champion("Jinx"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.0", "4950", "3.8")
+                            .addLatestStats("6.1", "-2350", "5.4")
+                            .addLatestStats("7.2", "900", "6.9")),
+            new Person(new Name("Ming"), new Role("support"), new Rank("Master"),
+                    new Champion("Nautilus"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.5", "1300", "5.1")
+                            .addLatestStats("4.5", "-2100", "5.1")
+                            .addLatestStats("7.7", "1250", "6.8")),
+            new Person(new Name("Karsa"), new Role("jungle"), new Rank("Grandmaster"),
+                    new Champion("Shen"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.6", "-1000", "5.2")
+                            .addLatestStats("7.3", "-1500", "3.6")
+                            .addLatestStats("8.8", "4300", "5.7")),
+            new Person(new Name("Baolan"), new Role("support"), new Rank("Challenger"),
+                    new Champion("Soraka"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.0", "-150", "5.6")
+                            .addLatestStats("8.3", "-5000", "6.2")
+                            .addLatestStats("6.6", "3150", "5.1")),
+            new Person(new Name("Clid"), new Role("jungle"), new Rank("Emerald"),
+                    new Champion("Renekton"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("3.7", "-1050", "7.0")
+                            .addLatestStats("4.3", "3050", "2.9")
+                            .addLatestStats("8.4", "-1150", "4.3")),
+            new Person(new Name("BeryL"), new Role("support"), new Rank("Platinum"),
+                    new Champion("Nami"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.4", "-4550", "5.1")
+                            .addLatestStats("6.4", "2650", "4.7")
+                            .addLatestStats("9.3", "4750", "4.5")),
+            new Person(new Name("Zeka"), new Role("mid"), new Rank("Gold"),
+                    new Champion("Syndra"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("4.8", "4100", "5.8")
+                            .addLatestStats("6.6", "1300", "6.1")
+                            .addLatestStats("9.8", "3750", "5.6")),
+            new Person(new Name("Gala"), new Role("adc"), new Rank("Silver"),
+                    new Champion("Vayne"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("4.8", "-50", "5.4")
+                            .addLatestStats("10.8", "3000", "6.7")
+                            .addLatestStats("8.5", "2100", "6.2")),
+            new Person(new Name("Wei"), new Role("jungle"), new Rank("Bronze"),
+                    new Champion("Tryndamere"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.7", "-300", "4.7")
+                            .addLatestStats("8.2", "1850", "7.3")
+                            .addLatestStats("10.6", "-750", "6.7")),
+            new Person(new Name("Crisp"), new Role("support"), new Rank("Iron"),
+                    new Champion("Janna"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.0", "4700", "6.1")
+                            .addLatestStats("9.2", "4400", "3.1")
+                            .addLatestStats("9.3", "4050", "2.2")),
+            new Person(new Name("Lwx"), new Role("adc"), new Rank("Master"),
+                    new Champion("Caitlyn"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.8", "-250", "5.1")
+                            .addLatestStats("6.4", "1700", "5.2")
+                            .addLatestStats("8.6", "4950", "5.2")),
+            new Person(new Name("FoFo"), new Role("mid"), new Rank("Grandmaster"),
+                    new Champion("Galio"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.8", "-2600", "4.6")
+                            .addLatestStats("7.3", "3400", "8.1")
+                            .addLatestStats("9.7", "3850", "4.9")),
+            new Person(new Name("Maple"), new Role("mid"), new Rank("Challenger"),
+                    new Champion("Ahri"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.5", "4200", "5.3")
+                            .addLatestStats("5.2", "4150", "4.1")
+                            .addLatestStats("8.1", "4300", "7.4")),
+            new Person(new Name("SwordArt"), new Role("support"), new Rank("Emerald"),
+                    new Champion("Thresh"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.0", "3150", "6.0")
+                            .addLatestStats("5.5", "4800", "4.8")
+                            .addLatestStats("7.6", "4050", "3.6")),
+            new Person(new Name("Hanabi"), new Role("top"), new Rank("Platinum"),
+                    new Champion("Riven"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("10.5", "2800", "4.1")
+                            .addLatestStats("9.9", "4350", "5.6")
+                            .addLatestStats("5.3", "4450", "5.0")),
+            new Person(new Name("River"), new Role("jungle"), new Rank("Gold"),
+                    new Champion("Aatrox"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.5", "750", "3.9")
+                            .addLatestStats("3.6", "3900", "3.0")
+                            .addLatestStats("8.8", "-2600", "4.5")),
+            new Person(new Name("CoreJJ"), new Role("support"), new Rank("Silver"),
+                    new Champion("Rakan"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.8", "-3250", "5.6")
+                            .addLatestStats("9.7", "-4100", "6.7")
+                            .addLatestStats("7.8", "2850", "4.5")),
+            new Person(new Name("Bjergsen"), new Role("mid"), new Rank("Bronze"),
+                    new Champion("Annie"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.6", "4350", "4.6")
+                            .addLatestStats("5.1", "-750", "3.8")
+                            .addLatestStats("4.4", "1050", "6.5")),
+            new Person(new Name("Doublelift"), new Role("adc"), new Rank("Iron"),
+                    new Champion("Xayah"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.9", "4750", "4.9")
+                            .addLatestStats("10.7", "4200", "6.5")
+                            .addLatestStats("4.8", "-4100", "3.7")),
+            new Person(new Name("Sneaky"), new Role("adc"), new Rank("Diamond"),
+                    new Champion("Ezreal"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("4.0", "-600", "5.9")
+                            .addLatestStats("7.8", "-2950", "4.9")
+                            .addLatestStats("4.9", "-3200", "4.3")),
+            new Person(new Name("Meteos"), new Role("jungle"), new Rank("Master"),
+                    new Champion("Teemo"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("10.6", "-1350", "5.6")
+                            .addLatestStats("10.1", "4800", "4.6")
+                            .addLatestStats("5.2", "-1300", "3.7")),
+            new Person(new Name("Impact"), new Role("top"), new Rank("Grandmaster"),
+                    new Champion("Malphite"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("3.6", "-4650", "6.1")
+                            .addLatestStats("7.4", "-250", "3.1")
+                            .addLatestStats("3.7", "2400", "5.3")),
+            new Person(new Name("Xmithie"), new Role("jungle"), new Rank("Challenger"),
+                    new Champion("Nasus"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.6", "-4650", "5.6")
+                            .addLatestStats("6.3", "2350", "4.6")
+                            .addLatestStats("6.9", "-4300", "7.0")),
+            new Person(new Name("Aphromoo"), new Role("support"), new Rank("Emerald"),
+                    new Champion("Lulu"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("10.3", "300", "6.6")
+                            .addLatestStats("6.4", "1900", "5.8")
+                            .addLatestStats("5.1", "3450", "6.3")),
+            new Person(new Name("Blaber"), new Role("jungle"), new Rank("Platinum"),
+                    new Champion("Shen"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.1", "300", "4.9")
+                            .addLatestStats("6.6", "-3950", "4.6")
+                            .addLatestStats("9.1", "-3300", "5.2")),
+            new Person(new Name("Vulcan"), new Role("support"), new Rank("Gold"),
+                    new Champion("Sona"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.8", "3850", "4.2")
+                            .addLatestStats("6.3", "4450", "4.7")
+                            .addLatestStats("6.2", "1500", "7.3")),
+            new Person(new Name("Zven"), new Role("support"), new Rank("Silver"),
+                    new Champion("Leona"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.9", "4000", "6.2")
+                            .addLatestStats("6.7", "-4200", "5.6")
+                            .addLatestStats("10.3", "600", "5.4")),
+            new Person(new Name("Spica"), new Role("jungle"), new Rank("Bronze"),
+                    new Champion("Renekton"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("10.3", "-2450", "4.4")
+                            .addLatestStats("8.3", "-2050", "5.8")
+                            .addLatestStats("7.8", "4050", "3.7")),
+            new Person(new Name("Inspired"), new Role("jungle"), new Rank("Iron"),
+                    new Champion("Tryndamere"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("4.4", "2200", "1.9")
+                            .addLatestStats("5.3", "-750", "4.2")
+                            .addLatestStats("7.3", "2050", "5.3")),
+            new Person(new Name("Untara"), new Role("top"), new Rank("Grandmaster"),
+                    new Champion("Teemo"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("9.1", "-2250", "4.9")
+                            .addLatestStats("3.9", "-2750", "3.3")
+                            .addLatestStats("6.8", "-3950", "3.3")),
+            new Person(new Name("Kiin"), new Role("top"), new Rank("Challenger"),
+                    new Champion("K'sante"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("8.7", "-4100", "5.4")
+                            .addLatestStats("10.3", "-3400", "4.5")
+                            .addLatestStats("4.5", "-4950", "4.3")),
+            new Person(new Name("Morgan"), new Role("top"), new Rank("Emerald"),
+                    new Champion("Renekton"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.9", "2200", "5.1")
+                            .addLatestStats("6.5", "-3150", "3.7")
+                            .addLatestStats("8.4", "3150", "2.9")),
+            new Person(new Name("Doran"), new Role("top"), new Rank("Platinum"),
+                    new Champion("Malphite"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("7.4", "2350", "4.5")
+                            .addLatestStats("6.7", "1500", "4.5")
+                            .addLatestStats("9.7", "850", "5.1")),
+            new Person(new Name("Ireking"), new Role("top"), new Rank("Gold"),
+                    new Champion("Irelia"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.0", "-1700", "4.8")
+                            .addLatestStats("6.7", "1400", "6.6")
+                            .addLatestStats("3.6", "-1550", "4.5")),
+            new Person(new Name("Adam"), new Role("top"), new Rank("Silver"),
+                    new Champion("Garen"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.9", "4600", "5.2")
+                            .addLatestStats("9.5", "-4750", "4.1")
+                            .addLatestStats("5.5", "-300", "6.4")),
+            new Person(new Name("Kingen"), new Role("top"), new Rank("Bronze"),
+                    new Champion("Aatrox"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("6.7", "-4350", "4.6")
+                            .addLatestStats("6.0", "-3250", "6.0")
+                            .addLatestStats("4.8", "3550", "6.3")),
+            new Person(new Name("Driver"), new Role("top"), new Rank("Iron"),
+                    new Champion("Sion"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("5.5", "-1150", "5.8")
+                            .addLatestStats("6.8", "-4750", "4.9")
+                            .addLatestStats("9.0", "-200", "5.4")),
+            new Person(new Name("Bwipbo"), new Role("top"), new Rank("Diamond"),
+                    new Champion("Mordekaiser"), getTagSet(), 0, 0,
+                    new Stats()
+                            .addLatestStats("4.4", "-1550", "5.5")
+                            .addLatestStats("8.5", "-3850", "4.7")
+                            .addLatestStats("9.8", "-2800", "4.9")),
+
         };
     }
 
