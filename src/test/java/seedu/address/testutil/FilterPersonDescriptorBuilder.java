@@ -51,6 +51,17 @@ public class FilterPersonDescriptorBuilder {
         return this;
     }
 
+    /**
+     * Sets the score threshold for this descriptor.
+     * @param scoreThreshold the minimum score threshold to filter by; may be {@code null}
+     *                       if no score filter is applied
+     * @return this builder instance for method chaining
+     */
+    public FilterPersonDescriptorBuilder withScoreThreshold(Float scoreThreshold) {
+        descriptor.setScoreThreshold(scoreThreshold);
+        return this;
+    }
+
     public FilterPersonDescriptor build() {
         return descriptor;
     }

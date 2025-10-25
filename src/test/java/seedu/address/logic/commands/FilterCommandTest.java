@@ -83,7 +83,9 @@ public class FilterCommandTest {
 
     @Test
     public void descriptor_isAnyFieldFiltered_correctlyDetects() {
-        FilterPersonDescriptor empty = new FilterPersonDescriptorBuilder().build();
+        FilterPersonDescriptor empty = new FilterPersonDescriptorBuilder()
+                .withScoreThreshold(null)
+                .build();
         assertFalse(empty.isAnyFieldFiltered());
 
         FilterPersonDescriptor filled = new FilterPersonDescriptorBuilder()

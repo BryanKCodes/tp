@@ -172,8 +172,8 @@ public class ParserUtil {
 
         try {
             float parsedScore = Float.parseFloat(trimmedScore);
-            if (parsedScore < 0.0f) {
-                throw new ParseException("Score cannot be negative.");
+            if (parsedScore <= 0.0f) {
+                throw new ParseException("Score must be a positive number.");
             }
             return parsedScore;
         } catch (NumberFormatException e) {
