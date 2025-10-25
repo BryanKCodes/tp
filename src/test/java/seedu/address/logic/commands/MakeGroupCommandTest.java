@@ -273,7 +273,7 @@ public class MakeGroupCommandTest {
         }
 
         @Override
-        public ObservableList<Person> getUnassignedPersons() {
+        public ObservableList<Person> getUnassignedPersonList() {
             return null;
         }
     }

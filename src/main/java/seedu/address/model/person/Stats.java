@@ -30,8 +30,8 @@ public class Stats {
                     + "Gold difference at 15m must be a decimal between -10,000 and 10,000; "
                     + "KDA must be a decimal between 0.0 and 200.0";
 
-    /** The average score (formatted as 0.0). */
-    public final Float value;
+    /** The average score. */
+    public final float value;
 
     /** Historical list of CS per minute values recorded. */
     public final ArrayList<Float> csPerMinute;
@@ -185,7 +185,7 @@ public class Stats {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return String.format("%.1f", value);
     }
 
     @Override
@@ -203,12 +203,12 @@ public class Stats {
         return csPerMinute.equals(otherStats.csPerMinute)
                 && goldDiffAt15.equals(otherStats.goldDiffAt15)
                 && kdaScores.equals(otherStats.kdaScores)
-                && value.equals(otherStats.value);
+                && Float.compare(value, otherStats.value) == 0;
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Float.hashCode(value);
     }
 
     /**

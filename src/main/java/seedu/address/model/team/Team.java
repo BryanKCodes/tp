@@ -18,7 +18,7 @@ import seedu.address.model.team.exceptions.InvalidTeamSizeException;
 /**
  * Represents a Team in the summoners book.
  * Guarantees: details are present and not null, field values are validated, immutable.
- * A team must have exactly 5 persons with unique roles (Top, Jungle, Mid, Bottom, Support).
+ * A team must have exactly 5 persons with unique roles (Top, Jungle, Mid, ADC, Support).
  */
 public class Team {
 

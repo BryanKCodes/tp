@@ -56,7 +56,7 @@ public class GroupCommand extends Command {
         requireNonNull(model);
 
         // Get all unassigned persons
-        List<Person> unassignedPersons = model.getUnassignedPersons();
+        List<Person> unassignedPersons = model.getUnassignedPersonList();
         int initialUnassignedCount = unassignedPersons.size();
 
         if (unassignedPersons.isEmpty()) {
@@ -104,7 +104,20 @@ public class GroupCommand extends Command {
 
     @Override
     public boolean equals(Object other) {
-        return other == this
-                || (other instanceof GroupCommand);
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof GroupCommand)) {
+            return false;
+        }
+
+        GroupCommand otherCommand = (GroupCommand) other;
+        return teamMatcher.equals(otherCommand.teamMatcher);
+    }
+
+    @Override
+    public int hashCode() {
+        return teamMatcher.hashCode();
     }
 }

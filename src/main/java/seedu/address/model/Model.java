@@ -72,12 +72,6 @@ public interface Model {
     boolean isPersonInAnyTeam(Person person);
 
     /**
-     * Returns an unmodifiable view of the list of persons who are not currently in any team.
-     * @return List of unassigned persons.
-     */
-    ObservableList<Person> getUnassignedPersons();
-
-    /**
      * Deletes the given person.
      * The person must exist in the address book.
      */
@@ -128,6 +122,9 @@ public interface Model {
 
     /** Returns an unmodifiable view of the filtered team list */
     ObservableList<Team> getFilteredTeamList();
+
+    /** Returns an unmodifiable view of the unassigned person list */
+    ObservableList<Person> getUnassignedPersonList();
 
     /**
      * Updates the filter of the filtered person list to filter by the given {@code predicate}.

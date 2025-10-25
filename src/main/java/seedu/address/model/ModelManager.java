@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
@@ -108,13 +107,6 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public ObservableList<Person> getUnassignedPersons() {
-        return FXCollections.unmodifiableObservableList(
-                FXCollections.observableArrayList(addressBook.getUnassignedPersons())
-        );
-    }
-
-    @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
     }
@@ -203,6 +195,17 @@ public class ModelManager implements Model {
     public void updateFilteredTeamList(Predicate<Team> predicate) {
         requireNonNull(predicate);
         filteredTeams.setPredicate(predicate);
+    }
+
+    //=========== Unassigned Person List Accessors ===============================================================
+
+    /**
+     * Returns an unmodifiable view of the list of unassigned {@code Person} backed by the internal list of
+     * {@code versionedAddressBook}
+     */
+    @Override
+    public ObservableList<Person> getUnassignedPersonList() {
+        return addressBook.getUnassignedPersonList();
     }
 
     //=========== Equals ======================================================================================
