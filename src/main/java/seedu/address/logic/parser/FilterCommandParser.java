@@ -105,7 +105,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
     /**
      * Parses {@code Collection<String> scores} into a {@code Float} if {@code scores} is non-empty.
-     * If {@code scores} contain only one element which is an empty string, it will be ignored.
+     * If {@code scores} contain only one element which is an empty string, it will be parsed as empty.
      * Only the first score is considered; others are ignored.
      */
     private Optional<Float> parseScoreForFilter(Collection<String> scores) throws ParseException {
@@ -115,16 +115,16 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             return Optional.empty();
         }
 
-        String scoreStr = scores.iterator().next().trim();
-        if (scoreStr.isEmpty()) {
+        Collection<String> scoreSet = scores.size() == 1 && scores.contains("")
+                ? Collections.emptySet()
+                : scores;
+
+        if (scoreSet.isEmpty()) {
             return Optional.empty();
         }
 
-        try {
-            float score = Float.parseFloat(scoreStr);
-            return Optional.of(score);
-        } catch (NumberFormatException e) {
-            throw new ParseException("Score must be a valid number: " + scoreStr);
-        }
+        // Use ParserUtil for validation and parsing
+        String firstScore = scoreSet.iterator().next();
+        return Optional.of(ParserUtil.parseScore(firstScore));
     }
 }
