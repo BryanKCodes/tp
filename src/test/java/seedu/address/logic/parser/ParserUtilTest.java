@@ -274,4 +274,50 @@ public class ParserUtilTest {
 
         assertEquals(expectedTagSet, actualTagSet);
     }
+
+    @Test
+    public void parseScore_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseScore(null));
+    }
+
+    @Test
+    public void parseScore_emptyOrWhitespace_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore(""));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("   "));
+    }
+
+    @Test
+    public void parseScore_validScores_success() throws Exception {
+        assertEquals(0.1f, ParserUtil.parseScore("0.1"));
+        assertEquals(1f, ParserUtil.parseScore("1"));
+        assertEquals(5.5f, ParserUtil.parseScore("5.5"));
+        assertEquals(10f, ParserUtil.parseScore("10"));
+    }
+
+    @Test
+    public void parseScore_validScoresWithWhitespace_success() throws Exception {
+        assertEquals(3.5f, ParserUtil.parseScore("   3.5  "));
+        assertEquals(10f, ParserUtil.parseScore("\t10\n"));
+    }
+
+    @Test
+    public void parseScore_invalidScores_throwsParseException() {
+        // Zero is not allowed
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("0"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("0.0"));
+
+        // Negative numbers are not allowed
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("-0.1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("-5"));
+
+        // Numbers above 10 are not allowed
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("10.1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("11"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("100"));
+
+        // Non-numeric strings are not allowed
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("abc"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("5a"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseScore("!@#"));
+    }
 }

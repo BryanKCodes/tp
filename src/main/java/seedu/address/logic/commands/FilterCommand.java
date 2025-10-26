@@ -26,7 +26,15 @@ import seedu.address.model.person.RoleContainsKeywordsPredicate;
 import seedu.address.model.person.ScoreInRangePredicate;
 
 /**
- * Edits the details of an existing person in the address book.
+ * Filters the list of persons in the address book based on the specified criteria:
+ * ranks, roles, champions, and/or score threshold. Only persons matching all
+ * provided criteria will be included in the filtered list.
+ *
+ * <p>At least one filter criterion must be specified. If no criteria are provided,
+ * a {@code ParseException} is thrown when parsing the command.
+ *
+ * <p>The filtered list is updated in the model, and the command returns a summary
+ * message indicating the number of persons found.
  */
 public class FilterCommand extends Command {
 
@@ -125,7 +133,9 @@ public class FilterCommand extends Command {
          * Returns true if at least one field is filtered.
          */
         public boolean isAnyFieldFiltered() {
-            return CollectionUtil.isAnyNonNull(roles, ranks, champions);
+            boolean hasOtherFilters = CollectionUtil.isAnyNonNull(roles, ranks, champions);
+            boolean hasScoreFilter = scoreThreshold != null && scoreThreshold > 0.0F;
+            return hasOtherFilters || hasScoreFilter;
         }
 
         /**

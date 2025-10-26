@@ -156,4 +156,31 @@ public class ParserUtil {
         }
         return roleSet;
     }
+
+    /**
+     * Parses a {@code String score} into a {@code Float}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code score} is invalid (not a float or negative).
+     */
+    public static Float parseScore(String score) throws ParseException {
+        requireNonNull(score);
+        String trimmedScore = score.trim();
+        if (trimmedScore.isEmpty()) {
+            throw new ParseException("Score cannot be empty.");
+        }
+
+        try {
+            float parsedScore = Float.parseFloat(trimmedScore);
+            if (parsedScore <= 0.0f) {
+                throw new ParseException("Score must be a positive number.");
+            }
+            if (parsedScore > 10.0f) {
+                throw new ParseException("Score must be at most 10.");
+            }
+            return parsedScore;
+        } catch (NumberFormatException e) {
+            throw new ParseException("Score must be a valid number: " + trimmedScore);
+        }
+    }
 }
