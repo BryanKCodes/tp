@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddStatsCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.DeleteStatsCommand;
@@ -121,6 +122,8 @@ public class AddressBookParserTest {
         FilterPersonDescriptor descriptor = new FilterPersonDescriptorBuilder()
                 .withChampions("annie", "leblanc").build();
         assertTrue(parser.parseCommand(FilterCommand.COMMAND_WORD + " rk/gold") instanceof FilterCommand);
+        assertEquals(parser.parseCommand(FilterCommand.COMMAND_WORD + " c/annie c/leblanc"),
+                new FilterCommand(descriptor));
     }
 
     @Test
@@ -180,6 +183,13 @@ public class AddressBookParserTest {
     public void parseCommand_deleteStatsCommand() throws Exception {
         String input = DeleteStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased();
         assertTrue(parser.parseCommand(input) instanceof DeleteStatsCommand);
+    }
+
+    @Test
+    public void parseCommand_addStatsCommand() throws Exception {
+        String input = AddStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
+                + " " + "cpm/10.2 gd15/2000 kda/2.2";
+        assertTrue(parser.parseCommand(input) instanceof AddStatsCommand);
     }
 
     @Test
