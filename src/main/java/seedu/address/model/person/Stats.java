@@ -61,9 +61,9 @@ public class Stats {
      * Constructor used for updating stats immutably.
      */
     public Stats(ArrayList<Float> csPerMinute,
-                  ArrayList<Integer> goldDiffAt15,
-                  ArrayList<Float> kdaScores,
-                  ArrayList<Double> scores) {
+                 ArrayList<Integer> goldDiffAt15,
+                 ArrayList<Float> kdaScores,
+                 ArrayList<Double> scores) {
         this.csPerMinute = csPerMinute;
         this.goldDiffAt15 = goldDiffAt15;
         this.kdaScores = kdaScores;
