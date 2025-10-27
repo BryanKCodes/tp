@@ -16,6 +16,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Person;
 
 /**
  * The main JavaFX window that provides the overall UI layout for the application.
@@ -162,6 +163,18 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
+    /**
+     * Opens a new person detail window for the specified person.
+     * A new window is created for each call to ensure a clean UI state.
+     * This prevents UI issues that may arise from reusing the same window instance.
+     */
+    public void handlePersonDetail(Person person) {
+        // Create a new instance each time the command is called.
+        PersonDetailWindow newPersonDetailWindow = new PersonDetailWindow();
+        newPersonDetailWindow.setPerson(person);
+        newPersonDetailWindow.show(); // This will show the new stage.
+    }
+
     void show() {
         primaryStage.show();
     }
@@ -216,6 +229,10 @@ public class MainWindow extends UiPart<Stage> {
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
+            }
+
+            if (commandResult.isShowPersonDetail()) {
+                commandResult.getPersonToShow().ifPresent(this::handlePersonDetail);
             }
 
             if (commandResult.isExit()) {

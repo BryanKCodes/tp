@@ -18,3 +18,75 @@
 .tooltip-text {
     -fx-text-fill: white;
 }
+
+.detail-key-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.detail-value-label {
+    -fx-text-fill: white;
+}
+
+/* Generic styles for ALL charts */
+.line-chart {
+    -fx-background-color: #383838;
+}
+
+.chart-title {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.axis-label {
+    -fx-text-fill: #b5b5b5;
+}
+
+.axis {
+    -fx-tick-label-fill: #b5b5b5;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+.chart-line-symbol {
+    -fx-padding: 3px;
+}
+
+/* Performance Chart Styles */
+.performance-chart .chart-series-line {
+    -fx-stroke: #4CAF50; /* Green */
+}
+
+.performance-chart .chart-line-symbol {
+    -fx-background-color: #4CAF50, white;
+}
+
+/* CS Per Minute Chart Styles */
+.cs-chart .chart-series-line {
+    -fx-stroke: #2196F3; /* Blue */
+}
+
+.cs-chart .chart-line-symbol {
+    -fx-background-color: #2196F3, white;
+}
+
+/* KDA Chart Styles */
+.kda-chart .chart-series-line {
+    -fx-stroke: #f44336; /* Red */
+}
+
+.kda-chart .chart-line-symbol {
+    -fx-background-color: #f44336, white;
+}
+
+/* Gold Difference Chart Styles */
+.gold-diff-chart .chart-series-line {
+    -fx-stroke: #FFD700; /* Gold */
+}
+
+.gold-diff-chart .chart-line-symbol {
+    -fx-background-color: #FFD700, white;
+}
