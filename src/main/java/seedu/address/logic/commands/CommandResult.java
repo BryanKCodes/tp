@@ -1,11 +1,11 @@
 package seedu.address.logic.commands;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.Objects;
+import java.util.Optional;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
+import seedu.address.model.team.Team;
 
 /**
  * Represents the result of a command execution.
@@ -26,23 +26,32 @@ public class CommandResult {
     /** The person whose details should be shown. */
     private final Person personToShow;
 
+    /** Team stats window should be shown to the user. */
+    private final boolean showTeamStats;
+
+    /** The team whose stats should be shown. */
+    private final Team teamToShow;
+
     /**
-     * Constructs a {@code CommandResult} with the specified fields.
+     * Full constructor with all fields.
      */
-    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit, boolean showPersonDetail,
-                         Person personToShow) {
-        this.feedbackToUser = requireNonNull(feedbackToUser);
+    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit,
+                         boolean showPersonDetail, Person personToShow,
+                         boolean showTeamStats, Team teamToShow) {
+        this.feedbackToUser = Objects.requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
         this.showPersonDetail = showPersonDetail;
         this.personToShow = personToShow;
+        this.showTeamStats = showTeamStats;
+        this.teamToShow = teamToShow;
     }
 
     /**
-     * Constructs a {@code CommandResult} with the specified fields (without person detail).
+     * Constructs a {@code CommandResult} with the specified fields (without person detail or team stats).
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
-        this(feedbackToUser, showHelp, exit, false, null);
+        this(feedbackToUser, showHelp, exit, false, null, false, null);
     }
 
     /**
@@ -50,14 +59,25 @@ public class CommandResult {
      * and other fields set to their default value.
      */
     public CommandResult(String feedbackToUser) {
-        this(feedbackToUser, false, false, false, null);
+        this(feedbackToUser, false, false, false, null, false, null);
     }
 
     /**
      * Constructs a {@code CommandResult} for showing person details.
      */
     public CommandResult(String feedbackToUser, Person personToShow) {
-        this(feedbackToUser, false, false, true, personToShow);
+        this(feedbackToUser, false, false, true, personToShow, false, null);
+    }
+
+    /**
+     * Factory method to create a result that opens the Team stats window.
+     *
+     * @param message feedback line for the result display
+     * @param team team to show
+     * @return a {@code CommandResult} configured to show the Team stats window
+     */
+    public static CommandResult showTeamStats(String message, Team team) {
+        return new CommandResult(message, false, false, false, null, true, team);
     }
 
     public String getFeedbackToUser() {
@@ -80,6 +100,14 @@ public class CommandResult {
         return personToShow;
     }
 
+    public boolean isShowTeamStats() {
+        return showTeamStats;
+    }
+
+    public Optional<Team> getTeamToShow() {
+        return Optional.ofNullable(teamToShow);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -96,12 +124,15 @@ public class CommandResult {
                 && showHelp == otherCommandResult.showHelp
                 && exit == otherCommandResult.exit
                 && showPersonDetail == otherCommandResult.showPersonDetail
-                && Objects.equals(personToShow, otherCommandResult.personToShow);
+                && Objects.equals(personToShow, otherCommandResult.personToShow)
+                && showTeamStats == otherCommandResult.showTeamStats
+                && Objects.equals(teamToShow, otherCommandResult.teamToShow);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit, showPersonDetail, personToShow);
+        return Objects.hash(feedbackToUser, showHelp, exit, showPersonDetail, personToShow,
+                showTeamStats, teamToShow);
     }
 
     @Override
@@ -112,7 +143,8 @@ public class CommandResult {
                 .add("exit", exit)
                 .add("showPersonDetail", showPersonDetail)
                 .add("personToShow", personToShow)
+                .add("showTeamStats", showTeamStats)
+                .add("teamToShow", teamToShow)
                 .toString();
     }
-
 }

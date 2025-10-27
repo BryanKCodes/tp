@@ -16,8 +16,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddStatsCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteStatsCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
@@ -32,6 +34,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListTeamCommand;
 import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
+import seedu.address.logic.commands.ViewTeamCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
@@ -119,6 +122,8 @@ public class AddressBookParserTest {
         FilterPersonDescriptor descriptor = new FilterPersonDescriptorBuilder()
                 .withChampions("annie", "leblanc").build();
         assertTrue(parser.parseCommand(FilterCommand.COMMAND_WORD + " rk/gold") instanceof FilterCommand);
+        assertEquals(parser.parseCommand(FilterCommand.COMMAND_WORD + " c/annie c/leblanc"),
+                new FilterCommand(descriptor));
     }
 
     @Test
@@ -154,6 +159,13 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_viewteam_success() throws Exception {
+        ViewTeamCommand command = (ViewTeamCommand) parser.parseCommand(
+                ViewTeamCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
+        assertEquals(new ViewTeamCommand(INDEX_FIRST_TEAM), command);
+    }
+
+    @Test
     public void parseCommand_winCommand() throws Exception {
         WinCommand command = (WinCommand) parser.parseCommand(
                 WinCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
@@ -165,6 +177,19 @@ public class AddressBookParserTest {
         LoseCommand command = (LoseCommand) parser.parseCommand(
                 LoseCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
         assertEquals(new LoseCommand(INDEX_FIRST_TEAM), command);
+    }
+
+    @Test
+    public void parseCommand_deleteStatsCommand() throws Exception {
+        String input = DeleteStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased();
+        assertTrue(parser.parseCommand(input) instanceof DeleteStatsCommand);
+    }
+
+    @Test
+    public void parseCommand_addStatsCommand() throws Exception {
+        String input = AddStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
+                + " " + "cpm/10.2 gd15/2000 kda/2.2";
+        assertTrue(parser.parseCommand(input) instanceof AddStatsCommand);
     }
 
     @Test

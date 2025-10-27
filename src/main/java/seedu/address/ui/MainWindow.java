@@ -19,8 +19,15 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Person;
 
 /**
- * The Main Window. Provides the basic application layout containing
- * a menu bar and space where other JavaFX elements can be placed.
+ * The main JavaFX window that provides the overall UI layout for the application.
+ * <p>
+ * It handles:
+ * <ul>
+ *   <li>Displaying command feedback and results</li>
+ *   <li>Executing user commands through the logic component</li>
+ *   <li>Opening auxiliary windows such as Help and Team Stats</li>
+ * </ul>
+ * This class acts as the controller for the main FXML layout.
  */
 public class MainWindow extends UiPart<Stage> {
 
@@ -36,6 +43,7 @@ public class MainWindow extends UiPart<Stage> {
     private TeamListPanel teamListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private TeamStatsWindow teamStatsWindow;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -183,6 +191,27 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.hide();
     }
 
+    /**
+     * Opens the Team stats window for the given team and brings it to front.
+     * Computes a friendly label (e.g., "Team 1") based on the team's index
+     * in the current filtered team list.
+     *
+     * @param team the team to display
+     */
+    private void handleTeamStats(seedu.address.model.team.Team team) {
+        if (teamStatsWindow == null) {
+            teamStatsWindow = new TeamStatsWindow();
+        }
+
+        // Derive user-friendly label from current filtered list
+        int idx = logic.getFilteredTeamList().indexOf(team);
+        String label = (idx >= 0) ? "Team " + (idx + 1) : "Team";
+
+        teamStatsWindow.setTeam(team, label);
+        teamStatsWindow.show();
+        teamStatsWindow.focus();
+    }
+
     public PersonListPanel getPersonListPanel() {
         return personListPanel;
     }
@@ -208,6 +237,10 @@ public class MainWindow extends UiPart<Stage> {
 
             if (commandResult.isExit()) {
                 handleExit();
+            }
+
+            if (commandResult.isShowTeamStats()) {
+                commandResult.getTeamToShow().ifPresent(this::handleTeamStats);
             }
 
             return commandResult;

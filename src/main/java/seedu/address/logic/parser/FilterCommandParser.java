@@ -5,6 +5,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_CHAMPION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RANK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SCORE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     public FilterCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_ROLE, PREFIX_RANK, PREFIX_CHAMPION);
+                ArgumentTokenizer.tokenize(args, PREFIX_ROLE, PREFIX_RANK, PREFIX_CHAMPION, PREFIX_SCORE);
 
         FilterPersonDescriptor filterPersonDescriptor = new FilterPersonDescriptor();
 
@@ -43,6 +44,9 @@ public class FilterCommandParser implements Parser<FilterCommand> {
 
         parseChampionsForFilter(argMultimap.getAllValues(PREFIX_CHAMPION))
                 .ifPresent(filterPersonDescriptor::setChampions);
+
+        parseScoreForFilter(argMultimap.getAllValues(PREFIX_SCORE))
+                .ifPresent(filterPersonDescriptor::setScoreThreshold);
 
         if (!filterPersonDescriptor.isAnyFieldFiltered()) {
             throw new ParseException(
@@ -99,4 +103,28 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         return Optional.of(ParserUtil.parseChampions(championSet));
     }
 
+    /**
+     * Parses {@code Collection<String> scores} into a {@code Float} if {@code scores} is non-empty.
+     * If {@code scores} contain only one element which is an empty string, it will be parsed as empty.
+     * Only the first score is considered; others are ignored.
+     */
+    private Optional<Float> parseScoreForFilter(Collection<String> scores) throws ParseException {
+        assert scores != null;
+
+        if (scores.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Collection<String> scoreSet = scores.size() == 1 && scores.contains("")
+                ? Collections.emptySet()
+                : scores;
+
+        if (scoreSet.isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Use ParserUtil for validation and parsing
+        String firstScore = scoreSet.iterator().next();
+        return Optional.of(ParserUtil.parseScore(firstScore));
+    }
 }

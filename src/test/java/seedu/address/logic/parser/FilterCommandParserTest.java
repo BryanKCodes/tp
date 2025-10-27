@@ -123,4 +123,32 @@ public class FilterCommandParserTest {
         FilterCommand expectedCommand = new FilterCommand(descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
+
+    @Test
+    public void parse_scoreFieldSpecified_success() {
+        // single valid score
+        String userInput = " s/5.5";
+        FilterPersonDescriptor descriptor = new FilterPersonDescriptorBuilder().withScoreThreshold(5.5f).build();
+        FilterCommand expectedCommand = new FilterCommand(descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // score with whitespace
+        userInput = " s/ 3.2 ";
+        descriptor = new FilterPersonDescriptorBuilder().withScoreThreshold(3.2f).build();
+        expectedCommand = new FilterCommand(descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_scoreWithOtherFields_success() {
+        String userInput = ROLE_DESC_AMY + RANK_DESC_AMY + CHAMPION_DESC_AMY + " s/7.7";
+        FilterPersonDescriptor descriptor = new FilterPersonDescriptorBuilder()
+                .withRoles(VALID_ROLE_AMY)
+                .withRanks(VALID_RANK_AMY)
+                .withChampions(VALID_CHAMPION_AMY)
+                .withScoreThreshold(7.7f)
+                .build();
+        FilterCommand expectedCommand = new FilterCommand(descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
 }

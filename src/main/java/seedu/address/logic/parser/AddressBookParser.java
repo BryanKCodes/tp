@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddStatsCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteStatsCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.ExportCommand;
@@ -26,6 +28,7 @@ import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
 import seedu.address.logic.commands.UngroupCommand;
 import seedu.address.logic.commands.ViewCommand;
+import seedu.address.logic.commands.ViewTeamCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -107,14 +110,24 @@ public class AddressBookParser {
 
         case ImportCommand.COMMAND_WORD:
             return new ImportCommandParser().parse(arguments);
+
+        case ViewCommand.COMMAND_WORD:
+            return new ViewCommandParser().parse(arguments);
+
+        case ViewTeamCommand.COMMAND_WORD:
+            return new ViewTeamCommandParser().parse(arguments);
+
         case WinCommand.COMMAND_WORD:
             return new WinCommandParser().parse(arguments);
 
         case LoseCommand.COMMAND_WORD:
             return new LoseCommandParser().parse(arguments);
 
-        case ViewCommand.COMMAND_WORD:
-            return new ViewCommandParser().parse(arguments);
+        case AddStatsCommand.COMMAND_WORD:
+            return new AddStatsCommandParser().parse(arguments);
+
+        case DeleteStatsCommand.COMMAND_WORD:
+            return new DeleteStatsCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);

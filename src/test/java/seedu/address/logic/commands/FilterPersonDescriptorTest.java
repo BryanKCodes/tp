@@ -57,7 +57,8 @@ public class FilterPersonDescriptorTest {
         String expected = FilterPersonDescriptor.class.getCanonicalName() + "{roles="
                 + Arrays.toString(filterPersonDescriptor.getRoles()) + ", ranks="
                 + Arrays.toString(filterPersonDescriptor.getRanks()) + ", champions="
-                + Arrays.toString(filterPersonDescriptor.getChampions()) + "}";
+                + Arrays.toString(filterPersonDescriptor.getChampions()) + ", scoreThreshold="
+                + filterPersonDescriptor.getScoreThreshold() + "}";
         assertEquals(expected, filterPersonDescriptor.toString());
     }
 }

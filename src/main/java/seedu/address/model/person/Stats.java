@@ -26,12 +26,12 @@ public class Stats {
      * Constraints message shown when invalid stat values are provided.
      */
     public static final String MESSAGE_CONSTRAINTS =
-            "CS per minute must be between 0 and 40; "
-                    + "Gold difference at 15m must be between -10,000 and 10,000; "
-                    + "KDA must be between 0 and 200.";
+            "CS per minute must be an integer between 0 and 40; "
+                    + "Gold difference at 15m must be a decimal between -10,000 and 10,000; "
+                    + "KDA must be a decimal between 0.0 and 200.0";
 
-    /** The textual representation of the average score (formatted as 0.0). */
-    public final String value;
+    /** The average score. */
+    public final float value;
 
     /** Historical list of CS per minute values recorded. */
     public final ArrayList<Float> csPerMinute;
@@ -61,9 +61,9 @@ public class Stats {
      * Constructor used for updating stats immutably.
      */
     public Stats(ArrayList<Float> csPerMinute,
-                  ArrayList<Integer> goldDiffAt15,
-                  ArrayList<Float> kdaScores,
-                  ArrayList<Double> scores) {
+                 ArrayList<Integer> goldDiffAt15,
+                 ArrayList<Float> kdaScores,
+                 ArrayList<Double> scores) {
         this.csPerMinute = csPerMinute;
         this.goldDiffAt15 = goldDiffAt15;
         this.kdaScores = kdaScores;
@@ -125,7 +125,7 @@ public class Stats {
     /**
      * Returns the current average performance score as a string formatted to one decimal place.
      */
-    public String getValue() {
+    public float getValue() {
         return this.value;
     }
 
@@ -185,7 +185,7 @@ public class Stats {
 
     @Override
     public String toString() {
-        return value;
+        return String.format("%.1f", value);
     }
 
     @Override
@@ -203,12 +203,12 @@ public class Stats {
         return csPerMinute.equals(otherStats.csPerMinute)
                 && goldDiffAt15.equals(otherStats.goldDiffAt15)
                 && kdaScores.equals(otherStats.kdaScores)
-                && value.equals(otherStats.value);
+                && Float.compare(value, otherStats.value) == 0;
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Float.hashCode(value);
     }
 
     /**
@@ -218,11 +218,11 @@ public class Stats {
      */
     private double calculateScore(float cpm, int gd15, float kda) {
         // Normalize each metric
-        double kdaNorm = Math.min(kda / 8.0, 1.0);
+        double kdaNorm = Math.min(kda / 3.0, 1.0);
         double csNorm = Math.min(cpm / 10.0, 1.0);
 
         // Logistic scaling for gold difference
-        double gdNorm = 1.0 / (1.0 + Math.exp(-gd15 / 800.0));
+        double gdNorm = 1.0 / (1.0 + Math.exp(-gd15 / 500.0));
 
         // Weighted combination
         double score = 10.0 * (0.45 * kdaNorm + 0.35 * csNorm + 0.20 * gdNorm);
@@ -234,14 +234,14 @@ public class Stats {
     /**
      * Computes the average of all recorded scores and returns it formatted to one decimal place.
      */
-    private String calculateAverageScore() {
+    private float calculateAverageScore() {
         if (scores.isEmpty()) {
-            return "0.0";
+            return 0.0F;
         }
         double total = scores.stream()
                 .reduce(0.0, Double::sum);
 
         double avg = total / scores.size();
-        return String.format("%.1f", avg);
+        return (float) (Math.round(avg * 10.0) / 10.0);
     }
 }
