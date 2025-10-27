@@ -34,6 +34,14 @@ public class CommandResult {
 
     /**
      * Constructs a {@code CommandResult} with all fields.
+     *
+     * @param feedbackToUser Feedback message to display to the user.
+     * @param showHelp Whether to show the help window.
+     * @param exit Whether the application should exit.
+     * @param showPersonDetail Whether to show the person detail window.
+     * @param personToShow The person whose details should be shown, or null.
+     * @param showTeamStats Whether to show the team stats window.
+     * @param teamToShow The team whose stats should be shown, or null.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit,
                          boolean showPersonDetail, Person personToShow,

@@ -64,7 +64,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
      */
     public PersonDetailWindow(Stage root) {
         super(FXML, root);
-        // The ChartFactory is instantiated once and reused. It is a stateless service.
         this.chartFactory = new ChartFactory();
     }
 
