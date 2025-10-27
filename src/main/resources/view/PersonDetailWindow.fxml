@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.Scene?>
 <?import javafx.scene.text.Font?>
@@ -21,116 +21,52 @@
 
     <scene>
         <Scene>
-            <VBox spacing="10" style="-fx-background-color: #383838;">
+            <VBox spacing="20" style="-fx-background-color: #383838;">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20" />
                 </padding>
 
-                <!-- Player Name -->
-                <Label fx:id="nameLabel" text="Player Name" style="-fx-text-fill: white;">
-                    <font>
-                        <Font name="System Bold" size="24" />
-                    </font>
-                </Label>
+                <!-- Static Component: Main Name Label -->
+                <Label fx:id="nameLabel" style="-fx-text-fill: white;"><font><Font name="System Bold" size="24" /></font></Label>
 
-                <!-- Player Details Section -->
-                <VBox spacing="5">
-                    <Label fx:id="roleLabel" text="Role: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                <!-- Static Component: Details Pane using a GridPane for clean alignment -->
+                <GridPane fx:id="detailsPane" hgap="10" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="80"/> <!-- Column 0 for keys -->
+                        <ColumnConstraints hgrow="ALWAYS" /> <!-- Column 1 for values -->
+                    </columnConstraints>
 
-                    <Label fx:id="championLabel" text="Champion: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                    <!-- Row 0: Role -->
+                    <Label styleClass="detail-key-label" text="Role:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="roleLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                    <Label fx:id="rankLabel" text="Rank: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                    <!-- Row 1: Rank -->
+                    <Label styleClass="detail-key-label" text="Rank:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="rankLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                    <Label fx:id="winsLabel" text="Wins: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                    <!-- Row 2: Champion -->
+                    <Label styleClass="detail-key-label" text="Champion:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="championLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                    <Label fx:id="lossesLabel" text="Losses: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                    <!-- Row 3: Wins -->
+                    <Label styleClass="detail-key-label" text="Wins:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Label fx:id="winsLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                    <Label fx:id="tagsLabel" text="Tags: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font size="14" />
-                        </font>
-                    </Label>
+                    <!-- Row 4: Losses -->
+                    <Label styleClass="detail-key-label" text="Losses:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <Label fx:id="lossesLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                    <Label fx:id="statsLabel" text="Average Performance Score: " style="-fx-text-fill: #d0d0d0;">
-                        <font>
-                            <Font name="System Bold" size="16" />
-                        </font>
-                    </Label>
-                </VBox>
+                    <!-- Row 5: Tags -->
+                    <Label styleClass="detail-key-label" text="Tags:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <Label fx:id="tagsLabel" styleClass="detail-value-label" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                </GridPane>
 
-                <!-- Performance Score Graph -->
-                <LineChart fx:id="performanceChart" prefHeight="200" prefWidth="800" animated="false"
-                          style="-fx-text-fill: white;">
-                    <xAxis>
-                        <NumberAxis label="Match Number" side="BOTTOM"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Performance Score" side="LEFT"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </yAxis>
-                </LineChart>
-
-                <!-- CS per Minute Graph -->
-                <LineChart fx:id="csChart" prefHeight="200" prefWidth="800" animated="false"
-                          style="-fx-text-fill: white;">
-                    <xAxis>
-                        <NumberAxis label="Match Number" side="BOTTOM"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="CS per Minute" side="LEFT"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </yAxis>
-                </LineChart>
-
-                <!-- KDA Graph -->
-                <LineChart fx:id="kdaChart" prefHeight="200" prefWidth="800" animated="false"
-                          style="-fx-text-fill: white;">
-                    <xAxis>
-                        <NumberAxis label="Match Number" side="BOTTOM"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="KDA" side="LEFT"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </yAxis>
-                </LineChart>
-
-                <!-- Gold Diff @15 Graph -->
-                <LineChart fx:id="goldChart" prefHeight="200" prefWidth="800" animated="false"
-                          style="-fx-text-fill: white;">
-                    <xAxis>
-                        <NumberAxis label="Match Number" side="BOTTOM"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Gold Diff @15" side="LEFT"
-                                   style="-fx-tick-label-fill: white; -fx-minor-tick-visible: false;" />
-                    </yAxis>
-                </LineChart>
+                <!-- Static Component: Container for Dynamic Content -->
+                <!-- This VBox is the designated injection point for the charts. -->
+                <VBox fx:id="chartPane" spacing="10" VBox.vgrow="ALWAYS" />
 
             </VBox>
         </Scene>
     </scene>
 </fx:root>
+

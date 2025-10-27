@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <LineChart fx:id="chart" animated="false" VBox.vgrow="ALWAYS">
+        <xAxis>
+            <NumberAxis label="Match Number" side="BOTTOM" style="-fx-minor-tick-visible: false;" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis side="LEFT" style="-fx-minor-tick-visible: false;" />
+        </yAxis>
+    </LineChart>
+</VBox>

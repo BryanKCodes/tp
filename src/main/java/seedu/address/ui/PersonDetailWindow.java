@@ -4,178 +4,109 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.Stats;
+import seedu.address.ui.charts.ChartFactory;
 
 /**
- * Controller for a window showing detailed information about a person.
- * Displays the person's profile and graphs of their performance statistics over time.
- * Focuses on UI coordination only.
+ * Controller for a window that displays detailed information about a person.
+ *
+ * This class follows a robust hybrid UI design pattern:
+ * 1.  Declarative FXML for Static Content: The window's static structure, layout,
+ *     and simple labels are all defined in PersonDetailWindow.fxml. This adheres to
+ *     the principle of Separation of Concerns, making the view's structure easy to
+ *     understand and modify without touching Java code.
+ *
+ * 2.  Programmatic Generation for Dynamic Content: Complex, data-driven components like
+ *     charts are generated dynamically in Java using a ChartFactory. This approach is
+ *     fully type-safe, checked at compile time, avoids brittle "magic strings" in
+ *     the FXML, and allows for easier extensibility. 
+ *
+ * The controller's primary role is to act as a coordinator: it binds data to the
+ * static FXML labels and injects the dynamically-generated charts into the designated
+ * container pane. This represents a pragmatic and maintainable best practice.
  */
 public class PersonDetailWindow extends UiPart<Stage> {
 
-    private static final Logger logger = LogsCenter.getLogger(PersonDetailWindow.class);
     private static final String FXML = "PersonDetailWindow.fxml";
+    private final Logger logger = LogsCenter.getLogger(getClass());
 
-    // Color constants for different chart types
-    private static final String COLOR_PERFORMANCE = "#4CAF50"; // Green - success/progress
-    private static final String COLOR_CS = "#2196F3"; // Blue - neutral/farming
-    private static final String COLOR_KDA = "#f44336"; // Red - kills/combat
-    private static final String COLOR_GOLD = "#FFD700"; // Gold/Yellow - intuitive for gold
-
-    // Chart title constants
-    private static final String TITLE_NO_DATA = "No performance data available";
-    private static final String TITLE_PERFORMANCE = "Performance Score Over Time (Latest %d)";
-    private static final String TITLE_CS = "CS per Minute Over Time (Latest %d)";
-    private static final String TITLE_KDA = "KDA Over Time (Latest %d)";
-    private static final String TITLE_GOLD = "Gold Diff @15 Over Time (Latest %d)";
-
-    @FXML
-    private Label nameLabel;
-
-    @FXML
-    private Label roleLabel;
-
-    @FXML
-    private Label championLabel;
-
-    @FXML
-    private Label rankLabel;
-
-    @FXML
-    private Label statsLabel;
-
-    @FXML
-    private Label winsLabel;
-
-    @FXML
-    private Label lossesLabel;
-
-    @FXML
-    private Label tagsLabel;
-
-    @FXML
-    private LineChart<Number, Number> performanceChart;
-
-    @FXML
-    private LineChart<Number, Number> csChart;
-
-    @FXML
-    private LineChart<Number, Number> kdaChart;
-
-    @FXML
-    private LineChart<Number, Number> goldChart;
-
+    private final ChartFactory chartFactory;
     private Person person;
 
-    /**
-     * Creates a new PersonDetailWindow.
-     *
-     * @param root Stage to use as the root of the PersonDetailWindow.
-     */
-    public PersonDetailWindow(Stage root) {
-        super(FXML, root);
-    }
+    // @FXML fields for the static components defined in the FXML file.
+    @FXML private Label nameLabel;
+    @FXML private Label roleLabel;
+    @FXML private Label rankLabel;
+    @FXML private Label championLabel;
+    @FXML private Label winsLabel;
+    @FXML private Label lossesLabel;
+    @FXML private Label tagsLabel;
+    @FXML private GridPane detailsPane;
+
+    // @FXML field for the container where dynamic content will be injected.
+    @FXML private VBox chartPane;
 
     /**
-     * Creates a new PersonDetailWindow.
+     * Creates a PersonDetailWindow.
      */
     public PersonDetailWindow() {
         this(new Stage());
     }
 
     /**
-     * Sets the person whose details should be displayed.
+     * Creates a PersonDetailWindow with the given Stage.
+     */
+    public PersonDetailWindow(Stage root) {
+        super(FXML, root);
+        // The ChartFactory is instantiated once and reused. It is a stateless service.
+        this.chartFactory = new ChartFactory();
+    }
+
+    /**
+     * Sets the person to be displayed and populates all UI elements.
+     * This is the single entry point for updating the window's content.
      *
-     * @param person The person to display.
+     * @param person The person whose details will be displayed. Must not be null.
      */
     public void setPerson(Person person) {
-        assert person != null;
+        assert person != null : "Person object cannot be null.";
         this.person = person;
-        loadPersonDetails();
+        displayPersonDetails();
+        displayCharts();
     }
 
     /**
-     * Loads and displays the person's details.
+     * Populates the static labels (defined in FXML) with the person's information.
+     * This method's responsibility is purely data binding.
      */
-    private void loadPersonDetails() {
-        // Display basic information
-        nameLabel.setText(person.getName().fullName);
-        roleLabel.setText("Role: " + person.getRole().value);
-        championLabel.setText("Champion: " + person.getChampion().value);
-        rankLabel.setText("Rank: " + person.getRank().value);
-        statsLabel.setText("Average Performance Score: " + person.getStats().getValue());
-        winsLabel.setText("Wins: " + person.getWins());
-        lossesLabel.setText("Losses: " + person.getLosses());
-        tagsLabel.setText("Tags: " + person.getTags().toString());
-
-        // Load stats graph
-        loadStatsGraph();
+    private void displayPersonDetails() {
+        nameLabel.setText(person.getName().toString());
+        roleLabel.setText(person.getRole().toString());
+        rankLabel.setText(person.getRank().toString());
+        championLabel.setText(person.getChampion().toString());
+        tagsLabel.setText(person.getTags().toString());
+        winsLabel.setText(String.valueOf(person.getWins()));
+        lossesLabel.setText(String.valueOf(person.getLosses()));
     }
 
     /**
-     * Loads the stats graphs with the person's historical performance data.
-     * Creates separate graphs for Performance Score, CS/min, KDA, and Gold Diff @15.
-     * Each graph has an intuitive color: green for performance, blue for CS, red for KDA, yellow for gold.
-     * Only displays the latest matches for better readability.
+     * Populates the chart pane with dynamically-generated charts from the ChartFactory.
+     * This method's responsibility is dynamic content injection.
      */
-    private void loadStatsGraph() {
-        Stats stats = person.getStats();
-
-        List<Double> scores = stats.getScores();
-        if (scores.isEmpty()) {
-            performanceChart.setTitle(TITLE_NO_DATA);
-            return;
-        }
-
-        // Load each chart with its respective data
-        loadChart(performanceChart, scores, TITLE_PERFORMANCE, COLOR_PERFORMANCE);
-        loadChart(csChart, stats.getCsPerMinute(), TITLE_CS, COLOR_CS);
-        loadChart(kdaChart, stats.getKdaScores(), TITLE_KDA, COLOR_KDA);
-        loadChart(goldChart, stats.getGoldDiffAt15(), TITLE_GOLD, COLOR_GOLD);
-    }
-
-    /**
-     * Loads a single chart with data, title, and color styling.
-     *
-     * @param chart The LineChart to populate.
-     * @param data The data to display in the chart.
-     * @param titleFormat The title format string (should contain %d for max displayed matches).
-     * @param color The color to apply to the chart line.
-     * @param <T> The type of data in the list (extends Number).
-     */
-    private static <T extends Number> void loadChart(
-            LineChart<Number, Number> chart,
-            List<T> data,
-            String titleFormat,
-            String color) {
-        chart.getData().clear();
-        chart.setTitle(String.format(titleFormat, ChartDataFormatter.getMaxDisplayedMatches()));
-        chart.setLegendVisible(false);
-
-        // Calculate data range for axis configuration
-        int startIndex = ChartDataFormatter.calculateStartIndex(data.size());
-        int startMatchNumber = startIndex + 1; // Convert to 1-indexed
-        int endMatchNumber = data.size();
-
-        // Delegate data formatting to ChartDataFormatter
-        XYChart.Series<Number, Number> series = ChartDataFormatter.createSeriesFromLastNPoints(data);
-        chart.getData().add(series);
-
-        // Delegate styling and axis configuration to ChartStyler
-        ChartStyler.applySeriesColor(chart, color);
-        ChartStyler.applyWhiteTextStyling(chart);
-        ChartStyler.configureXAxis(chart, startMatchNumber, endMatchNumber);
+    private void displayCharts() {
+        chartPane.getChildren().clear();
+        List<Node> chartComponents = chartFactory.createAllChartComponents(person);
+        chartPane.getChildren().addAll(chartComponents);
     }
 
     /**
      * Shows the person detail window.
-     *
      * @throws IllegalStateException
      *     <ul>
      *         <li>
@@ -193,7 +124,7 @@ public class PersonDetailWindow extends UiPart<Stage> {
      *     </ul>
      */
     public void show() {
-        logger.fine("Showing person detail window for: " + (person != null ? person.getName() : "unknown"));
+        logger.fine("Showing person detail window.");
         getRoot().show();
         getRoot().centerOnScreen();
     }
