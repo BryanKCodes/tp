@@ -232,7 +232,7 @@ public class MainWindow extends UiPart<Stage> {
             }
 
             if (commandResult.isShowPersonDetail()) {
-                handlePersonDetail(commandResult.getPersonToShow());
+                commandResult.getPersonToShow().ifPresent(this::handlePersonDetail);
             }
 
             if (commandResult.isExit()) {

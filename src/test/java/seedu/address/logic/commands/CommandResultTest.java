@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.person.Person;
+
 public class CommandResultTest {
     @Test
     public void equals() {
@@ -55,10 +57,14 @@ public class CommandResultTest {
     @Test
     public void toStringMethod() {
         CommandResult commandResult = new CommandResult("feedback");
-        String expected = CommandResult.class.getCanonicalName() + "{feedbackToUser="
-                + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
-                + ", exit=" + commandResult.isExit() + ", showPersonDetail=" + commandResult.isShowPersonDetail()
-                + ", personToShow=" + commandResult.getPersonToShow() + "}";
+        String expected = CommandResult.class.getCanonicalName()
+                + "{feedbackToUser=" + commandResult.getFeedbackToUser()
+                + ", showHelp=" + commandResult.isShowHelp()
+                + ", exit=" + commandResult.isExit()
+                + ", showPersonDetail=" + commandResult.isShowPersonDetail()
+                + ", personToShow=" + commandResult.getPersonToShow().orElse(null)
+                + ", showTeamStats=" + commandResult.isShowTeamStats()
+                + ", teamToShow=" + commandResult.getTeamToShow().orElse(null) + "}";
         assertEquals(expected, commandResult.toString());
     }
 }

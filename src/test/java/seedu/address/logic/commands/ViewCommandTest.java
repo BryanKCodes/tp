@@ -10,6 +10,8 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -116,6 +118,6 @@ public class ViewCommandTest {
         assertTrue(result.isShowPersonDetail());
         assertFalse(result.isShowHelp());
         assertFalse(result.isExit());
-        assertEquals(personToView, result.getPersonToShow());
+        assertEquals(Optional.of(personToView), result.getPersonToShow());
     }
 }

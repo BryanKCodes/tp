@@ -33,7 +33,7 @@ public class CommandResult {
     private final Team teamToShow;
 
     /**
-     * Full constructor with all fields.
+     * Constructs a {@code CommandResult} with all fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit,
                          boolean showPersonDetail, Person personToShow,
@@ -96,8 +96,8 @@ public class CommandResult {
         return showPersonDetail;
     }
 
-    public Person getPersonToShow() {
-        return personToShow;
+    public Optional<Person> getPersonToShow() {
+        return Optional.ofNullable(personToShow);
     }
 
     public boolean isShowTeamStats() {
