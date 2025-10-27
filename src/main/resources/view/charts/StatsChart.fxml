@@ -5,12 +5,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-    <LineChart fx:id="chart" animated="false" VBox.vgrow="ALWAYS">
+    <LineChart fx:id="chart" animated="false" VBox.vgrow="ALWAYS" styleClass="stats-chart">
         <xAxis>
-            <NumberAxis label="Match Number" side="BOTTOM" style="-fx-minor-tick-visible: false;" />
+            <NumberAxis label="Match Number" side="BOTTOM"
+                        style="-fx-minor-tick-visible: false; -fx-tick-label-fill: white; -fx-stroke: white;" />
         </xAxis>
         <yAxis>
-            <NumberAxis side="LEFT" style="-fx-minor-tick-visible: false;" />
+            <NumberAxis side="LEFT"
+                        style="-fx-minor-tick-visible: false; -fx-tick-label-fill: white; -fx-stroke: white;" />
         </yAxis>
     </LineChart>
 </VBox>

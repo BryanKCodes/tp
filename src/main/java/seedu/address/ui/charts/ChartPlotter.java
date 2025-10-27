@@ -12,8 +12,6 @@ import javafx.scene.chart.XYChart;
 public class ChartPlotter {
 
     private static final String TITLE_NO_DATA = "No performance data available";
-    private static final String STYLE_TICK_LABEL_FILL_WHITE = "-fx-tick-label-fill: white;";
-    private static final String CSS_CHART_TITLE = ".chart-title";
     private static final String CSS_CHART_SERIES_LINE = ".chart-series-line";
 
     private final LineChart<Number, Number> chart;
@@ -82,22 +80,11 @@ public class ChartPlotter {
      * @param color The hexadecimal color string for the data series.
      */
     public void applyStyling(String color) {
-        // Style axis text and labels.
-        chart.getXAxis().setStyle(STYLE_TICK_LABEL_FILL_WHITE);
-        chart.getYAxis().setStyle(STYLE_TICK_LABEL_FILL_WHITE);
-
         // A layout pass is required for CSS lookups to find nodes like the series line.
         chart.applyCss();
         chart.layout();
 
-        styleTitle();
         styleSeries(color);
-    }
-
-    private void styleTitle() {
-        if (chart.lookup(CSS_CHART_TITLE) != null) {
-            chart.lookup(CSS_CHART_TITLE).setStyle("-fx-text-fill: white;");
-        }
     }
 
     private void styleSeries(String color) {

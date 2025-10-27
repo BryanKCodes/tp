@@ -18,3 +18,16 @@
 .tooltip-text {
     -fx-text-fill: white;
 }
+
+.stats-chart .chart-title {
+    -fx-text-fill: white;
+}
+
+.detail-key-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.detail-value-label {
+    -fx-text-fill: white;
+}
