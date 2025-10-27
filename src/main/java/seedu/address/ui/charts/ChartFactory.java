@@ -2,6 +2,7 @@ package seedu.address.ui.charts;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import seedu.address.model.person.Person;

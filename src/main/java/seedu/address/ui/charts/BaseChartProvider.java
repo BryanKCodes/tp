@@ -1,6 +1,7 @@
 package seedu.address.ui.charts;
 
 import java.util.List;
+
 import javafx.scene.chart.XYChart;
 import seedu.address.model.person.Stats;
 

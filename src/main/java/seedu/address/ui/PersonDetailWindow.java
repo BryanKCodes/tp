@@ -25,7 +25,7 @@ import seedu.address.ui.charts.ChartFactory;
  * 2.  Programmatic Generation for Dynamic Content: Complex, data-driven components like
  *     charts are generated dynamically in Java using a ChartFactory. This approach is
  *     fully type-safe, checked at compile time, avoids brittle "magic strings" in
- *     the FXML, and allows for easier extensibility. 
+ *     the FXML, and allows for easier extensibility.
  *
  * The controller's primary role is to act as a coordinator: it binds data to the
  * static FXML labels and injects the dynamically-generated charts into the designated
