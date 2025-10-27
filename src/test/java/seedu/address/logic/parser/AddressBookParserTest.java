@@ -34,6 +34,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListTeamCommand;
 import seedu.address.logic.commands.LoseCommand;
 import seedu.address.logic.commands.MakeGroupCommand;
+import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.commands.ViewTeamCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -156,6 +157,13 @@ public class AddressBookParserTest {
                 String.format(
                         MESSAGE_INVALID_COMMAND_FORMAT,
                         MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
+    }
+
+    @Test
+    public void parseCommand_view() throws Exception {
+        ViewCommand command = (ViewCommand) parser.parseCommand(
+                ViewCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+        assertEquals(new ViewCommand(INDEX_FIRST_PERSON), command);
     }
 
     @Test
