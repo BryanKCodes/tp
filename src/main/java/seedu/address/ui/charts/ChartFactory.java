@@ -7,6 +7,11 @@ import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Stats;
+import seedu.address.ui.charts.provider.ChartProvider;
+import seedu.address.ui.charts.provider.CsPerMinuteChartProvider;
+import seedu.address.ui.charts.provider.GoldDifferenceChartProvider;
+import seedu.address.ui.charts.provider.KdaChartProvider;
+import seedu.address.ui.charts.provider.PerformanceChartProvider;
 
 /**
  * Factory for creating chart UI components.

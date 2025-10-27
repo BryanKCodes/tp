@@ -1,4 +1,4 @@
-package seedu.address.ui.charts;
+package seedu.address.ui.charts.provider;
 
 import java.util.List;
 

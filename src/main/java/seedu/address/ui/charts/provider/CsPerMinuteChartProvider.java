@@ -1,32 +1,32 @@
-package seedu.address.ui.charts;
+package seedu.address.ui.charts.provider;
 
 import java.util.List;
 
 import seedu.address.model.person.Stats;
 
 /**
- * Provides configuration for the Performance Score chart.
+ * Provides configuration for the CS per Minute chart.
  */
-public class PerformanceChartProvider extends BaseChartProvider {
+public class CsPerMinuteChartProvider extends BaseChartProvider {
 
     @Override
     public String getTitle() {
-        return String.format("Performance Score Over Time (Latest %d)", getMaxDisplayedMatches());
+        return String.format("CS per Minute Over Time (Latest %d)", getMaxDisplayedMatches());
     }
 
     @Override
     public String getYAxisLabel() {
-        return "Performance Score";
+        return "CS per Minute";
     }
 
     @Override
     public String getStyleClass() {
-        return "performance-chart";
+        return "cs-chart";
     }
 
     @Override
     protected List<? extends Number> getData(Stats stats) {
-        return stats.getScores();
+        return stats.getCsPerMinute();
     }
 
     @Override
