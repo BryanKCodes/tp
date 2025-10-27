@@ -52,10 +52,10 @@ public class ChartFactory {
 
         String title = provider.getTitle();
         String yAxisLabel = provider.getYAxisLabel();
-        String color = provider.getSeriesColor();
+        String styleClass = provider.getStyleClass();
         XYChart.Series<Number, Number> series = provider.createSeries(stats);
 
-        chart.updateChart(title, yAxisLabel, color, series);
+        chart.updateChart(title, yAxisLabel, styleClass, series);
         return chart.getRoot();
     }
 }

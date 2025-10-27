@@ -31,10 +31,10 @@ public class StatsChart extends UiPart<VBox> {
      *
      * @param title The main title for the chart.
      * @param yAxisLabel The label for the vertical axis.
-     * @param color The hexadecimal color string for the data series.
+     * @param styleClass The CSS style class for the chart.
      * @param series The data series to render.
      */
-    public void updateChart(String title, String yAxisLabel, String color, XYChart.Series<Number, Number> series) {
+    public void updateChart(String title, String yAxisLabel, String styleClass, XYChart.Series<Number, Number> series) {
         if (series.getData().isEmpty()) {
             chartPlotter.showEmptyMessage();
             return;
@@ -43,6 +43,6 @@ public class StatsChart extends UiPart<VBox> {
         chartPlotter.setLabels(title, yAxisLabel);
         chartPlotter.plot(series);
         chartPlotter.configureAxes();
-        chartPlotter.applyStyling(color);
+        chartPlotter.applyStyleClass(styleClass);
     }
 }

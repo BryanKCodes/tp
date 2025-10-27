@@ -20,8 +20,8 @@ public class KdaChartProvider extends BaseChartProvider {
     }
 
     @Override
-    public String getSeriesColor() {
-        return "#f44336"; // Material Red
+    public String getStyleClass() {
+        return "kda-chart";
     }
 
     @Override

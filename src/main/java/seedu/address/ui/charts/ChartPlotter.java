@@ -7,12 +7,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
 /**
- * Handles low-level plotting, styling, and configuration for a JavaFX LineChart.
+ * Handles data plotting and configuration for a JavaFX LineChart.
+ * All styling is delegated to CSS via style classes for proper separation of concerns.
  */
 public class ChartPlotter {
 
     private static final String TITLE_NO_DATA = "No performance data available";
-    private static final String CSS_CHART_SERIES_LINE = ".chart-series-line";
 
     private final LineChart<Number, Number> chart;
 
@@ -75,34 +75,13 @@ public class ChartPlotter {
     }
 
     /**
-     * Applies visual styling to the chart and plotted series.
+     * Applies a CSS style class to the chart.
+     * This is the only styling-related action this class takes.
+     * All visual styling is defined in the CSS file.
      *
-     * @param color The hexadecimal color string for the data series.
+     * @param styleClass The CSS class to apply (e.g., "performance-chart").
      */
-    public void applyStyling(String color) {
-        // A layout pass is required for CSS lookups to find nodes like the series line.
-        chart.applyCss();
-        chart.layout();
-
-        styleSeries(color);
-    }
-
-    private void styleSeries(String color) {
-        if (chart.getData().isEmpty()) {
-            return;
-        }
-        XYChart.Series<Number, Number> series = chart.getData().get(0);
-
-        // Style the line connecting the data points.
-        if (series.getNode() != null && series.getNode().lookup(CSS_CHART_SERIES_LINE) != null) {
-            series.getNode().lookup(CSS_CHART_SERIES_LINE).setStyle("-fx-stroke: " + color + ";");
-        }
-
-        // Style each individual data point symbol on the line.
-        for (XYChart.Data<Number, Number> data : series.getData()) {
-            if (data.getNode() != null) {
-                data.getNode().setStyle("-fx-background-color: " + color + ";");
-            }
-        }
+    public void applyStyleClass(String styleClass) {
+        chart.getStyleClass().add(styleClass);
     }
 }

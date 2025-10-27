@@ -23,11 +23,11 @@ public interface ChartProvider {
     String getYAxisLabel();
 
     /**
-     * Returns the color for the data series.
+     * Returns the CSS style class for this chart.
      *
-     * @return A hexadecimal color string (e.g., "#4CAF50").
+     * @return The CSS class name.
      */
-    String getSeriesColor();
+    String getStyleClass();
 
     /**
      * Creates a data series from the given stats.

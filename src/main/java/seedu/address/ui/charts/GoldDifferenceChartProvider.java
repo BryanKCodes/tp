@@ -20,8 +20,8 @@ public class GoldDifferenceChartProvider extends BaseChartProvider {
     }
 
     @Override
-    public String getSeriesColor() {
-        return "#FFD700"; // Gold
+    public String getStyleClass() {
+        return "gold-diff-chart";
     }
 
     @Override

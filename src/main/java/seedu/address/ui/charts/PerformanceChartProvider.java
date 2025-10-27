@@ -20,8 +20,8 @@ public class PerformanceChartProvider extends BaseChartProvider {
     }
 
     @Override
-    public String getSeriesColor() {
-        return "#4CAF50"; // Material Green
+    public String getStyleClass() {
+        return "performance-chart";
     }
 
     @Override

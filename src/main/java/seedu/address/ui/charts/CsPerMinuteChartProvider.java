@@ -20,8 +20,8 @@ public class CsPerMinuteChartProvider extends BaseChartProvider {
     }
 
     @Override
-    public String getSeriesColor() {
-        return "#2196F3"; // Material Blue
+    public String getStyleClass() {
+        return "cs-chart";
     }
 
     @Override
