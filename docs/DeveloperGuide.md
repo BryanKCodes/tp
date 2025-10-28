@@ -6,15 +6,21 @@ pageNav: 3
 
 # SummonersBook Developer Guide
 
-<!-- * Table of Contents -->
-<page-nav-print />
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well }_
+SummonersBook was developed based on [AddressBook Level 3 (AB3)](https://github.com/se-edu/addressbook-level3) by the SE-EDU initiative.
+Certain sections of the code, documentation structure, and testing conventions were reused or adapted from the original AB3 project.
+
+It makes use of the following open-source libraries:
+
+- [JavaFX](https://openjfx.io/) (v17.0.7) — for building the graphical user interface
+- [Jackson Databind](https://github.com/FasterXML/jackson-databind) (v2.7.0) — for JSON data serialization and deserialization
+- [Jackson Datatype JSR310](https://github.com/FasterXML/jackson-modules-java8) (v2.7.4) — for Java 8 date and time (JSR-310) support in JSON
+- [JUnit 5 (Jupiter)](https://junit.org/junit5/) (v5.4.0) — for unit testing
+
+We thank the original AB3 contributors and the authors of the above libraries for making this project possible.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -198,124 +204,152 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Filter Feature
 
-#### Proposed Implementation
+#### Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo
-history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the
-following operations:
+The filter feature is implemented through the `FilterCommand` and `FilterPredicate` classes.  
+It allows users to display only the persons whose attributes match the given criteria — such as name, role, rank, or champion.
 
-* `VersionedAddressBook#commit()`— Saves the current address book state in its history.
-* `VersionedAddressBook#undo()`— Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()`— Restores a previously undone address book state from its history.
+When the user executes a command such as:
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and
-`Model#redoAddressBook()` respectively.
+`filter rk Gold rl Mid`
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+the app filters the list of persons based on the provided criteria.  
+In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the
-initial address book state, and the `currentStatePointer` pointing to that single address book state.
+This functionality is supported by three key components:
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+- **`FilterCommand`** — represents the command that performs filtering.
+- **`FilterPredicate`** — encapsulates the logical conditions for filtering.
+- **`Model#updateFilteredPersonList(Predicate<Person>)`** — applies the predicate to the main person list, updating the UI display.
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls
-`Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be
-saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Each field type (e.g. rank, role, champion) within the same category uses **OR** logic:
+> Example: `rk Gold rk Silver` → persons with rank Gold **or** Silver.
 
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
+Across different field types, conditions are combined using **AND** logic:
+> Example: `rk Gold rk Silver rl Mid` → persons who are (Gold **or** Silver) **and** play Mid.
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls
-`Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+---
 
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
+#### Example Usage
 
-<box type="info" seamless>
+**Step 1.**  
+When the app starts, all persons are displayed.  
+No filtering has been applied yet.
 
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will
-not be saved into the `addressBookStateList`.
+---
 
-</box>
+**Step 2.**  
+The user executes `filter rk Gold`.  
+The `FilterCommandParser` creates a `FilterCommand` containing a `FilterPredicate` that checks each person’s rank.  
+`Model#updateFilteredPersonList(predicate)` is called, and the UI updates to show only matching entries.
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the
-`undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once
-to the left, pointing it to the previous address book state, and restores the address book to that state.
+---
 
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
+**Step 3.**  
+The user then runs `filter rk Gold rl Mid`.  
+Now, the displayed list includes only persons whose rank is Gold **and** whose role is Mid.
 
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no
-previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the
-case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</box>
-
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
-
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
+---
 
 <box type="info" seamless>
 
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the
-lifeline reaches the end of diagram.
+**Note:**  
+If no valid parameters are provided, all persons are shown.  
+The `list` command can also be used to reset the view and display everyone.
 
 </box>
 
-Similarly, how an undo operation goes through the `Model` component is shown below:
+---
 
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
+#### Sequence of Operation
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once
-to the right, pointing to the previously undone state, and restores the address book to that state.
+The following sequence diagram illustrates how a filter command flows through the app:
+
+<puml src="diagrams/FilterCommandSequenceDiagram.puml" alt="FilterCommandSequenceDiagram" />
+
+---
+
+#### Design Considerations
+
+**Aspect: How filtering is executed**
+
+- **Alternative 1 (current implementation):**  
+  Apply filtering by setting a predicate using `Model#updateFilteredPersonList(predicate)`.
+    - *Pros:* Simple and efficient. Leverages JavaFX’s built-in `FilteredList`.
+    - *Cons:* Each new filter replaces the previous one.
+
+- **Alternative 2:**  
+  Maintain a list of active filters that are combined dynamically.
+    - *Pros:* Enables cumulative filtering (e.g. filter by role, then by rank later).
+    - *Cons:* Adds complexity and state management overhead.
+
+
+### Auto-Grouping Feature
+
+#### Implementation
+
+The auto-grouping feature is implemented through the `GroupCommand` and `TeamMatcher` classes.  
+It automatically creates balanced teams from all unassigned players, taking into account **player roles, ranks, and champions**.
+
+When the user executes:
+
+`group`
+
+the application attempts to form as many full teams as possible while respecting role requirements (Top, Jungle, Mid, ADC, Support) and avoiding duplicate champions within the same team.
+
+This functionality is supported by three key components:
+
+- **`GroupCommand`** — represents the command that performs auto-grouping.
+- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned players.
+- **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
+
+---
+
+#### Example Usage
+
+**Step 1.**  
+The user has a list of unassigned players with roles and ranks.  
+The application currently shows all players without any teams assigned.
+
+
+---
+
+**Step 2.**  
+The user executes the `group` command.  
+The `GroupCommand` fetches all unassigned players via `Model#getUnassignedPersonList()`.  
+`TeamMatcher#matchTeams()` is called to form balanced teams.
+
+
+---
+
+**Step 3.**  
+Teams are successfully formed according to role, rank, and champion constraints.  
+`Model#addTeam(team)` is called for each team, updating the application state and UI.
+
+
+---
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address
-book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()`
-to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**Note:**  
+If there are insufficient players to form a full team (i.e., missing a required role), the command will notify the user with:
+
+`No teams could be formed. Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).`
+
+Any leftover unassigned players remain in the pool and can be used in future auto-grouping operations.
 
 </box>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as
-`list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus,
-the `addressBookStateList` remains unchanged.
+---
 
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
+#### Design Considerations
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not
-pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be
-purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern
-desktop applications follow.
-
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-    * Pros: Easy to implement.
-    * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-    * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-    * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
+- **Current implementation:**  
+  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned players.
+    - *Pros:* Ensures balanced teams with no duplicate champions and respects role requirements.
+    - *Cons:* Leftover players who do not complete a full team remain unassigned.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -553,12 +587,12 @@ testers are expected to do more *exploratory* testing.
     1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
+1. { more test cases … }
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+    1. {explain how to simulate a missing/corrupted file, and the expected behavior}_
 
-1. _{ more test cases …​ }_
+1. { more test cases … }
