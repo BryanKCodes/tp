@@ -2,6 +2,8 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -72,20 +74,57 @@
 
                 </GridPane>
 
-                <!-- Static Component: Container for Dynamic Content -->
-                <!-- This GridPane displays charts in a 2x2 layout with designated containers. -->
+                <!-- Static Component: 2x2 Chart Grid -->
+                <!-- All charts are statically defined; only their data is populated dynamically. -->
                 <GridPane hgap="15" vgap="15" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                    </columnConstraints>
+
                     <!-- Row 0, Column 0: Performance Chart -->
-                    <VBox fx:id="performanceChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <LineChart fx:id="performanceChart" animated="false" styleClass="line-chart"
+                               GridPane.rowIndex="0" GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis label="Match Number" side="BOTTOM" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT" />
+                        </yAxis>
+                    </LineChart>
 
                     <!-- Row 0, Column 1: CS/min Chart -->
-                    <VBox fx:id="csChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    <LineChart fx:id="csChart" animated="false" styleClass="line-chart"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis label="Match Number" side="BOTTOM" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT" />
+                        </yAxis>
+                    </LineChart>
 
                     <!-- Row 1, Column 0: KDA Chart -->
-                    <VBox fx:id="kdaChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <LineChart fx:id="kdaChart" animated="false" styleClass="line-chart"
+                               GridPane.rowIndex="1" GridPane.columnIndex="0" VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis label="Match Number" side="BOTTOM" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT" />
+                        </yAxis>
+                    </LineChart>
 
                     <!-- Row 1, Column 1: Gold Diff Chart -->
-                    <VBox fx:id="goldDiffChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    <LineChart fx:id="goldDiffChart" animated="false" styleClass="line-chart"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1" VBox.vgrow="ALWAYS">
+                        <xAxis>
+                            <NumberAxis label="Match Number" side="BOTTOM" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT" />
+                        </yAxis>
+                    </LineChart>
                 </GridPane>
 
             </VBox>
