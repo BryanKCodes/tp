@@ -175,7 +175,7 @@ public class PersonDetailWindow extends UiPart<Stage> {
     /**
      * Creates a data series from the last N matches.
      */
-    private XYChart.Series<Number, Number> createChartSeries(List<? extends Number> data) {
+    public static XYChart.Series<Number, Number> createChartSeries(List<? extends Number> data) {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         int startIndex = Math.max(0, data.size() - MAX_DISPLAYED_MATCHES);
         List<? extends Number> relevantData = data.subList(startIndex, data.size());
