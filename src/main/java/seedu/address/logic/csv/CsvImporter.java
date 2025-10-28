@@ -24,7 +24,7 @@ import seedu.address.model.tag.Tag;
 
 
 /**
- * CSV importer for players. Supports multiple headers:
+ * CSV importer for persons. Supports multiple headers:
  * <ul>
  *   <li>{@code Name,Role,Rank,Champion}</li>
  *   <li>{@code Name,Role,Rank,Champion,Wins,Losses}</li>
@@ -62,7 +62,7 @@ public final class CsvImporter {
     }
 
     /**
-     * Imports players from the given CSV file path into the model.
+     * Imports persons from the given CSV file path into the model.
      *
      * @param model the model to mutate
      * @param path  path to CSV file
@@ -71,7 +71,7 @@ public final class CsvImporter {
      * @throws InvalidCsvException when header/format is invalid
      * @throws ParseException      when values fail domain validation
      */
-    public static Result importPlayers(Model model, Path path)
+    public static Result importPersons(Model model, Path path)
             throws IOException, InvalidCsvException, ParseException {
         requireNonNull(model);
         if (!Files.exists(path)) {
@@ -101,7 +101,7 @@ public final class CsvImporter {
                 List<String> cols = parseCsvLine(line);
 
                 try {
-                    PlayerRow row = PlayerRow.parse(cols, type);
+                    PersonRow row = PersonRow.parse(cols, type);
                     Person candidate = new Person(
                             new Name(row.name),
                             new Role(row.role),
@@ -158,7 +158,7 @@ public final class CsvImporter {
         }
     }
 
-    private static final class PlayerRow {
+    private static final class PersonRow {
         final String name;
         final String role;
         final String rank;
@@ -166,7 +166,7 @@ public final class CsvImporter {
         final int wins;
         final int losses;
 
-        private PlayerRow(String name, String role, String rank, String champion, int wins, int losses) {
+        private PersonRow(String name, String role, String rank, String champion, int wins, int losses) {
             this.name = name;
             this.role = role;
             this.rank = rank;
@@ -175,13 +175,13 @@ public final class CsvImporter {
             this.losses = losses;
         }
 
-        static PlayerRow parse(List<String> cols, HeaderType type) {
+        static PersonRow parse(List<String> cols, HeaderType type) {
             switch (type) {
             case BASIC:
                 if (cols.size() < 4) {
                     throw new IllegalArgumentException("bad cols");
                 }
-                return new PlayerRow(
+                return new PersonRow(
                         cols.get(0).trim(),
                         cols.get(1).trim(),
                         cols.get(2).trim(),
@@ -199,7 +199,7 @@ public final class CsvImporter {
                 int wins = tryParseInt(cols.get(4).trim(), 0);
                 int losses = tryParseInt(cols.get(5).trim(), 0);
                 // If more columns exist (WinRate%, AvgGrade), they are intentionally ignored.
-                return new PlayerRow(
+                return new PersonRow(
                         cols.get(0).trim(),
                         cols.get(1).trim(),
                         cols.get(2).trim(),

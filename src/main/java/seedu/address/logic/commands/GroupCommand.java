@@ -7,29 +7,29 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.teammatcher.InsufficientPlayersException;
+import seedu.address.logic.teammatcher.InsufficientPersonsException;
 import seedu.address.logic.teammatcher.TeamMatcher;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
 /**
- * Automatically creates balanced teams from unassigned players.
- * Uses a role-based matching algorithm that considers player ranks and champions.
+ * Automatically creates balanced teams from unassigned persons.
+ * Uses a role-based matching algorithm that considers person ranks and champions.
  */
 public class GroupCommand extends Command {
 
     public static final String COMMAND_WORD = "group";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Automatically creates balanced teams from all unassigned players.\n"
-            + "The algorithm groups players by role, sorts by rank, and ensures no duplicate champions per team.\n"
+            + ": Automatically creates balanced teams from all unassigned persons.\n"
+            + "The algorithm groups persons by role, sorts by rank, and ensures no duplicate champions per team.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_SUCCESS = "Successfully created %1$d team(s):\n%2$s\n\n"
-            + "%3$d player(s) remain unassigned.";
+            + "%3$d person(s) remain unassigned.";
     public static final String MESSAGE_NO_TEAMS_FORMED = "No teams could be formed. "
-            + "Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).";
+            + "Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).";
 
     private final TeamMatcher teamMatcher;
 
@@ -60,14 +60,14 @@ public class GroupCommand extends Command {
         int initialUnassignedCount = unassignedPersons.size();
 
         if (unassignedPersons.isEmpty()) {
-            throw new CommandException("No unassigned players available to form teams.");
+            throw new CommandException("No unassigned persons available to form teams.");
         }
 
         // Use TeamMatcher to form teams
         List<Team> teams;
         try {
             teams = teamMatcher.matchTeams(unassignedPersons);
-        } catch (InsufficientPlayersException e) {
+        } catch (InsufficientPersonsException e) {
             throw new CommandException(e.getMessage());
         }
 
@@ -80,15 +80,15 @@ public class GroupCommand extends Command {
             model.addTeam(team);
         }
 
-        // Calculate remaining unassigned players
-        int playersUsed = teams.size() * Team.TEAM_SIZE;
-        assert playersUsed <= initialUnassignedCount : "Matcher should not use more players than available";
-        int remainingPlayers = initialUnassignedCount - playersUsed;
+        // Calculate remaining unassigned persons
+        int personsUsed = teams.size() * Team.TEAM_SIZE;
+        assert personsUsed <= initialUnassignedCount : "Matcher should not use more persons than available";
+        int remainingPersons = initialUnassignedCount - personsUsed;
 
         // Format the success message
         String teamsFormatted = formatTeams(teams);
         return new CommandResult(String.format(MESSAGE_SUCCESS,
-                teams.size(), teamsFormatted, remainingPlayers));
+                teams.size(), teamsFormatted, remainingPersons));
     }
 
     /**

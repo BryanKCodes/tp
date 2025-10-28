@@ -11,7 +11,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * <p>
  * Recognises commands of the form:
  * <ul>
- *   <li>{@code import players from data/players.csv}</li>
+ *   <li>{@code import persons from data/persons.csv}</li>
  * </ul>
  * Extracts the file path after the keyword {@code from} and constructs
  * an {@link ImportCommand} with that path.
@@ -21,18 +21,18 @@ public class ImportCommandParser implements Parser<ImportCommand> {
     /**
      * Parses the given user input and returns an {@link ImportCommand}.
      * <p>
-     * Expected format: {@code players from FILEPATH}.
+     * Expected format: {@code persons from FILEPATH}.
      *
      * @param args full user input string (excluding the command word)
-     * @return an {@link ImportCommand} that imports players from the specified file path
+     * @return an {@link ImportCommand} that imports persons from the specified file path
      * @throws ParseException if the input does not match the required format
      */
     @Override
     public ImportCommand parse(String args) throws ParseException {
         String trimmed = args.trim();
-        // Expected input example: "players from data/players.csv"
+        // Expected input example: "persons from data/persons.csv"
         String[] parts = trimmed.split("\\s+");
-        if (parts.length < 3 || !parts[0].equalsIgnoreCase("players") || !parts[1].equalsIgnoreCase("from")) {
+        if (parts.length < 3 || !parts[0].equalsIgnoreCase("persons") || !parts[1].equalsIgnoreCase("from")) {
             throw new ParseException(ImportCommand.MESSAGE_USAGE);
         }
         Path path = Paths.get(trimmed.substring(trimmed.toLowerCase().indexOf("from") + 5));

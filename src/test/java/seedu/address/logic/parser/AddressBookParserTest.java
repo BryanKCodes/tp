@@ -88,8 +88,8 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_export() throws Exception {
         // no path -> default path inside command
-        ExportCommand expected1 = new ExportCommand(ExportCommand.Target.PLAYERS, null);
-        assertEquals(expected1, parser.parseCommand("export players"));
+        ExportCommand expected1 = new ExportCommand(ExportCommand.Target.PERSONS, null);
+        assertEquals(expected1, parser.parseCommand("export persons"));
 
         // with path
         ExportCommand expected2 =
@@ -114,8 +114,8 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_import() throws Exception {
         ImportCommand expected =
-                new ImportCommand(Paths.get("data/players.csv"));
-        assertEquals(expected, parser.parseCommand("import players from data/players.csv"));
+                new ImportCommand(Paths.get("data/persons.csv"));
+        assertEquals(expected, parser.parseCommand("import persons from data/persons.csv"));
     }
 
     @Test

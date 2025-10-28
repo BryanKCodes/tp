@@ -4,7 +4,7 @@ import seedu.address.model.person.Person;
 
 /**
  * Signals that the operation would result in duplicate champions in a team.
- * Each team cannot have multiple players with the same champion.
+ * Each team cannot have multiple persons with the same champion.
  */
 public class DuplicateChampionException extends RuntimeException {
     private final Person person1;

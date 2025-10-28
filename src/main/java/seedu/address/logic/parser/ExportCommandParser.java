@@ -13,9 +13,9 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * <p>
  * Recognises the following valid patterns:
  * <ul>
- *   <li>{@code export players}</li>
+ *   <li>{@code export persons}</li>
  *   <li>{@code export teams}</li>
- *   <li>{@code export players to/data/players.csv}</li>
+ *   <li>{@code export persons to/data/persons.csv}</li>
  *   <li>{@code export teams to/data/teams.csv}</li>
  * </ul>
  * If no {@code to/FILEPATH} is provided, a default path is used.
@@ -36,13 +36,13 @@ public class ExportCommandParser implements Parser<ExportCommand> {
             throw new ParseException(ExportCommand.MESSAGE_USAGE);
         }
 
-        // Example inputs: "players to/data/players.csv" or "teams"
+        // Example inputs: "persons to/data/persons.csv" or "teams"
         String[] parts = trimmed.split("\\s+");
         String first = parts[0].toLowerCase();
 
         Target target;
-        if (first.equals("players")) {
-            target = Target.PLAYERS;
+        if (first.equals("persons")) {
+            target = Target.PERSONS;
         } else if (first.equals("teams")) {
             target = Target.TEAMS;
         } else {

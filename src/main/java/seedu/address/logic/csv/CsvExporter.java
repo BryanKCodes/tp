@@ -20,7 +20,7 @@ import seedu.address.model.team.Team;
  * Utility class that exports {@link Person} and {@link Team} data from the model
  * into CSV files following RFC4180 minimal formatting.
  * <p>
- * Supports exporting both player and team datasets with consistent columns.
+ * Supports exporting both person and team datasets with consistent columns.
  * The exported files can later be re-imported using {@code CsvImporter}.
  */
 public final class CsvExporter {
@@ -28,7 +28,7 @@ public final class CsvExporter {
     }
 
     /**
-     * Exports all players currently stored in the model to a CSV file at the specified path.
+     * Exports all persons currently stored in the model to a CSV file at the specified path.
      * <p>
      * The exported file includes the following columns:
      * <pre>
@@ -37,11 +37,11 @@ public final class CsvExporter {
      * Average grade values are extracted reflectively if {@code Person#getStats()} exists;
      * otherwise, they are shown as {@code "-"}.
      *
-     * @param model the {@link Model} containing players to export
+     * @param model the {@link Model} containing persons to export
      * @param out   the output file path; parent directories are created if missing
      * @throws IOException if an I/O error occurs during writing
      */
-    public static void exportPlayers(Model model, Path out) throws IOException {
+    public static void exportPersons(Model model, Path out) throws IOException {
         requireNonNull(model);
         List<String> lines = new ArrayList<>();
         lines.add("Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade");

@@ -31,8 +31,8 @@ import seedu.address.testutil.PersonBuilder;
 public class GroupCommandTest {
 
     @Test
-    public void execute_sufficientPlayers_success() throws Exception {
-        // Create 5 unassigned players
+    public void execute_sufficientPersons_success() throws Exception {
+        // Create 5 unassigned persons
         Person top = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
         Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
@@ -44,8 +44,8 @@ public class GroupCommandTest {
         Person support = new PersonBuilder().withName("Support1").withRole("support")
                 .withRank("Gold").withChampion("Leona").build();
 
-        List<Person> unassignedPlayers = Arrays.asList(top, jungle, mid, adc, support);
-        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(unassignedPlayers);
+        List<Person> unassignedPersons = Arrays.asList(top, jungle, mid, adc, support);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
 
         GroupCommand command = new GroupCommand();
         CommandResult result = command.execute(modelStub);
@@ -56,18 +56,18 @@ public class GroupCommandTest {
     }
 
     @Test
-    public void execute_noUnassignedPlayers_throwsCommandException() {
-        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(new ArrayList<>());
+    public void execute_noUnassignedPersons_throwsCommandException() {
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(new ArrayList<>());
 
         GroupCommand command = new GroupCommand();
 
         CommandException exception = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertTrue(exception.getMessage().contains("No unassigned players"));
+        assertTrue(exception.getMessage().contains("No unassigned persons"));
     }
 
     @Test
-    public void execute_insufficientPlayers_throwsCommandException() {
-        // Only 3 players - not enough for a full team
+    public void execute_insufficientPersons_throwsCommandException() {
+        // Only 3 persons - not enough for a full team
         Person top = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
         Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
@@ -75,8 +75,8 @@ public class GroupCommandTest {
         Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
                 .withRank("Gold").withChampion("Ahri").build();
 
-        List<Person> unassignedPlayers = Arrays.asList(top, jungle, mid);
-        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(unassignedPlayers);
+        List<Person> unassignedPersons = Arrays.asList(top, jungle, mid);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
 
         GroupCommand command = new GroupCommand();
 
@@ -85,7 +85,7 @@ public class GroupCommandTest {
 
     @Test
     public void execute_multipleTeams_success() throws Exception {
-        // Create 10 unassigned players (2 per role)
+        // Create 10 unassigned persons (2 per role)
         Person top1 = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
         Person top2 = new PersonBuilder().withName("Top2").withRole("top")
@@ -111,10 +111,10 @@ public class GroupCommandTest {
         Person support2 = new PersonBuilder().withName("Support2").withRole("support")
                 .withRank("Silver").withChampion("Thresh").build();
 
-        List<Person> unassignedPlayers = Arrays.asList(
+        List<Person> unassignedPersons = Arrays.asList(
                 top1, top2, jungle1, jungle2, mid1, mid2, adc1, adc2, support1, support2
         );
-        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(unassignedPlayers);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
 
         GroupCommand command = new GroupCommand();
         CommandResult result = command.execute(modelStub);
@@ -214,7 +214,7 @@ public class GroupCommandTest {
 
     @Test
     public void execute_noTeamsFormed_throwsCommandException() {
-        // Create players but use a TeamMatcher that returns empty teams list
+        // Create persons but use a TeamMatcher that returns empty teams list
         Person top = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
         Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
@@ -226,8 +226,8 @@ public class GroupCommandTest {
         Person support = new PersonBuilder().withName("Support1").withRole("support")
                 .withRank("Gold").withChampion("Leona").build();
 
-        List<Person> unassignedPlayers = Arrays.asList(top, jungle, mid, adc, support);
-        ModelStubWithUnassignedPlayers modelStub = new ModelStubWithUnassignedPlayers(unassignedPlayers);
+        List<Person> unassignedPersons = Arrays.asList(top, jungle, mid, adc, support);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
 
         // Use a TeamMatcher that returns no teams
         TeamMatcherStub teamMatcherStub = new TeamMatcherStub(new ArrayList<>());
@@ -375,20 +375,20 @@ public class GroupCommandTest {
     }
 
     /**
-     * A Model stub that always provides unassigned players and tracks teams.
+     * A Model stub that always provides unassigned persons and tracks teams.
      */
-    private class ModelStubWithUnassignedPlayers extends ModelStub {
+    private class ModelStubWithUnassignedPersons extends ModelStub {
         final ArrayList<Team> teamsAdded = new ArrayList<>();
-        private final List<Person> unassignedPlayers;
+        private final List<Person> unassignedPersons;
 
-        ModelStubWithUnassignedPlayers(List<Person> unassignedPlayers) {
-            requireNonNull(unassignedPlayers);
-            this.unassignedPlayers = new ArrayList<>(unassignedPlayers);
+        ModelStubWithUnassignedPersons(List<Person> unassignedPersons) {
+            requireNonNull(unassignedPersons);
+            this.unassignedPersons = new ArrayList<>(unassignedPersons);
         }
 
         @Override
         public ObservableList<Person> getUnassignedPersonList() {
-            return FXCollections.observableArrayList(unassignedPlayers);
+            return FXCollections.observableArrayList(unassignedPersons);
         }
 
         @Override

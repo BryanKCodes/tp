@@ -20,15 +20,15 @@ public class ExportCommandTest {
     Path tempDir;
 
     @Test
-    public void execute_players_writesFileAndReturnsMessage() throws Exception {
+    public void execute_persons_writesFileAndReturnsMessage() throws Exception {
         Model model = new ModelManager(new AddressBook(), new UserPrefs());
-        Path out = tempDir.resolve("players.csv");
+        Path out = tempDir.resolve("persons.csv");
 
-        ExportCommand cmd = new ExportCommand(ExportCommand.Target.PLAYERS, out);
+        ExportCommand cmd = new ExportCommand(ExportCommand.Target.PERSONS, out);
         CommandResult result = cmd.execute(model);
 
         assertTrue(Files.exists(out));
-        assertTrue(result.getFeedbackToUser().contains("Exported player data to"));
+        assertTrue(result.getFeedbackToUser().contains("Exported person data to"));
     }
 
     @Test

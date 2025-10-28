@@ -91,7 +91,7 @@ public class Team {
      * Validates that the team has exactly 5 persons with unique roles and unique champions.
      *
      * @param persons List of persons to validate.
-     * @throws InvalidTeamSizeException   if team does not have exactly 5 players.
+     * @throws InvalidTeamSizeException   if team does not have exactly 5 persons.
      * @throws DuplicateRoleException     if team has duplicate roles.
      * @throws DuplicateChampionException if team has duplicate champions.
      */
@@ -101,7 +101,7 @@ public class Team {
             throw new InvalidTeamSizeException(persons.size());
         }
 
-        // Pairwise conflict check for all players
+        // Pairwise conflict check for all persons
         for (int i = 0; i < persons.size(); i++) {
             for (int j = i + 1; j < persons.size(); j++) {
                 checkConflict(persons.get(i), persons.get(j));
@@ -169,7 +169,7 @@ public class Team {
     }
 
     /**
-     * Returns true if both teams have the same players.
+     * Returns true if both teams have the same persons.
      * This defines a weaker notion of equality between two teams.
      */
     public boolean isSameTeam(Team otherTeam) {
@@ -181,7 +181,7 @@ public class Team {
             return false;
         }
 
-        // Compare player IDs to determine if it's the same team formation
+        // Compare person IDs to determine if it's the same team formation
         if (this.persons.size() != otherTeam.persons.size()) {
             return false;
         }

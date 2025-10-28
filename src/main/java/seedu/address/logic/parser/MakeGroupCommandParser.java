@@ -33,11 +33,11 @@ public class MakeGroupCommandParser implements Parser<MakeGroupCommand> {
         }
 
         // Convert each string to a Name object
-        List<Name> playerNames = new ArrayList<>();
+        List<Name> personNames = new ArrayList<>();
         for (String nameStr : nameStrings) {
-            playerNames.add(ParserUtil.parseName(nameStr));
+            personNames.add(ParserUtil.parseName(nameStr));
         }
 
-        return new MakeGroupCommand(playerNames);
+        return new MakeGroupCommand(personNames);
     }
 }

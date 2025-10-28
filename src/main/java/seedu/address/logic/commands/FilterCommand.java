@@ -40,7 +40,7 @@ public class FilterCommand extends Command {
 
     public static final String COMMAND_WORD = "filter";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filter out players based on their "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filter out persons based on their "
             + "rank, role and champion (case-insensitive)"
             + "and displays them as a list with index numbers.\n"
             + "Parameters: INDEX (must be a positive integer) "

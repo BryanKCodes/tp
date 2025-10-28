@@ -12,7 +12,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 
 /**
- * Imports player data from a CSV file into the application's player database.
+ * Imports person data from a CSV file into the application's person database.
  * <p>
  * Supported headers include:
  * <ul>
@@ -20,13 +20,13 @@ import seedu.address.model.Model;
  *     <li>{@code Name,Role,Rank,Champion,Wins,Losses}</li>
  *     <li>{@code Name,Role,Rank,Champion,Wins,Losses,AvgGrade}</li>
  * </ul>
- * Each imported player is added to the model unless a duplicate already exists.
+ * Each imported person is added to the model unless a duplicate already exists.
  */
 public class ImportCommand extends Command {
     public static final String COMMAND_WORD = "import";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Imports players from a CSV.\n"
-            + "Parameters: import players from FILEPATH\n"
-            + "Example: import players from data/new_players.csv";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Imports persons from a CSV.\n"
+            + "Parameters: import persons from FILEPATH\n"
+            + "Example: import persons from data/new_persons.csv";
 
     private final Path path;
 
@@ -40,13 +40,13 @@ public class ImportCommand extends Command {
     }
 
     /**
-     * Executes the import command by reading player data from the specified CSV file
+     * Executes the import command by reading person data from the specified CSV file
      * and inserting valid entries into the model.
      * <p>
-     * Provides a summary indicating how many players were imported, skipped as duplicates,
+     * Provides a summary indicating how many persons were imported, skipped as duplicates,
      * or rejected due to invalid data.
      *
-     * @param model the model in which players are stored
+     * @param model the model in which persons are stored
      * @return a {@link CommandResult} containing the import summary message
      * @throws CommandException if the file is missing, invalid, or cannot be parsed
      */
@@ -54,8 +54,8 @@ public class ImportCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         try {
-            CsvImporter.Result r = CsvImporter.importPlayers(model, path);
-            String msg = String.format("Imported %d players, skipped %d duplicates, %d invalid row(s).",
+            CsvImporter.Result r = CsvImporter.importPersons(model, path);
+            String msg = String.format("Imported %d persons, skipped %d duplicates, %d invalid row(s).",
                     r.imported, r.duplicates, r.invalid);
             return new CommandResult(msg);
         } catch (NoSuchFileException e) {

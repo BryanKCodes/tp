@@ -16,10 +16,10 @@ public class ExportCommandParserTest {
     private final ExportCommandParser parser = new ExportCommandParser();
 
     @Test
-    public void parse_playersNoPath_success() throws Exception {
-        ExportCommand cmd = parser.parse("players");
+    public void parse_personsNoPath_success() throws Exception {
+        ExportCommand cmd = parser.parse("persons");
         // equals() implemented on ExportCommand -> content equality works
-        assertEquals(new ExportCommand(Target.PLAYERS, null), cmd);
+        assertEquals(new ExportCommand(Target.PERSONS, null), cmd);
     }
 
     @Test
@@ -28,14 +28,14 @@ public class ExportCommandParserTest {
     }
 
     @Test
-    public void parse_playersUpperCase_success() throws Exception {
-        ExportCommand cmd = parser.parse("PLAYERS");
-        assertEquals(new ExportCommand(Target.PLAYERS, null), cmd);
+    public void parse_personsUpperCase_success() throws Exception {
+        ExportCommand cmd = parser.parse("PERSONS");
+        assertEquals(new ExportCommand(Target.PERSONS, null), cmd);
     }
 
     @Test
     public void parse_invalidExtraToken_throwsParseException() {
-        assertThrows(ParseException.class, () -> parser.parse("players somethingElse"));
+        assertThrows(ParseException.class, () -> parser.parse("persons somethingElse"));
     }
 
     @Test

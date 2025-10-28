@@ -16,19 +16,19 @@ public class ImportCommandParserTest {
 
     @Test
     public void parse_valid_success() throws Exception {
-        ImportCommand cmd = parser.parse("players from data/players.csv");
-        assertEquals(new ImportCommand(Paths.get("data/players.csv")), cmd);
+        ImportCommand cmd = parser.parse("persons from data/persons.csv");
+        assertEquals(new ImportCommand(Paths.get("data/persons.csv")), cmd);
     }
 
     @Test
     public void parse_validCaseInsensitive_success() throws Exception {
-        ImportCommand cmd = parser.parse("PLAYERS FROM data/players.csv");
-        assertEquals(new ImportCommand(Paths.get("data/players.csv")), cmd);
+        ImportCommand cmd = parser.parse("PERSONS FROM data/persons.csv");
+        assertEquals(new ImportCommand(Paths.get("data/persons.csv")), cmd);
     }
 
     @Test
     public void parse_invalid_throwsParseException() {
-        assertThrows(ParseException.class, () -> parser.parse("players data/players.csv"));
+        assertThrows(ParseException.class, () -> parser.parse("persons data/persons.csv"));
     }
 }
 

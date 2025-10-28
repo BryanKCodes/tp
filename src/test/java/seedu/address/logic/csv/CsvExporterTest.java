@@ -30,9 +30,9 @@ public class CsvExporterTest {
     }
 
     @Test
-    public void exportPlayers_writesHeaderAndRows() throws Exception {
-        Path out = tempDir.resolve("players.csv");
-        CsvExporter.exportPlayers(populatedModel, out);
+    public void exportPersons_writesHeaderAndRows() throws Exception {
+        Path out = tempDir.resolve("persons.csv");
+        CsvExporter.exportPersons(populatedModel, out);
         assertTrue(Files.exists(out));
 
         String content = Files.readString(out);

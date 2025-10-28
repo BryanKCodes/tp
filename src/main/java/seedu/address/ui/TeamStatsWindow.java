@@ -85,7 +85,7 @@ public class TeamStatsWindow extends Stage {
                 new PieChart.Data("Losses (" + losses + ")", Math.max(0, losses))
         ));
 
-        // Build role -> player name map (Top, Jungle, Mid, Adc, Support)
+        // Build role -> person name map (Top, Jungle, Mid, Adc, Support)
         Map<String, String> roleToName = new LinkedHashMap<>();
         roleToName.put("Top", "");
         roleToName.put("Jungle", "");
