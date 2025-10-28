@@ -161,7 +161,7 @@ You can filter by:
 #### Examples
 - `filter rl/Mid Jungle` — players who are **Mid OR Jungle**.
 - `filter rl/Mid rk/Gold` — players who are **Mid AND Gold**.
-- `filter rl/Mid Jungle rk/Gold Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
+- `filter rl/Mid rl/Jungle rk/Gold rk/Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
 
 ### Editing a player : `edit`
 
@@ -228,6 +228,47 @@ Examples:
 
 - `ungroup 1` — disbands the 1st team
 - `ungroup all` — disbands all teams
+
+### Add new performance record to a player : `addStats`
+
+Add a new set of values to a player's Stats:
+- Creep score per minute (CPM)
+- Gold difference at 15th minute (GD15)
+- Kill/Death/Assist score (KDA)
+
+**Format:**
+`addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+
+#### Notes
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* All fields must be provided.
+* CPM and KDA can be decimals or integers e.g., `cpm/9.8`, `kda/2`
+* Decimal point is a dot `.`
+* GD15 must be an integer in the ranger e.g, `gd15/560`
+* These values will be recorded in one's Stats and their average score will be updated accordingly.
+
+#### Examples
+- `addStats 1 cpm/8.8 kda/6.0 gd15/2000`
+  Add the performance values for the latest match of the first player in the list to their Stats.
+
+### Remove the most recent performance record of a player : `deleteStats`
+
+Delete the most recent set of values of a player's Stats:
+- Creep score per minute (CPM)
+- Gold difference at 15th minute (GD15)
+- Kill/Death/Assist score (KDA)
+
+**Format:**
+`deleteStats INDEX`
+
+#### Notes
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* The most recent set of performance values (cpm, gd15, kda) will be deleted in one's Stats
+  and their average score will be updated accordingly.
+
+#### Examples
+- `deleteStats 1`
+  delete the most recent set of performance values of the first player in the list.
 
 ### Clearing all entries : `clear`
 
@@ -297,5 +338,7 @@ Action               | Format
 **Auto-group teams** | `group`
 **Manually create team** | `makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
 **Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
+**Add performance values** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+**Delete performance values** | `deleteStats INDEX`
 **Clear all entries**| `clear`
 **Exit**             | `exit`
