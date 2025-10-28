@@ -1,17 +1,20 @@
 package seedu.address.ui;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
-import seedu.address.ui.charts.ChartFactory;
+import seedu.address.model.person.Stats;
+import seedu.address.ui.charts.StatsChart;
+import seedu.address.ui.charts.provider.CsPerMinuteChartProvider;
+import seedu.address.ui.charts.provider.GoldDifferenceChartProvider;
+import seedu.address.ui.charts.provider.KdaChartProvider;
+import seedu.address.ui.charts.provider.PerformanceChartProvider;
 
 /**
  * Controller for a window that displays detailed information about a person.
@@ -36,7 +39,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
     private static final String FXML = "PersonDetailWindow.fxml";
     private final Logger logger = LogsCenter.getLogger(getClass());
 
-    private final ChartFactory chartFactory;
     private Person person;
 
     // @FXML fields for the static components defined in the FXML file.
@@ -47,10 +49,12 @@ public class PersonDetailWindow extends UiPart<Stage> {
     @FXML private Label winsLabel;
     @FXML private Label lossesLabel;
     @FXML private Label tagsLabel;
+    @FXML private Label performanceLabel;
+    @FXML private Label totalMatchesLabel;
     @FXML private GridPane detailsPane;
 
     // @FXML field for the container where dynamic content will be injected.
-    @FXML private VBox chartPane;
+    @FXML private GridPane chartPane;
 
     /**
      * Creates a PersonDetailWindow.
@@ -64,7 +68,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
      */
     public PersonDetailWindow(Stage root) {
         super(FXML, root);
-        this.chartFactory = new ChartFactory();
     }
 
     /**
@@ -92,16 +95,31 @@ public class PersonDetailWindow extends UiPart<Stage> {
         tagsLabel.setText(person.getTags().toString());
         winsLabel.setText(String.valueOf(person.getWins()));
         lossesLabel.setText(String.valueOf(person.getLosses()));
+        performanceLabel.setText(String.format("%.1f / 10.0", person.getStats().getValue()));
     }
 
     /**
-     * Populates the chart pane with dynamically-generated charts from the ChartFactory.
-     * This method's responsibility is dynamic content injection.
+     * Populates the chart pane with the 4 specific charts in a 2x2 grid layout.
+     * This method's responsibility is deciding which charts to display and their arrangement.
      */
     private void displayCharts() {
         chartPane.getChildren().clear();
-        List<Node> chartComponents = chartFactory.createAllChartComponents(person);
-        chartPane.getChildren().addAll(chartComponents);
+        Stats stats = person.getStats();
+
+        // Create and position charts in 2x2 grid
+        addChartToGrid(StatsChart.createChart(new PerformanceChartProvider(), stats), 0, 0);
+        addChartToGrid(StatsChart.createChart(new CsPerMinuteChartProvider(), stats), 0, 1);
+        addChartToGrid(StatsChart.createChart(new KdaChartProvider(), stats), 1, 0);
+        addChartToGrid(StatsChart.createChart(new GoldDifferenceChartProvider(), stats), 1, 1);
+    }
+
+    /**
+     * Adds a chart to the grid pane at the specified position.
+     */
+    private void addChartToGrid(VBox chart, int row, int col) {
+        GridPane.setRowIndex(chart, row);
+        GridPane.setColumnIndex(chart, col);
+        chartPane.getChildren().add(chart);
     }
 
     /**

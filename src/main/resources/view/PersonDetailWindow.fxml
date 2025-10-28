@@ -65,11 +65,21 @@
                     <!-- Row 5: Tags -->
                     <Label styleClass="detail-key-label" text="Tags:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                     <Label fx:id="tagsLabel" styleClass="detail-value-label" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <!-- Row 6: Performance Score -->
+                    <Label styleClass="detail-key-label" text="Performance:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <Label fx:id="performanceLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
                 </GridPane>
 
                 <!-- Static Component: Container for Dynamic Content -->
-                <!-- This VBox is the designated injection point for the charts. -->
-                <VBox fx:id="chartPane" spacing="10" VBox.vgrow="ALWAYS" />
+                <!-- This GridPane is the designated injection point for the charts in a 2x2 layout. -->
+                <GridPane fx:id="chartPane" hgap="15" vgap="15" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                    </columnConstraints>
+                </GridPane>
 
             </VBox>
         </Scene>
