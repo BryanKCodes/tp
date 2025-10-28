@@ -69,6 +69,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Creates a PersonDetailWindow with the given Stage.
+     *
+     * @param root The Stage to be used as the root of this window.
      */
     public PersonDetailWindow(Stage root) {
         super(FXML, root);

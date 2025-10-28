@@ -2,8 +2,10 @@ package seedu.address.logic.teammatcher;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import seedu.address.model.person.Person;
@@ -47,11 +49,11 @@ public class TeamMatcher {
         // Validate we have at least one player per role
         validateMinimumPlayers(playersByRole);
 
-        // Sort each role group by rank
-        sortByRank(playersByRole);
+        // Create defensive copies and sort each role group by rank
+        Map<Role, List<Person>> sortedPlayersByRole = createSortedCopy(playersByRole);
 
         // Form teams
-        return formTeams(playersByRole);
+        return formTeams(sortedPlayersByRole);
     }
 
     /**
@@ -77,20 +79,33 @@ public class TeamMatcher {
     }
 
     /**
-     * Sorts each role's player list by rank (highest to lowest).
+     * Creates a sorted defensive copy of the players by role map.
+     * Each role's player list is sorted by rank (highest to lowest).
      * Uses Rank's natural ordering (Comparable) in reverse.
+     *
+     * @param playersByRole Original map of players grouped by role (not modified).
+     * @return New map with sorted copies of player lists.
      */
-    private void sortByRank(Map<Role, List<Person>> playersByRole) {
+    private Map<Role, List<Person>> createSortedCopy(Map<Role, List<Person>> playersByRole) {
         Comparator<Person> rankComparator = Comparator.comparing(Person::getRank).reversed();
+        Map<Role, List<Person>> sortedCopy = new HashMap<>();
 
-        for (List<Person> players : playersByRole.values()) {
-            players.sort(rankComparator);
+        for (Map.Entry<Role, List<Person>> entry : playersByRole.entrySet()) {
+            List<Person> sortedPlayers = new ArrayList<>(entry.getValue());
+            sortedPlayers.sort(rankComparator);
+            sortedCopy.put(entry.getKey(), sortedPlayers);
         }
+
+        return sortedCopy;
     }
 
     /**
      * Forms as many complete teams as possible from the sorted role groups.
      * Ensures no duplicate champions within each team.
+     * Modifies the input map by removing players as they are assigned to teams.
+     *
+     * @param playersByRole Map of roles to lists of players (will be modified).
+     * @return List of teams formed from the players.
      */
     private List<Team> formTeams(Map<Role, List<Person>> playersByRole) {
         List<Team> teams = new ArrayList<>();
@@ -102,16 +117,16 @@ public class TeamMatcher {
             // Try to select one player from each role
             for (Role role : REQUIRED_ROLES) {
                 List<Person> availablePlayers = playersByRole.get(role);
-                Person selectedPlayer = selectPlayerWithoutChampionConflict(availablePlayers, teamMembers);
+                Optional<Person> selectedPlayer = selectPlayerWithoutChampionConflict(availablePlayers, teamMembers);
 
-                if (selectedPlayer == null) {
+                if (selectedPlayer.isEmpty()) {
                     // Can't form a complete team without champion conflicts
                     // Put back the players we've selected and stop
                     return teams;
                 }
 
-                teamMembers.add(selectedPlayer);
-                availablePlayers.remove(selectedPlayer);
+                teamMembers.add(selectedPlayer.get());
+                availablePlayers.remove(selectedPlayer.get());
             }
 
             // Successfully formed a team
@@ -141,16 +156,16 @@ public class TeamMatcher {
      *
      * @param availablePlayers List of players to choose from.
      * @param selectedMembers Already selected team members.
-     * @return The selected player, or null if no valid player can be found.
+     * @return The selected player, or Optional.empty() if no valid player can be found.
      */
-    private Person selectPlayerWithoutChampionConflict(List<Person> availablePlayers,
-                                                        List<Person> selectedMembers) {
+    private Optional<Person> selectPlayerWithoutChampionConflict(List<Person> availablePlayers,
+                                                                  List<Person> selectedMembers) {
         for (Person candidate : availablePlayers) {
             if (!hasChampionConflict(candidate, selectedMembers)) {
-                return candidate;
+                return Optional.of(candidate);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

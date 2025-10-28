@@ -163,6 +163,15 @@ public class UngroupCommandTest {
         assertFalse(ungroupAllCommand.equals(ungroupFirstCommand));
     }
 
+    @Test
+    public void toStringMethod() {
+        Index targetIndex = Index.fromOneBased(1);
+        UngroupCommand ungroupCommand = new UngroupCommand(targetIndex);
+        String expected = UngroupCommand.class.getCanonicalName() + "{targetIndex=" + targetIndex
+                + ", removeAll=" + false + "}";
+        assertEquals(expected, ungroupCommand.toString());
+    }
+
     /**
      * A default model stub that have all of the methods failing.
      */

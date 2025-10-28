@@ -237,6 +237,14 @@ public class GroupCommandTest {
         assertEquals(GroupCommand.MESSAGE_NO_TEAMS_FORMED, exception.getMessage());
     }
 
+    @Test
+    public void toStringMethod() {
+        TeamMatcher teamMatcher = new TeamMatcher();
+        GroupCommand groupCommand = new GroupCommand(teamMatcher);
+        String expected = GroupCommand.class.getCanonicalName() + "{teamMatcher=" + teamMatcher + "}";
+        assertEquals(expected, groupCommand.toString());
+    }
+
     /**
      * A TeamMatcher stub that returns a predefined list of teams.
      */
