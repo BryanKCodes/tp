@@ -1,6 +1,7 @@
-package seedu.address.ui.charts;
+package seedu.address.ui;
 
 import java.util.Collections;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -8,15 +9,14 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import seedu.address.model.person.Stats;
-import seedu.address.ui.UiPart;
-import seedu.address.ui.charts.provider.ChartProvider;
 
 /**
- * A UI component that displays a single line chart.
+ * A UI component that displays a single line chart for player statistics.
  */
 public class StatsChart extends UiPart<VBox> {
     private static final String FXML = "charts/StatsChart.fxml";
     private static final String TITLE_NO_DATA = "No performance data available";
+    private static final int MAX_DISPLAYED_MATCHES = 10;
 
     @FXML
     private LineChart<Number, Number> chart;
@@ -30,22 +30,72 @@ public class StatsChart extends UiPart<VBox> {
     }
 
     /**
-     * Static factory method to create a chart with the given provider and stats.
-     *
-     * @param provider The chart provider supplying data and configuration.
-     * @param stats The stats data to visualize.
-     * @return A VBox containing the configured chart.
+     * Creates a Performance Score chart.
      */
-    public static VBox createChart(ChartProvider provider, Stats stats) {
+    public static VBox createPerformanceChart(Stats stats) {
+        String title = String.format("Performance Score Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
+        String yAxisLabel = "Performance Score";
+        String styleClass = "performance-chart";
+        XYChart.Series<Number, Number> series = createSeries(stats.getScores());
+        return createChart(title, yAxisLabel, styleClass, series);
+    }
+
+    /**
+     * Creates a CS per Minute chart.
+     */
+    public static VBox createCsPerMinuteChart(Stats stats) {
+        String title = String.format("CS per Minute Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
+        String yAxisLabel = "CS per Minute";
+        String styleClass = "cs-chart";
+        XYChart.Series<Number, Number> series = createSeries(stats.getCsPerMinute());
+        return createChart(title, yAxisLabel, styleClass, series);
+    }
+
+    /**
+     * Creates a KDA chart.
+     */
+    public static VBox createKdaChart(Stats stats) {
+        String title = String.format("KDA Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
+        String yAxisLabel = "KDA";
+        String styleClass = "kda-chart";
+        XYChart.Series<Number, Number> series = createSeries(stats.getKdaScores());
+        return createChart(title, yAxisLabel, styleClass, series);
+    }
+
+    /**
+     * Creates a Gold Difference chart.
+     */
+    public static VBox createGoldDifferenceChart(Stats stats) {
+        String title = String.format("Gold Diff @15 Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
+        String yAxisLabel = "Gold Diff @15";
+        String styleClass = "gold-diff-chart";
+        XYChart.Series<Number, Number> series = createSeries(stats.getGoldDiffAt15());
+        return createChart(title, yAxisLabel, styleClass, series);
+    }
+
+    /**
+     * Creates a chart with the given configuration.
+     */
+    private static VBox createChart(String title, String yAxisLabel, String styleClass,
+            XYChart.Series<Number, Number> series) {
         StatsChart statsChart = new StatsChart();
-
-        String title = provider.getTitle();
-        String yAxisLabel = provider.getYAxisLabel();
-        String styleClass = provider.getStyleClass();
-        XYChart.Series<Number, Number> series = provider.createSeries(stats);
-
         statsChart.updateChart(title, yAxisLabel, styleClass, series);
         return statsChart.getRoot();
+    }
+
+    /**
+     * Creates a data series from the last N matches.
+     */
+    private static XYChart.Series<Number, Number> createSeries(List<? extends Number> data) {
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        int startIndex = Math.max(0, data.size() - MAX_DISPLAYED_MATCHES);
+        List<? extends Number> relevantData = data.subList(startIndex, data.size());
+
+        for (int i = 0; i < relevantData.size(); i++) {
+            int matchNumber = startIndex + i + 1;
+            series.getData().add(new XYChart.Data<>(matchNumber, relevantData.get(i)));
+        }
+        return series;
     }
 
     /**

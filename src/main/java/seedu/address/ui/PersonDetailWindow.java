@@ -10,11 +10,6 @@ import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Stats;
-import seedu.address.ui.charts.StatsChart;
-import seedu.address.ui.charts.provider.CsPerMinuteChartProvider;
-import seedu.address.ui.charts.provider.GoldDifferenceChartProvider;
-import seedu.address.ui.charts.provider.KdaChartProvider;
-import seedu.address.ui.charts.provider.PerformanceChartProvider;
 
 /**
  * Controller for a window that displays detailed information about a person.
@@ -53,8 +48,11 @@ public class PersonDetailWindow extends UiPart<Stage> {
     @FXML private Label totalMatchesLabel;
     @FXML private GridPane detailsPane;
 
-    // @FXML field for the container where dynamic content will be injected.
-    @FXML private GridPane chartPane;
+    // @FXML fields for the chart containers defined in FXML.
+    @FXML private VBox performanceChartPane;
+    @FXML private VBox csChartPane;
+    @FXML private VBox kdaChartPane;
+    @FXML private VBox goldDiffChartPane;
 
     /**
      * Creates a PersonDetailWindow.
@@ -99,27 +97,17 @@ public class PersonDetailWindow extends UiPart<Stage> {
     }
 
     /**
-     * Populates the chart pane with the 4 specific charts in a 2x2 grid layout.
-     * This method's responsibility is deciding which charts to display and their arrangement.
+     * Populates the chart containers with the 4 specific charts.
+     * Each chart is placed in its designated container defined in FXML.
      */
     private void displayCharts() {
-        chartPane.getChildren().clear();
         Stats stats = person.getStats();
 
-        // Create and position charts in 2x2 grid
-        addChartToGrid(StatsChart.createChart(new PerformanceChartProvider(), stats), 0, 0);
-        addChartToGrid(StatsChart.createChart(new CsPerMinuteChartProvider(), stats), 0, 1);
-        addChartToGrid(StatsChart.createChart(new KdaChartProvider(), stats), 1, 0);
-        addChartToGrid(StatsChart.createChart(new GoldDifferenceChartProvider(), stats), 1, 1);
-    }
-
-    /**
-     * Adds a chart to the grid pane at the specified position.
-     */
-    private void addChartToGrid(VBox chart, int row, int col) {
-        GridPane.setRowIndex(chart, row);
-        GridPane.setColumnIndex(chart, col);
-        chartPane.getChildren().add(chart);
+        // Populate each chart container
+        performanceChartPane.getChildren().setAll(StatsChart.createPerformanceChart(stats));
+        csChartPane.getChildren().setAll(StatsChart.createCsPerMinuteChart(stats));
+        kdaChartPane.getChildren().setAll(StatsChart.createKdaChart(stats));
+        goldDiffChartPane.getChildren().setAll(StatsChart.createGoldDifferenceChart(stats));
     }
 
     /**

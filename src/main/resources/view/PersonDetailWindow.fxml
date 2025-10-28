@@ -73,12 +73,19 @@
                 </GridPane>
 
                 <!-- Static Component: Container for Dynamic Content -->
-                <!-- This GridPane is the designated injection point for the charts in a 2x2 layout. -->
-                <GridPane fx:id="chartPane" hgap="15" vgap="15" VBox.vgrow="ALWAYS">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
-                    </columnConstraints>
+                <!-- This GridPane displays charts in a 2x2 layout with designated containers. -->
+                <GridPane hgap="15" vgap="15" VBox.vgrow="ALWAYS">
+                    <!-- Row 0, Column 0: Performance Chart -->
+                    <VBox fx:id="performanceChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+
+                    <!-- Row 0, Column 1: CS/min Chart -->
+                    <VBox fx:id="csChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <!-- Row 1, Column 0: KDA Chart -->
+                    <VBox fx:id="kdaChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+
+                    <!-- Row 1, Column 1: Gold Diff Chart -->
+                    <VBox fx:id="goldDiffChartPane" VBox.vgrow="ALWAYS" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                 </GridPane>
 
             </VBox>
