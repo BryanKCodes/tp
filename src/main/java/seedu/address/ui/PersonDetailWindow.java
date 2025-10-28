@@ -36,7 +36,6 @@ import seedu.address.model.person.Stats;
 public class PersonDetailWindow extends UiPart<Stage> {
 
     private static final String FXML = "PersonDetailWindow.fxml";
-    private static final String TITLE_NO_DATA = "No performance data available";
     private static final int MAX_DISPLAYED_MATCHES = 10;
     private final Logger logger = LogsCenter.getLogger(getClass());
 
@@ -161,12 +160,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
     private void populateChart(LineChart<Number, Number> chart, String title, String yAxisLabel,
             XYChart.Series<Number, Number> series) {
         chart.setLegendVisible(false);
-
-        if (series.getData().isEmpty()) {
-            showEmptyMessage(chart);
-            return;
-        }
-
         setLabels(chart, title, yAxisLabel);
         plotData(chart, series);
         configureAxes(chart);
@@ -185,14 +178,6 @@ public class PersonDetailWindow extends UiPart<Stage> {
             series.getData().add(new XYChart.Data<>(matchNumber, relevantData.get(i)));
         }
         return series;
-    }
-
-    /**
-     * Displays a message on the chart indicating that no data is available.
-     */
-    private void showEmptyMessage(LineChart<Number, Number> chart) {
-        chart.getData().clear();
-        chart.setTitle(TITLE_NO_DATA);
     }
 
     /**
