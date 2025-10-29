@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.teammatcher.InsufficientPlayersException;
 import seedu.address.logic.teammatcher.TeamMatcher;
@@ -57,7 +58,6 @@ public class GroupCommand extends Command {
 
         // Get all unassigned persons
         List<Person> unassignedPersons = model.getUnassignedPersonList();
-        int initialUnassignedCount = unassignedPersons.size();
 
         if (unassignedPersons.isEmpty()) {
             throw new CommandException("No unassigned players available to form teams.");
@@ -80,10 +80,8 @@ public class GroupCommand extends Command {
             model.addTeam(team);
         }
 
-        // Calculate remaining unassigned players
-        int playersUsed = teams.size() * Team.TEAM_SIZE;
-        assert playersUsed <= initialUnassignedCount : "Matcher should not use more players than available";
-        int remainingPlayers = initialUnassignedCount - playersUsed;
+        // Get the actual count of remaining unassigned players from the model
+        int remainingPlayers = model.getUnassignedPersonList().size();
 
         // Format the success message
         String teamsFormatted = formatTeams(teams);
@@ -94,6 +92,9 @@ public class GroupCommand extends Command {
     /**
      * Formats the list of teams for display.
      * Each team is displayed on a separate line with its number and members.
+     *
+     * @param teams List of teams to format.
+     * @return Formatted string representation of teams.
      */
     private String formatTeams(List<Team> teams) {
         assert !teams.isEmpty() : "formatTeams should only be called with non-empty teams list";
@@ -119,5 +120,12 @@ public class GroupCommand extends Command {
     @Override
     public int hashCode() {
         return teamMatcher.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .add("teamMatcher", teamMatcher)
+                .toString();
     }
 }

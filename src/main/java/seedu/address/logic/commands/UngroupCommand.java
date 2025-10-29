@@ -3,8 +3,10 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -70,6 +72,10 @@ public class UngroupCommand extends Command {
 
     /**
      * Removes all teams from the model.
+     *
+     * @param model Model to remove teams from.
+     * @param teamList List of teams to remove.
+     * @return CommandResult with success message.
      */
     private CommandResult executeRemoveAll(Model model, List<Team> teamList) {
         int teamCount = teamList.size();
@@ -87,6 +93,11 @@ public class UngroupCommand extends Command {
 
     /**
      * Removes a single team at the specified index.
+     *
+     * @param model Model to remove team from.
+     * @param teamList List of teams currently displayed.
+     * @return CommandResult with success message.
+     * @throws CommandException If the index is invalid.
      */
     private CommandResult executeRemoveSingle(Model model, List<Team> teamList) throws CommandException {
         if (targetIndex.getZeroBased() >= teamList.size()) {
@@ -119,5 +130,18 @@ public class UngroupCommand extends Command {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(targetIndex, removeAll);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .add("targetIndex", targetIndex)
+                .add("removeAll", removeAll)
+                .toString();
     }
 }
