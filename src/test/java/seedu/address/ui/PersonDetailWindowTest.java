@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -11,6 +12,11 @@ import org.junit.jupiter.api.Test;
 import javafx.scene.chart.XYChart;
 
 class PersonDetailWindowTest {
+
+    @Test
+    void createChartSeries_nullData_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> PersonDetailWindow.createChartSeries(null));
+    }
 
     @Test
     void createChartSeries_emptyList_returnsEmptySeries() {

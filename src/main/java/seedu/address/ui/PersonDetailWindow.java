@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -116,6 +118,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates the Performance Score chart with data.
+     *
+     * @param scores The list of performance scores to display.
      */
     private void populatePerformanceChart(List<? extends Number> scores) {
         String title = String.format("Performance Score Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
@@ -126,6 +130,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates the CS per Minute chart with data.
+     *
+     * @param csPerMinute The list of CS per minute values to display.
      */
     private void populateCsPerMinuteChart(List<? extends Number> csPerMinute) {
         String title = String.format("CS per Minute Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
@@ -136,6 +142,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates the KDA chart with data.
+     *
+     * @param kdaScores The list of KDA scores to display.
      */
     private void populateKdaChart(List<? extends Number> kdaScores) {
         String title = String.format("KDA Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
@@ -146,6 +154,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates the Gold Difference chart with data.
+     *
+     * @param goldDiffAt15 The list of gold difference at 15 minutes values to display.
      */
     private void populateGoldDifferenceChart(List<? extends Number> goldDiffAt15) {
         String title = String.format("Gold Diff @15 Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
@@ -156,6 +166,11 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates a chart with the given title, axis label, and data series.
+     *
+     * @param chart The chart to populate.
+     * @param title The title to display on the chart.
+     * @param yAxisLabel The label for the Y-axis.
+     * @param series The data series to plot.
      */
     private void populateChart(LineChart<Number, Number> chart, String title, String yAxisLabel,
             XYChart.Series<Number, Number> series) {
@@ -167,8 +182,13 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Creates a data series from the last N matches.
+     * Package-private to allow testing.
+     *
+     * @param data The list of data points to create a series from. Must not be null.
+     * @return A series containing the last N data points.
      */
-    public static XYChart.Series<Number, Number> createChartSeries(List<? extends Number> data) {
+    static XYChart.Series<Number, Number> createChartSeries(List<? extends Number> data) {
+        requireNonNull(data);
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         int startIndex = Math.max(0, data.size() - MAX_DISPLAYED_MATCHES);
         List<? extends Number> relevantData = data.subList(startIndex, data.size());
@@ -182,6 +202,9 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Plots the given data series onto the chart, replacing any existing data.
+     *
+     * @param chart The chart to plot data on.
+     * @param series The data series to plot.
      */
     private void plotData(LineChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
         chart.getData().setAll(List.of(series));
@@ -189,6 +212,10 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Sets the title and axis labels for the chart.
+     *
+     * @param chart The chart to set labels for.
+     * @param title The title to set.
+     * @param yAxisLabel The Y-axis label to set.
      */
     private void setLabels(LineChart<Number, Number> chart, String title, String yAxisLabel) {
         chart.setTitle(title);
@@ -198,6 +225,8 @@ public class PersonDetailWindow extends UiPart<Stage> {
     /**
      * Configures the X-Axis bounds and ticks based on the data in the plotted series.
      * This method must be called after plotData() has been called.
+     *
+     * @param chart The chart whose axes to configure.
      */
     private void configureAxes(LineChart<Number, Number> chart) {
         if (chart.getData().isEmpty() || chart.getData().get(0).getData().isEmpty()) {
