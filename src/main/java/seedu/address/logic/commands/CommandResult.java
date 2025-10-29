@@ -78,6 +78,17 @@ public class CommandResult {
     }
 
     /**
+     * Factory method to create a result that opens the Person detail window.
+     *
+     * @param message feedback line for the result display
+     * @param person person to show
+     * @return a {@code CommandResult} configured to show the Person detail window
+     */
+    public static CommandResult showPersonDetail(String message, Person person) {
+        return new CommandResult(message, false, false, true, person, false, null);
+    }
+
+    /**
      * Factory method to create a result that opens the Team stats window.
      *
      * @param message feedback line for the result display

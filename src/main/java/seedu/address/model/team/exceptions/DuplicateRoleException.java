@@ -4,7 +4,7 @@ import seedu.address.model.person.Person;
 
 /**
  * Signals that the operation would result in duplicate roles in a team.
- * Each team must have exactly one player for each of the five roles: Top, Jungle, Mid, ADC, Support.
+ * Each team must have exactly one person for each of the five roles: Top, Jungle, Mid, ADC, Support.
  */
 public class DuplicateRoleException extends RuntimeException {
     private final Person person1;

@@ -11,6 +11,10 @@ import static seedu.address.testutil.TypicalPersons.CARL;
 import static seedu.address.testutil.TypicalPersons.DANIEL;
 import static seedu.address.testutil.TypicalPersons.ELLE;
 import static seedu.address.testutil.TypicalPersons.FIONA;
+import static seedu.address.testutil.TypicalPersons.GEORGE;
+import static seedu.address.testutil.TypicalPersons.HOON;
+import static seedu.address.testutil.TypicalPersons.IDA;
+import static seedu.address.testutil.TypicalPersons.JAMES;
 import static seedu.address.testutil.TypicalTeams.TEAM_A;
 import static seedu.address.testutil.TypicalTeams.TEAM_B;
 
@@ -20,6 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.team.exceptions.DuplicateTeamException;
+import seedu.address.model.team.exceptions.PersonAlreadyInTeamException;
 import seedu.address.model.team.exceptions.TeamNotFoundException;
 import seedu.address.testutil.TeamBuilder;
 
@@ -152,5 +157,39 @@ public class UniqueTeamListTest {
         uniqueTeamList.add(team);
         assertEquals(team, uniqueTeamList.getTeamContainingPerson(ALICE));
         assertEquals(team, uniqueTeamList.getTeamContainingPerson(BENSON));
+    }
+
+    @Test
+    public void add_personAlreadyInAnotherTeam_throwsPersonAlreadyInTeamException() {
+        // Add first team: ALICE (mid), BENSON (top), CARL (jungle), DANIEL (adc), ELLE (support)
+        Team team1 = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        uniqueTeamList.add(team1);
+
+        // Try to add second team that also contains ALICE
+        // Team2: ALICE (mid), GEORGE (top), IDA (jungle), JAMES (adc), HOON (support)
+        Team team2 = new Team(Arrays.asList(ALICE, GEORGE, IDA, JAMES, HOON));
+        assertThrows(PersonAlreadyInTeamException.class, () -> uniqueTeamList.add(team2));
+    }
+
+    @Test
+    public void setTeams_personsReusedAcrossTeams_throwsPersonAlreadyInTeamException() {
+        // Create two teams where ALICE appears in both
+        Team team1 = new Team(Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE));
+        Team team2 = new Team(Arrays.asList(ALICE, GEORGE, IDA, JAMES, HOON));
+
+        List<Team> teamsWithReusedPerson = Arrays.asList(team1, team2);
+        assertThrows(PersonAlreadyInTeamException.class, () -> uniqueTeamList.setTeams(teamsWithReusedPerson));
+    }
+
+    @Test
+    public void setTeams_personsUniqueAcrossTeams_success() {
+        // TEAM_A and TEAM_B have completely different persons
+        List<Team> teamsWithUniquePersons = Arrays.asList(TEAM_A, TEAM_B);
+        uniqueTeamList.setTeams(teamsWithUniquePersons);
+
+        UniqueTeamList expectedUniqueTeamList = new UniqueTeamList();
+        expectedUniqueTeamList.add(TEAM_A);
+        expectedUniqueTeamList.add(TEAM_B);
+        assertEquals(expectedUniqueTeamList, uniqueTeamList);
     }
 }
