@@ -5,8 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIFTH_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_TEAM;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FOURTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddStatsCommand;
 import seedu.address.logic.commands.ClearCommand;
@@ -38,7 +43,6 @@ import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.commands.ViewTeamCommand;
 import seedu.address.logic.commands.WinCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
@@ -134,29 +138,22 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_listteam_returnsListTeamCommand() throws Exception {
+    public void parseCommand_listTeam() throws Exception {
         assertTrue(parser.parseCommand(ListTeamCommand.COMMAND_WORD) instanceof ListTeamCommand);
         assertTrue(parser.parseCommand(ListTeamCommand.COMMAND_WORD + " 3") instanceof ListTeamCommand);
     }
 
     @Test
-    public void parseCommand_makeGroupValid_success() throws Exception {
-        String input = "makegroup n/Alice n/Bob n/Cathy n/Derek n/Ella";
-        List<Name> expectedNames = Arrays.asList(
-                new Name("Alice"), new Name("Bob"), new Name("Cathy"), new Name("Derek"), new Name("Ella")
-        );
-        MakeGroupCommand expectedCommand = new MakeGroupCommand(expectedNames);
+    public void parseCommand_makeGroup() throws Exception {
+        List<Index> indices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON, INDEX_THIRD_PERSON,
+                INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON);
 
-        assertEquals(expectedCommand, parser.parseCommand(input));
-    }
+        String arguments = indices.stream().map(index -> String.valueOf(index.getOneBased()))
+                .collect(Collectors.joining(" "));
 
-    @Test
-    public void parseCommand_makeGroupInvalidNumber_throwsParseException() {
-        String input = "makegroup n/Alice n/Bob"; // fewer than 5 names
-        assertThrows(ParseException.class,
-                String.format(
-                        MESSAGE_INVALID_COMMAND_FORMAT,
-                        MakeGroupCommand.MESSAGE_USAGE), () -> parser.parseCommand(input));
+        MakeGroupCommand command = (MakeGroupCommand) parser.parseCommand(
+                MakeGroupCommand.COMMAND_WORD + " " + arguments);
+        assertEquals(new MakeGroupCommand(indices), command);
     }
 
     @Test
@@ -167,41 +164,41 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_viewteam_success() throws Exception {
+    public void parseCommand_viewTeam() throws Exception {
         ViewTeamCommand command = (ViewTeamCommand) parser.parseCommand(
                 ViewTeamCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
         assertEquals(new ViewTeamCommand(INDEX_FIRST_TEAM), command);
     }
 
     @Test
-    public void parseCommand_winCommand() throws Exception {
+    public void parseCommand_win() throws Exception {
         WinCommand command = (WinCommand) parser.parseCommand(
                 WinCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
         assertEquals(new WinCommand(INDEX_FIRST_TEAM), command);
     }
 
     @Test
-    public void parseCommand_loseCommand() throws Exception {
+    public void parseCommand_lose() throws Exception {
         LoseCommand command = (LoseCommand) parser.parseCommand(
                 LoseCommand.COMMAND_WORD + " " + INDEX_FIRST_TEAM.getOneBased());
         assertEquals(new LoseCommand(INDEX_FIRST_TEAM), command);
     }
 
     @Test
-    public void parseCommand_deleteStatsCommand() throws Exception {
+    public void parseCommand_deleteStats() throws Exception {
         String input = DeleteStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased();
         assertTrue(parser.parseCommand(input) instanceof DeleteStatsCommand);
     }
 
     @Test
-    public void parseCommand_addStatsCommand() throws Exception {
+    public void parseCommand_addStats() throws Exception {
         String input = AddStatsCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
                 + " " + "cpm/10.2 gd15/2000 kda/2.2";
         assertTrue(parser.parseCommand(input) instanceof AddStatsCommand);
     }
 
     @Test
-    public void parseCommand_group_returnsGroupCommand() throws Exception {
+    public void parseCommand_group() throws Exception {
         assertTrue(parser.parseCommand(GroupCommand.COMMAND_WORD) instanceof GroupCommand);
     }
 
