@@ -9,7 +9,7 @@ public class InvalidTeamSizeExceptionTest {
     @Test
     public void constructor_noArgs_success() {
         InvalidTeamSizeException exception = new InvalidTeamSizeException();
-        assertTrue(exception.getMessage().contains("5 players"));
+        assertTrue(exception.getMessage().contains("5 persons"));
     }
 
     @Test
