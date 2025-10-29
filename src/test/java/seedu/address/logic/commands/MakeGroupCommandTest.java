@@ -40,14 +40,14 @@ public class MakeGroupCommandTest {
             .withName("Ella").withRole("support").withRank("Silver").withChampion("Leona").build();
 
     @Test
-    public void execute_validPlayers_teamCreatedSuccessfully() throws CommandException {
-        List<Person> players = Arrays.asList(alice, bob, cathy, derek, ella);
-        List<Name> playerNames = new ArrayList<>();
-        players.forEach(p -> playerNames.add(p.getName()));
+    public void execute_validPersons_teamCreatedSuccessfully() throws CommandException {
+        List<Person> persons = Arrays.asList(alice, bob, cathy, derek, ella);
+        List<Name> personNames = new ArrayList<>();
+        persons.forEach(p -> personNames.add(p.getName()));
 
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(players);
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
 
-        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+        MakeGroupCommand command = new MakeGroupCommand(personNames);
         CommandResult result = command.execute(modelStub);
 
         Team actualTeam = modelStub.teamsAdded.get(0); // the team that was added
@@ -61,20 +61,20 @@ public class MakeGroupCommandTest {
         assertEquals(1, modelStub.teamsAdded.size());
 
         // 3. Check that the correct persons were grouped into the team
-        List<Person> actualPlayers = actualTeam.getPersons();
-        assertTrue(players.containsAll(actualPlayers) && actualPlayers.containsAll(players));
+        List<Person> actualPersons = actualTeam.getPersons();
+        assertTrue(persons.containsAll(actualPersons) && actualPersons.containsAll(persons));
     }
 
     @Test
     public void execute_duplicateNames_throwsCommandException() throws CommandException {
-        List<Name> playerNames = Arrays.asList(
+        List<Name> personNames = Arrays.asList(
                 alice.getName(),
                 alice.getName(),
                 bob.getName(),
                 cathy.getName(),
                 derek.getName()
         );
-        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+        MakeGroupCommand command = new MakeGroupCommand(personNames);
         ModelStub modelStub = new ModelStub();
 
         CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
@@ -82,45 +82,45 @@ public class MakeGroupCommandTest {
     }
 
     @Test
-    public void execute_playerNotFound_throwsCommandException() throws CommandException {
-        List<Person> existingPlayers = Arrays.asList(alice, bob, cathy, derek);
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(existingPlayers);
+    public void execute_personNotFound_throwsCommandException() throws CommandException {
+        List<Person> existingPersons = Arrays.asList(alice, bob, cathy, derek);
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(existingPersons);
 
-        List<Name> playerNames = Arrays.asList(
+        List<Name> personNames = Arrays.asList(
                 alice.getName(), bob.getName(), cathy.getName(), derek.getName(),
                 new Name("NonExistent")
         );
 
-        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+        MakeGroupCommand command = new MakeGroupCommand(personNames);
 
         CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
 
-        // Ensure exception message contains the missing player
+        // Ensure exception message contains the missing persons
         assertTrue(thrown.getMessage().contains("NonExistent"));
     }
 
     @Test
-    public void execute_insufficientPlayers_throwsCommandException() {
+    public void execute_insufficientPersons_throwsCommandException() {
         List<Name> fewerNames = Arrays.asList(alice.getName(), bob.getName(), cathy.getName());
         MakeGroupCommand command = new MakeGroupCommand(fewerNames);
         ModelStub modelStub = new ModelStubAcceptingTeamAdded(Arrays.asList(alice, bob, cathy, derek, ella));
 
         CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertEquals(MakeGroupCommand.MESSAGE_INSUFFICIENT_PLAYERS, thrown.getMessage());
+        assertEquals(MakeGroupCommand.MESSAGE_INSUFFICIENT_PERSONS, thrown.getMessage());
     }
 
     @Test
     public void execute_duplicateRole_throwsCommandException() {
-        // Create two players with the same role (both mid)
+        // Create two persons with the same role (both mid)
         Person alice2 = new PersonBuilder()
                 .withName("Alice2").withRole("mid").withRank("Gold").withChampion("Zed").build();
 
-        List<Person> players = Arrays.asList(alice, alice2, bob, cathy, derek);
-        List<Name> playerNames = new ArrayList<>();
-        players.forEach(p -> playerNames.add(p.getName()));
+        List<Person> persons = Arrays.asList(alice, alice2, bob, cathy, derek);
+        List<Name> personNames = new ArrayList<>();
+        persons.forEach(p -> personNames.add(p.getName()));
 
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(players);
-        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
+        MakeGroupCommand command = new MakeGroupCommand(personNames);
 
         CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
         assertTrue(thrown.getMessage().contains("duplicate roles"));
@@ -130,16 +130,16 @@ public class MakeGroupCommandTest {
 
     @Test
     public void execute_duplicateChampion_throwsCommandException() {
-        // Create two players with the same champion (both Ahri)
+        // Create two persons with the same champion (both Ahri)
         Person alice2 = new PersonBuilder()
                 .withName("Alice2").withRole("support").withRank("Gold").withChampion("Ahri").build();
 
-        List<Person> players = Arrays.asList(alice, alice2, bob, cathy, derek);
-        List<Name> playerNames = new ArrayList<>();
-        players.forEach(p -> playerNames.add(p.getName()));
+        List<Person> persons = Arrays.asList(alice, alice2, bob, cathy, derek);
+        List<Name> personNames = new ArrayList<>();
+        persons.forEach(p -> personNames.add(p.getName()));
 
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(players);
-        MakeGroupCommand command = new MakeGroupCommand(playerNames);
+        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
+        MakeGroupCommand command = new MakeGroupCommand(personNames);
 
         CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
         assertTrue(thrown.getMessage().contains("duplicate champions"));
@@ -279,17 +279,17 @@ public class MakeGroupCommandTest {
     }
 
     private class ModelStubAcceptingTeamAdded extends ModelStub {
-        private final List<Person> existingPlayers;
+        private final List<Person> existingPersons;
         private final List<Team> teamsAdded = new ArrayList<>();
 
-        ModelStubAcceptingTeamAdded(List<Person> existingPlayers) {
-            requireNonNull(existingPlayers);
-            this.existingPlayers = new ArrayList<>(existingPlayers);
+        ModelStubAcceptingTeamAdded(List<Person> existingPersons) {
+            requireNonNull(existingPersons);
+            this.existingPersons = new ArrayList<>(existingPersons);
         }
 
         @Override
         public Optional<Person> findPersonByName(Name name) {
-            return existingPlayers.stream()
+            return existingPersons.stream()
                     .filter(p -> p.getName().equals(name))
                     .findFirst();
         }
