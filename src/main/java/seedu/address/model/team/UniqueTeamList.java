@@ -91,7 +91,7 @@ public class UniqueTeamList implements Iterable<Team> {
      */
     public void setTeams(List<Team> teams) {
         requireAllNonNull(teams);
-        if (!teamsAreUnique(teams)) {
+        if (!areTeamsUnique(teams)) {
             throw new DuplicateTeamException();
         }
 
@@ -162,7 +162,7 @@ public class UniqueTeamList implements Iterable<Team> {
     /**
      * Returns true if {@code teams} contains only unique teams.
      */
-    private boolean teamsAreUnique(List<Team> teams) {
+    private boolean areTeamsUnique(List<Team> teams) {
         for (int i = 0; i < teams.size() - 1; i++) {
             for (int j = i + 1; j < teams.size(); j++) {
                 if (teams.get(i).isSameTeam(teams.get(j))) {
