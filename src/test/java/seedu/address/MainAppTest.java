@@ -2,6 +2,7 @@ package seedu.address;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 
@@ -18,15 +19,19 @@ import seedu.address.storage.StorageManager;
 
 public class MainAppTest {
 
-    private static final Path TEST_DATA_FOLDER = Path.of("src", "test", "data", "MainAppTest");
+    private static final Path TEST_DATA_FOLDER = Path.of("src", "test", "data", "JsonAddressBookStorageTest");
 
     @TempDir
     public Path testFolder;
 
-    @Test
-    public void initModelManager_missingFile_loadsSampleData() throws Exception {
-        // Create storage pointing to non-existent file
-        Path addressBookPath = testFolder.resolve("nonexistent.json");
+    /**
+     * Helper method to create a Model using the specified test data file.
+     *
+     * @param testDataFileName Name of the test data file in JsonAddressBookStorageTest folder.
+     * @return The initialized Model.
+     */
+    private Model createModelFromTestData(String testDataFileName) {
+        Path addressBookPath = TEST_DATA_FOLDER.resolve(testDataFileName);
         Path userPrefsPath = testFolder.resolve("userprefs.json");
 
         Storage storage = new StorageManager(
@@ -35,292 +40,103 @@ public class MainAppTest {
         );
 
         ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        // Create a test MainApp instance to call initModelManager
         TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load sample data, not empty
-        assertNotNull(model);
-        assertNotNull(model.getAddressBook());
-        // Sample data should have some persons
-        assert model.getAddressBook().getPersonList().size() > 0;
+        return mainApp.initModelManager(storage, userPrefs);
     }
 
-    @Test
-    public void initModelManager_invalidJsonFormat_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid JSON format
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "notJsonFormatAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to DataLoadingException
+    /**
+     * Helper method to verify that a model has an empty address book.
+     */
+    private void assertEmptyAddressBook(Model model) {
         assertNotNull(model);
         assertEquals(0, model.getAddressBook().getPersonList().size());
         assertEquals(0, model.getAddressBook().getTeamList().size());
     }
 
-    @Test
-    public void initModelManager_invalidPersonData_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid person name
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidPersonAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to invalid data
+    /**
+     * Helper method to verify that a model has sample data loaded.
+     */
+    private void assertSampleDataLoaded(Model model) {
         assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+        assertTrue(model.getAddressBook().getPersonList().size() > 0);
     }
 
     @Test
-    public void initModelManager_personInMultipleTeams_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with person in multiple teams (runtime exception)
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "personInMultipleTeamsAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to PersonAlreadyInTeamException
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_missingFile_loadsSampleData() {
+        Model model = createModelFromTestData("nonexistent.json");
+        assertSampleDataLoaded(model);
     }
 
     @Test
-    public void initModelManager_teamWithDuplicateRoles_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with duplicate roles in team (runtime exception)
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "teamWithDuplicateRolesAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to DuplicateRoleException
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_invalidJsonFormat_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("notJsonFormatAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_teamWithDuplicateChampions_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with duplicate champions in team (runtime exception)
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "teamWithDuplicateChampionsAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to DuplicateChampionException
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_invalidPersonData_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidPersonAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_teamWithInvalidSize_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with team of wrong size (runtime exception)
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "teamWithInvalidSizeAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to InvalidTeamSizeException
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_personInMultipleTeams_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("personInMultipleTeamsAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_invalidRank_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid rank
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidRankAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to invalid rank
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_teamWithDuplicateRoles_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("teamWithDuplicateRolesAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_invalidRole_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid role
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidRoleAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to invalid role
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_teamWithDuplicateChampions_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("teamWithDuplicateChampionsAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_invalidChampion_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid champion
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidChampionAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to invalid champion
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_teamWithInvalidSize_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("teamWithInvalidSizeAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_missingName_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with missing name
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "missingNameAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to missing name
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_invalidRank_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidRankAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_invalidStatsType_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid stats type
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidStatsTypeAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
-
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
-
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
-
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
-
-        // Should load empty AddressBook due to invalid stats type
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    public void initModelManager_invalidRole_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidRoleAddressBook.json"));
     }
 
     @Test
-    public void initModelManager_invalidTag_loadsEmptyAddressBook() throws Exception {
-        // Use the test file with invalid tag
-        Path addressBookPath = Path.of("src", "test", "data",
-                "JsonAddressBookStorageTest", "invalidTagAddressBook.json");
-        Path userPrefsPath = testFolder.resolve("userprefs.json");
+    public void initModelManager_invalidChampion_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidChampionAddressBook.json"));
+    }
 
-        Storage storage = new StorageManager(
-                new JsonAddressBookStorage(addressBookPath),
-                new JsonUserPrefsStorage(userPrefsPath)
-        );
+    @Test
+    public void initModelManager_missingName_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("missingNameAddressBook.json"));
+    }
 
-        ReadOnlyUserPrefs userPrefs = new UserPrefs();
+    @Test
+    public void initModelManager_invalidStatsType_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidStatsTypeAddressBook.json"));
+    }
 
-        TestableMainApp mainApp = new TestableMainApp();
-        Model model = mainApp.initModelManager(storage, userPrefs);
+    @Test
+    public void initModelManager_invalidTag_loadsEmptyAddressBook() {
+        assertEmptyAddressBook(createModelFromTestData("invalidTagAddressBook.json"));
+    }
 
-        // Should load empty AddressBook due to invalid tag
-        assertNotNull(model);
-        assertEquals(0, model.getAddressBook().getPersonList().size());
-        assertEquals(0, model.getAddressBook().getTeamList().size());
+    @Test
+    public void initModelManager_dataLoadingException_catchesAndLoadsEmpty() {
+        // Explicitly tests the DataLoadingException catch block (MainApp.java:87-90)
+        assertEmptyAddressBook(createModelFromTestData("notJsonFormatAddressBook.json"));
+    }
+
+    @Test
+    public void initModelManager_runtimeException_catchesAndLoadsEmpty() {
+        // Explicitly tests the Exception catch block (MainApp.java:91-95)
+        assertEmptyAddressBook(createModelFromTestData("personInMultipleTeamsAddressBook.json"));
     }
 
     /**
