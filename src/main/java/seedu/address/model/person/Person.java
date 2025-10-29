@@ -25,10 +25,10 @@ public class Person {
     private final Role role;
     private final Rank rank;
     private final Champion champion;
-    private final Stats stats;
     private final Set<Tag> tags = new HashSet<>();
 
     // Stat fields
+    private final Stats stats;
     private final int wins;
     private final int losses;
 

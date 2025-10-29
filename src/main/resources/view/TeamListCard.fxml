@@ -20,40 +20,16 @@
                 <Label fx:id="id" styleClass="cell_big_label" />
                 <Label fx:id="teamName" text="\$teamName" styleClass="cell_big_label" />
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label styleClass="bullet_point" text="•"/>
-                <Label fx:id="top" styleClass="cell_small_label, team_details_label" minWidth="60" prefWidth="60" maxWidth="60" alignment="CENTER"/>
-                <Label fx:id="topRank" styleClass="cell_small_label, team_details_label" minWidth="90" prefWidth="90" maxWidth="90" alignment="CENTER"/>
-                <Label fx:id="topName" styleClass="cell_small_label" minWidth="120" prefWidth="120" alignment="CENTER_LEFT" wrapText="false"/>
-            </HBox>
+            <!-- Top -->
+            <HBox fx:id="topPersonDetails" alignment="CENTER_LEFT" spacing="8" />
             <!-- Jungle -->
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label styleClass="bullet_point" text="•"/>
-                <Label fx:id="jungle" styleClass="cell_small_label, team_details_label" minWidth="60" prefWidth="60" maxWidth="60" alignment="CENTER"/>
-                <Label fx:id="jungleRank" styleClass="cell_small_label, team_details_label" minWidth="90" prefWidth="90" maxWidth="90" alignment="CENTER"/>
-                <Label fx:id="jungleName" styleClass="cell_small_label" minWidth="120" prefWidth="120" alignment="CENTER_LEFT" wrapText="false"/>
-            </HBox>
+            <HBox fx:id="junglePersonDetails" alignment="CENTER_LEFT" spacing="8" />
             <!-- Mid Lane -->
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label styleClass="bullet_point" text="•"/>
-                <Label fx:id="mid" styleClass="cell_small_label, team_details_label" minWidth="60" prefWidth="60" maxWidth="60" alignment="CENTER"/>
-                <Label fx:id="midRank" styleClass="cell_small_label, team_details_label" minWidth="90" prefWidth="90" maxWidth="90" alignment="CENTER"/>
-                <Label fx:id="midName" styleClass="cell_small_label" minWidth="120" prefWidth="120" alignment="CENTER_LEFT" wrapText="false"/>
-            </HBox>
+            <HBox fx:id="midPersonDetails" alignment="CENTER_LEFT" spacing="8" />
             <!-- ADC -->
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label styleClass="bullet_point" text="•"/>
-                <Label fx:id="adc" styleClass="cell_small_label, team_details_label" minWidth="60" prefWidth="60" maxWidth="60" alignment="CENTER"/>
-                <Label fx:id="adcRank" styleClass="cell_small_label, team_details_label" minWidth="90" prefWidth="90" maxWidth="90" alignment="CENTER"/>
-                <Label fx:id="adcName" styleClass="cell_small_label" minWidth="120" prefWidth="120" alignment="CENTER_LEFT" wrapText="false"/>
-            </HBox>
+            <HBox fx:id="adcPersonDetails" alignment="CENTER_LEFT" spacing="8" />
             <!-- Support -->
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label styleClass="bullet_point" text="•"/>
-                <Label fx:id="support" styleClass="cell_small_label, team_details_label" minWidth="60" prefWidth="60" maxWidth="60" alignment="CENTER"/>
-                <Label fx:id="supportRank" styleClass="cell_small_label, team_details_label" minWidth="90" prefWidth="90" maxWidth="90" alignment="CENTER"/>
-                <Label fx:id="supportName" styleClass="cell_small_label" minWidth="120" prefWidth="120" alignment="CENTER_LEFT" wrapText="false"/>
-            </HBox>
+            <HBox fx:id="supportPersonDetails" alignment="CENTER_LEFT" spacing="8" />
         </VBox>
     </GridPane>
 </HBox>
