@@ -64,8 +64,7 @@ public class ImportCommand extends Command {
             throw new CommandException(
                     "Invalid file format. Expected header: "
                             + "'Name,Role,Rank,Champion' or "
-                            + "'Name,Role,Rank,Champion,Wins,Losses' or "
-                            + "'Name,Role,Rank,Champion,Wins,Losses,AvgGrade'.");
+                            + "'Name,Role,Rank,Champion,Wins,Losses'.");
         } catch (ParseException e) {
             throw new CommandException("Invalid value: " + e.getMessage());
         } catch (Exception e) {

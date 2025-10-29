@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,18 +21,16 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 
-
 /**
- * CSV importer for players. Supports multiple headers:
+ * CSV importer for players. Supports headers:
  * <ul>
  *   <li>{@code Name,Role,Rank,Champion}</li>
  *   <li>{@code Name,Role,Rank,Champion,Wins,Losses}</li>
- *   <li>{@code Name,Role,Rank,Champion,Wins,Losses,AvgGrade} (AvgGrade ignored)</li>
- *   <li>{@code Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade} (WinRate% &amp; AvgGrade ignored)</li>
  * </ul>
- * <p>Win/Loss values are accepted but not injected into {@code Person} pre-merge; they are ignored safely.</p>
+ * <p>WinRate% is not supported and such files are rejected.</p>
  */
 public final class CsvImporter {
 
@@ -107,7 +106,10 @@ public final class CsvImporter {
                             new Role(row.role),
                             new Rank(row.rank),
                             new Champion(row.champion),
-                            Collections.<Tag>emptySet()
+                            Collections.<Tag>emptySet(),
+                            row.wins,
+                            row.losses,
+                            new Stats()
                     );
 
                     if (model.hasPerson(candidate)) {
@@ -130,31 +132,25 @@ public final class CsvImporter {
      * Supported CSV header formats.
      */
     private enum HeaderType {
-        BASIC,
-        EXTENDED_WL, // 6 columns
-        EXTENDED_WL_AVG, // 7 columns (ignores AvgGrade)
-        EXTENDED_WL_WR_AVG, // 8 columns (ignores WinRate% and AvgGrade)
+        H4,        // Name,Role,Rank,Champion
+        H6,        // Name,Role,Rank,Champion,Wins,Losses
         UNKNOWN;
 
         static HeaderType from(String header) {
-            String h = header == null ? "" : header.trim().toLowerCase();
-            // Handle optional BOM (Byte Order Mark)
-            if (!h.isEmpty() && h.charAt(0) == '\uFEFF') {
-                h = h.substring(1);
+
+            if (header == null || header.isBlank()) {
+                return HeaderType.UNKNOWN;
             }
-            if (h.equals("name,role,rank,champion")) {
-                return BASIC;
-            }
-            if (h.equals("name,role,rank,champion,wins,losses")) {
-                return EXTENDED_WL;
-            }
-            if (h.equals("name,role,rank,champion,wins,losses,avggrade")) {
-                return EXTENDED_WL_AVG;
-            }
-            if (h.equals("name,role,rank,champion,wins,losses,winrate%,avggrade")) {
-                return EXTENDED_WL_WR_AVG;
-            }
-            return UNKNOWN;
+
+            if (header.charAt(0) == '\uFEFF') header = header.substring(1);
+
+            List<String> h = Arrays.stream(header.split(",", -1))
+                    .map(s -> s.trim().toLowerCase())
+                    .toList();
+
+            if (h.equals(List.of("name","role","rank","champion"))) return HeaderType.H4;
+            if (h.equals(List.of("name","role","rank","champion","wins","losses"))) return HeaderType.H6;
+            return HeaderType.UNKNOWN;
         }
     }
 
@@ -177,7 +173,7 @@ public final class CsvImporter {
 
         static PlayerRow parse(List<String> cols, HeaderType type) {
             switch (type) {
-            case BASIC:
+            case H4:
                 if (cols.size() < 4) {
                     throw new IllegalArgumentException("bad cols");
                 }
@@ -189,10 +185,7 @@ public final class CsvImporter {
                         0,
                         0
                 );
-
-            case EXTENDED_WL:
-            case EXTENDED_WL_AVG:
-            case EXTENDED_WL_WR_AVG:
+            case H6:
                 if (cols.size() < 6) {
                     throw new IllegalArgumentException("bad cols");
                 }
