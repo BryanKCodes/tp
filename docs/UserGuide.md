@@ -178,26 +178,67 @@ Edits an existing person in your roster.
 * **People that have already been added to a team cannot be edited.**
 
 #### Examples
-* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`  
-  Updates the 1st person’s name, role, rank, and champion.
+* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`
+  Updates the 1st person's name, role, rank, and champion.
 
-* `edit 2 t/`  
+* `edit 2 t/`
   Clears all tags of the 2nd person.
 
-* `edit 3 rl/Top rk/Gold`  
-  Updates the 3rd person’s role and rank.
+* `edit 3 rl/Top rk/Gold`
+  Updates the 3rd person's role and rank.
 
-### Auto-grouping people into teams: `group` (WIP)
+### Viewing detailed person information : `view`
 
-Forms as many balanced teams of five as possible from **unassigned** people.
-Format:
+Opens a detailed window showing comprehensive information about a person, including their performance statistics visualized in graphs.
+
+**Format:**
+`view INDEX`
+
+#### Notes
+* `INDEX` refers to the number shown in the current displayed person list. Must be a positive integer (1, 2, 3…).
+* The window displays:
+  - Basic information (name, role, rank, champion, tags)
+  - Win/loss record
+  - Performance score over time
+  - CS per minute trends
+  - KDA trends
+  - Gold difference at 15 minutes trends
+* Up to the latest 10 matches are shown in the performance graphs.
+
+#### Examples
+* `view 1`
+  Opens a detailed window for the 1st person in the list.
+
+* `view 5`
+  Opens a detailed window for the 5th person in the list.
+
+### Auto-grouping people into teams: `group`
+
+Automatically forms as many balanced teams of five as possible from **unassigned** people using an intelligent matching algorithm.
+
+**Format:**
 `group`
 
 #### How it works
+The algorithm follows these steps:
+1. Groups all unassigned people by their roles (Top, Jungle, Mid, ADC, Support).
+2. Sorts each role group by rank (highest to lowest) to prioritize balanced skill distribution.
+3. Iteratively forms teams by selecting one person from each role.
+4. Ensures no duplicate champions within each team to avoid conflicts.
+5. Continues creating teams until there are insufficient people to form a complete team.
+
+#### Notes
+* At least one unassigned person for each of the five roles is required to form a team.
 * Only people **not already in a team** are considered.
-* The system ensures that each team has **no conflicting roles** (each role appears at most once per team).
-* People are grouped to create teams with **similar ranks** whenever possible, balancing skill across teams.
-* Teams are automatically created until there are fewer than five unassigned people remaining.
+* If champion conflicts prevent forming a team, the algorithm stops and reports how many teams were created.
+* Any remaining unassigned people stay in the pool and can be grouped later.
+
+#### Success output
+Shows the number of teams created, their members, and how many people remain unassigned.
+
+#### Examples
+* `group`
+  Forms balanced teams from all unassigned people.
 
 ### Manually creating a team: `makegroup`
 
@@ -219,15 +260,26 @@ Creates a new team with those five members.
 
 ### Disbanding a team or all teams : `ungroup`
 
-Disbands one team (returns its people to the unassigned pool) or disbands all teams.
+Removes one or more teams from the system, returning their members to the unassigned pool.
 
-Format:
-`ungroup TEAM_INDEX` OR `ungroup all` ('all' is case-insensitive)
+**Format:**
+`ungroup INDEX` or `ungroup all`
 
-Examples:
+#### Notes
+* `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* Use `all` (case-insensitive) to disband all teams at once.
+* After ungrouping, all team members become available for forming new teams.
+* If there are no teams, the command will show an error.
 
-- `ungroup 1` — disbands the 1st team
-- `ungroup all` — disbands all teams
+#### Examples
+* `ungroup 1`
+  Disbands the 1st team in the displayed team list.
+
+* `ungroup all`
+  Disbands all teams, making all people unassigned.
+
+* `ungroup ALL`
+  Same as above (case-insensitive).
 
 ### Add new performance record to a person : `addStats`
 

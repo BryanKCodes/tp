@@ -290,7 +290,7 @@ The following sequence diagram illustrates how a filter command flows through th
 
 #### Implementation
 
-The auto-grouping feature is implemented through the `GroupCommand` and `TeamMatcher` classes.  
+The auto-grouping feature is implemented through the `GroupCommand`, `GroupCommandParser`, and `TeamMatcher` classes.
 It automatically creates balanced teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
 
 When the user executes:
@@ -299,42 +299,68 @@ When the user executes:
 
 the application attempts to form as many full teams as possible while respecting role requirements (Top, Jungle, Mid, ADC, Support) and avoiding duplicate champions within the same team.
 
-This functionality is supported by three key components:
+This functionality is supported by the following key components:
 
-- **`GroupCommand`** — represents the command that performs auto-grouping.
-- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned persons.
+- **`GroupCommand`** — represents the command that performs auto-grouping. Validates input and orchestrates team formation.
+- **`GroupCommandParser`** — parses user input for the group command. Ensures no arguments are provided.
+- **`TeamMatcher`** — contains the core algorithm for forming balanced teams from unassigned persons.
+- **`Model#getUnassignedPersonList()`** — retrieves the list of persons not currently assigned to any team.
 - **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
+
+---
+
+#### TeamMatcher Algorithm
+
+The `TeamMatcher` class implements a sophisticated role-based matching algorithm:
+
+1. **Group by Role**: All unassigned persons are grouped by their roles (Top, Jungle, Mid, ADC, Support).
+
+2. **Sort by Rank**: Within each role group, persons are sorted by rank in descending order (highest to lowest). This uses the `Rank` class's natural `Comparable` ordering.
+
+3. **Iterative Team Formation**:
+   - The algorithm attempts to form teams by selecting one person from each role.
+   - For each role, it selects the highest-ranked available person who doesn't have a champion conflict.
+   - A champion conflict occurs when a person plays the same champion as someone already selected for the current team.
+
+4. **Champion Conflict Resolution**:
+   - If the highest-ranked person for a role has a champion conflict, the algorithm tries the next person in that role.
+   - If no person can be found without a conflict, team formation stops.
+
+5. **Continuation**: The algorithm continues forming teams until it cannot form a complete team of 5 persons.
+
+The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamMatcher#selectPersonWithoutChampionConflict()`.
 
 ---
 
 #### Example Usage
 
-**Step 1.**  
-The user has a list of unassigned persons with roles and ranks.  
+**Step 1.**
+The user has a list of unassigned persons with various roles and ranks.
 The application currently shows all persons without any teams assigned.
 
+**Step 2.**
+The user executes the `group` command.
+- `GroupCommandParser` validates that no arguments were provided.
+- `GroupCommand` is created and executed.
+- `GroupCommand#execute()` fetches all unassigned persons via `Model#getUnassignedPersonList()`.
 
----
+**Step 3.**
+`TeamMatcher#matchTeams()` is called to form balanced teams:
+- Persons are grouped by role.
+- Each role group is sorted by rank.
+- Teams are formed iteratively while avoiding champion conflicts.
 
-**Step 2.**  
-The user executes the `group` command.  
-The `GroupCommand` fetches all unassigned persons via `Model#getUnassignedPersonList()`.  
-`TeamMatcher#matchTeams()` is called to form balanced teams.
-
-
----
-
-**Step 3.**  
-Teams are successfully formed according to role, rank, and champion constraints.  
+**Step 4.**
+Teams are successfully formed according to role, rank, and champion constraints.
 `Model#addTeam(team)` is called for each team, updating the application state and UI.
-
+A success message shows the number of teams created and remaining unassigned persons.
 
 ---
 
 <box type="info" seamless>
 
-**Note:**  
-If there are insufficient persons to form a full team (i.e., missing a required role), the command will notify the user with:
+**Note:**
+If there are insufficient persons to form a full team (i.e., missing a required role), the command will throw a `CommandException` with:
 
 `No teams could be formed. Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).`
 
@@ -346,10 +372,310 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 
 #### Design Considerations
 
-- **Current implementation:**  
-  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned persons.
-    - *Pros:* Ensures balanced teams with no duplicate champions and respects role requirements.
-    - *Cons:* Leftover persons who do not complete a full team remain unassigned.
+**Aspect: Team formation algorithm**
+
+- **Alternative 1 (current implementation):**
+  Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
+    - *Pros:* Simple, predictable, and efficient (O(n log n) for sorting + O(n) for team formation).
+    - *Pros:* Ensures teams are balanced by rank since highest-ranked players are selected first.
+    - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
+
+- **Alternative 2:**
+  Use a backtracking algorithm to explore all possible team combinations and find the maximum number of teams.
+    - *Pros:* Guarantees finding the optimal solution (maximum number of teams).
+    - *Cons:* Exponential time complexity (O(n!)). Impractical for large person lists.
+    - *Cons:* Overly complex for the use case. Coaches can manually adjust teams if needed.
+
+- **Alternative 3:**
+  Use a constraint satisfaction problem (CSP) solver.
+    - *Pros:* Can handle complex constraints elegantly.
+    - *Cons:* Requires external library and adds significant complexity.
+    - *Cons:* Overkill for this domain where greedy approach works well.
+
+### Viewing Person Details Feature
+
+#### Implementation
+
+The person details viewing feature is implemented through the `ViewCommand`, `ViewCommandParser`, `PersonDetailWindow`, and enhanced `CommandResult` classes.
+It allows users to view comprehensive information about a person in a dedicated modal window, including performance statistics visualized with JavaFX charts.
+
+When the user executes:
+
+`view INDEX`
+
+the application opens a new window displaying the person's details, win/loss record, and performance trends over their last 10 matches.
+
+This functionality is supported by the following key components:
+
+- **`ViewCommand`** — represents the command that retrieves a person by index and triggers the detail window.
+- **`ViewCommandParser`** — parses the user input and validates the index format.
+- **`CommandResult`** — encapsulates the command result and signals to the UI that a person detail window should be shown. Uses the factory method `CommandResult.showPersonDetail()`.
+- **`PersonDetailWindow`** — the JavaFX controller that manages the modal window displaying person details and performance charts.
+- **`MainWindow#handlePersonDetail()`** — the UI event handler that creates and shows the `PersonDetailWindow` when triggered by a `CommandResult`.
+
+---
+
+#### Architecture and Design Pattern
+
+The `PersonDetailWindow` follows a **hybrid declarative-imperative UI pattern**:
+
+1. **Declarative FXML Structure**: The window's layout, labels, and chart components are defined in `PersonDetailWindow.fxml`. This separates presentation from logic (Separation of Concerns principle).
+
+2. **Imperative Data Binding**: The Java controller (`PersonDetailWindow.java`) populates the FXML components with data from the `Person` object through the `setPerson()` method.
+
+3. **Dynamic Chart Population**: Performance charts are dynamically populated with data series through private helper methods that transform `Stats` data into JavaFX `XYChart.Series`.
+
+This design is pragmatic and maintainable: static structure is in FXML (easy to modify layouts), while dynamic data binding is in Java (type-safe and testable).
+
+**Key methods**:
+- `displayPersonDetails()` — binds basic person information to labels.
+- `displayCharts()` — populates all four performance charts.
+- `createChartSeries()` — transforms raw statistics into chart data (package-private for testing).
+- `configureAxes()` — configures X-axis bounds to show match numbers correctly.
+
+---
+
+#### Example Usage
+
+**Step 1.**
+The user views the person list and identifies a person they want detailed information about.
+
+**Step 2.**
+The user executes `view 1` to view the first person.
+- `ViewCommandParser` parses the index argument using `ParserUtil.parseIndex()`.
+- `ViewCommand` is created with the target index.
+
+**Step 3.**
+`ViewCommand#execute()` validates the index and retrieves the person:
+- Checks that the index is within bounds of the filtered person list.
+- Retrieves the `Person` object at the specified index.
+- Creates a `CommandResult` using the factory method `CommandResult.showPersonDetail()`, passing the person object.
+
+**Step 4.**
+`MainWindow` receives the `CommandResult`:
+- Detects `isShowPersonDetail()` is true.
+- Extracts the person using `getPersonToShow()`.
+- Creates a new `PersonDetailWindow` and calls `setPerson(person)`.
+- Shows the window with `show()`.
+
+**Step 5.**
+`PersonDetailWindow` displays the information:
+- `setPerson()` triggers data population.
+- Basic details are bound to labels via `displayPersonDetails()`.
+- Charts are populated via `displayCharts()`, which creates data series for up to the latest 10 matches.
+- The window appears centered on screen with all information visible.
+
+---
+
+#### Design Considerations
+
+**Aspect: Modal window vs in-app panel**
+
+- **Alternative 1 (current implementation):**
+  Use a separate modal window to display person details.
+    - *Pros:* Doesn't clutter the main UI. Users can keep the window open while working with the main app.
+    - *Pros:* Allows multiple detail windows to be open simultaneously (future enhancement).
+    - *Cons:* Window management (position, size) must be handled carefully.
+
+- **Alternative 2:**
+  Display details in a panel within the main window (e.g., sidebar or bottom panel).
+    - *Pros:* No window management needed. Simpler implementation.
+    - *Cons:* Takes up space in the main UI, reducing visibility of the person/team lists.
+    - *Cons:* Can only view one person's details at a time.
+
+**Aspect: Chart data range**
+
+- **Alternative 1 (current implementation):**
+  Show up to the latest 10 matches in performance charts.
+    - *Pros:* Focuses on recent performance trends. Charts remain readable.
+    - *Cons:* Older data is not visible in the charts (though still stored).
+
+- **Alternative 2:**
+  Show all matches in the charts.
+    - *Pros:* Complete historical view.
+    - *Cons:* Charts become cluttered for persons with many matches. Performance may degrade.
+
+- **Alternative 3:**
+  Allow users to configure the range (e.g., last 5, 10, 20 matches).
+    - *Pros:* Flexible to user needs.
+    - *Cons:* Adds UI complexity. Requires additional state management.
+
+### Ungrouping Teams Feature
+
+#### Implementation
+
+The team ungrouping feature is implemented through the `UngroupCommand` and `UngroupCommandParser` classes.
+It allows users to disband one specific team or all teams at once, returning all team members to the unassigned pool.
+
+When the user executes:
+
+`ungroup INDEX` or `ungroup all`
+
+the application removes the specified team(s) from the model, making all affected persons available for future team formation.
+
+This functionality is supported by the following key components:
+
+- **`UngroupCommand`** — represents the command that removes teams. Supports two modes: single team removal and remove all.
+- **`UngroupCommandParser`** — parses the user input, distinguishing between an index and the "all" keyword (case-insensitive).
+- **`Model#deleteTeam(Team)`** — removes a team from the model and triggers UI updates.
+- **`Model#getFilteredTeamList()`** — retrieves the current list of teams being displayed.
+
+---
+
+#### Two Modes of Operation
+
+`UngroupCommand` supports two distinct modes through constructor overloading:
+
+1. **Single Team Removal**: `new UngroupCommand(Index targetIndex)`
+   - Removes the team at the specified index in the displayed team list.
+   - The `removeAll` flag is set to `false`.
+
+2. **Remove All Teams**: `new UngroupCommand()`
+   - Removes all teams from the model.
+   - The `removeAll` flag is set to `true` and `targetIndex` is `null`.
+
+This design follows the **Factory Pattern** concept where different constructors create objects with different behaviors.
+
+---
+
+#### Example Usage Scenario 1: Remove Single Team
+
+**Step 1.**
+The user views the team list using `listteam` and sees multiple teams.
+
+**Step 2.**
+The user executes `ungroup 2` to disband the second team.
+- `UngroupCommandParser` parses "2" as an index using `ParserUtil.parseIndex()`.
+- Creates `new UngroupCommand(Index.fromOneBased(2))`.
+
+**Step 3.**
+`UngroupCommand#execute()` validates and removes the team:
+- Retrieves the filtered team list from the model.
+- Validates the index is within bounds (throws `CommandException` if invalid).
+- Calls `executeRemoveSingle()` helper method.
+- Gets the team at the specified index.
+- Calls `model.deleteTeam(team)` to remove it.
+- Returns a success message showing which team was removed.
+
+---
+
+#### Example Usage Scenario 2: Remove All Teams
+
+**Step 1.**
+The user has multiple teams and wants to reset and start over.
+
+**Step 2.**
+The user executes `ungroup all`.
+- `UngroupCommandParser` detects the "all" keyword (case-insensitive check).
+- Creates `new UngroupCommand()` (no-argument constructor).
+
+**Step 3.**
+`UngroupCommand#execute()` removes all teams:
+- Validates that there are teams to remove (throws `CommandException` if none).
+- Calls `executeRemoveAll()` helper method.
+- Creates a defensive copy of the team list using `List.copyOf()` to avoid concurrent modification.
+- Iterates through the copy and calls `model.deleteTeam(team)` for each team.
+- Returns a success message showing how many teams were removed.
+
+---
+
+#### Design Considerations
+
+**Aspect: Single command vs separate commands**
+
+- **Alternative 1 (current implementation):**
+  Use one `UngroupCommand` that supports both single and all removal via constructor overloading.
+    - *Pros:* User-friendly with intuitive syntax (`ungroup 1` vs `ungroup all`).
+    - *Pros:* Reduces code duplication. Both modes share validation logic.
+    - *Cons:* Command class handles two distinct behaviors, slightly violating Single Responsibility Principle.
+
+- **Alternative 2:**
+  Create separate commands: `UngroupCommand` for single removal and `UngroupAllCommand` for removing all.
+    - *Pros:* Stricter adherence to Single Responsibility Principle.
+    - *Cons:* More classes to maintain. Introduces code duplication for shared logic.
+    - *Cons:* Requires separate command words (e.g., `ungroup` and `ungroupall`), less intuitive for users.
+
+**Aspect: Handling concurrent modification**
+
+- **Alternative 1 (current implementation):**
+  Create a defensive copy of the team list before iteration using `List.copyOf()`.
+    - *Pros:* Safe and prevents `ConcurrentModificationException`.
+    - *Pros:* Simple and clear code.
+    - *Cons:* Minor memory overhead for copying the list.
+
+- **Alternative 2:**
+  Use an iterator with explicit removal.
+    - *Pros:* No memory overhead for copying.
+    - *Cons:* More complex code. Easy to introduce bugs.
+
+- **Alternative 3:**
+  Collect team IDs first, then remove by ID.
+    - *Pros:* Avoids concurrent modification.
+    - *Cons:* Requires additional ID lookup logic. More complex.
+
+### CommandResult Enhancement for Modal Windows
+
+#### Implementation
+
+The `CommandResult` class has been enhanced to support triggering modal windows for displaying person details and team statistics.
+This allows commands to not only return feedback text but also signal the UI to show specific windows with context data.
+
+#### Key Fields Added
+
+1. **`showPersonDetail`** (boolean) — indicates whether the person detail window should be shown.
+2. **`personToShow`** (Person) — the person whose details should be displayed (null if not applicable).
+3. **`showTeamStats`** (boolean) — indicates whether the team stats window should be shown.
+4. **`teamToShow`** (Team) — the team whose stats should be displayed (null if not applicable).
+
+These fields extend the original `CommandResult` design which only supported `showHelp` and `exit` flags.
+
+#### Factory Methods
+
+To maintain clean command code and adhere to the **Dependency Inversion Principle**, `CommandResult` provides static factory methods:
+
+- **`CommandResult.showPersonDetail(String message, Person person)`**
+  - Creates a result configured to open the person detail window.
+  - Used by `ViewCommand` to trigger the display.
+
+- **`CommandResult.showTeamStats(String message, Team team)`**
+  - Creates a result configured to open the team stats window.
+  - Reserved for future team statistics features (e.g., `viewteam` command).
+
+These factory methods make the intent explicit and prevent construction errors.
+
+#### Integration with UI
+
+The `MainWindow` class handles `CommandResult` objects returned by command execution:
+
+1. **Check result flags**: After executing a command, `MainWindow` checks `isShowPersonDetail()` or `isShowTeamStats()`.
+
+2. **Extract context data**: If a flag is set, it extracts the relevant object using `getPersonToShow()` or `getTeamToShow()`, which return `Optional<Person>` or `Optional<Team>`.
+
+3. **Create and show window**: It creates the appropriate window instance (`PersonDetailWindow` or similar), passes the context data, and shows the window.
+
+This design maintains **separation of concerns**: commands decide *what* to show, UI decides *how* to show it.
+
+#### Design Considerations
+
+**Aspect: How to signal UI actions from commands**
+
+- **Alternative 1 (current implementation):**
+  Extend `CommandResult` with flags and optional data fields.
+    - *Pros:* Centralized result handling. All commands return the same type.
+    - *Pros:* UI layer handles all window management. Commands remain decoupled from JavaFX.
+    - *Cons:* `CommandResult` class grows as more UI actions are added.
+
+- **Alternative 2:**
+  Use an event bus or observer pattern where commands emit events.
+    - *Pros:* More extensible. New events can be added without modifying `CommandResult`.
+    - *Cons:* Adds complexity. Requires event bus infrastructure.
+    - *Cons:* Harder to trace control flow during debugging.
+
+- **Alternative 3:**
+  Commands directly call UI methods (e.g., `ui.showPersonDetail(person)`).
+    - *Pros:* Simple and direct.
+    - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
+    - *Cons:* Makes testing commands difficult (need to mock UI).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -650,10 +976,102 @@ testers are expected to do more *exploratory* testing.
 
 1. { more test cases … }
 
+### Viewing person details
+
+1. Viewing a person's detailed information
+
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+    1. Test case: `view 1`<br>
+       Expected: A new window opens displaying detailed information about the first person, including basic details (name, role, rank, champion, tags), win/loss record, and performance charts. Success message shown in the result display with the person's name.
+
+    1. Test case: `view 0`<br>
+       Expected: No window opens. Error message "Invalid command format!" shown. The person index provided is invalid.
+
+    1. Test case: `view x` (where x is larger than the list size)<br>
+       Expected: No window opens. Error message "The person index provided is invalid" shown.
+
+    1. Other incorrect view commands to try: `view`, `view abc`, `view -1`<br>
+       Expected: Similar error messages for invalid format or invalid index.
+
+1. Viewing person details with performance data
+
+    1. Prerequisites: The person has performance statistics recorded (use `addStats` to add data if needed).
+
+    1. Test case: View a person with at least 10 matches of statistics<br>
+       Expected: All four charts (Performance Score, CS per Minute, KDA, Gold Diff @15) show up to 10 data points. The X-axis shows match numbers correctly.
+
+    1. Test case: View a person with fewer than 10 matches<br>
+       Expected: Charts show all available data points. The X-axis adjusts to show only the relevant match numbers.
+
+### Auto-grouping persons into teams
+
+1. Auto-grouping with sufficient persons
+
+    1. Prerequisites: Have at least 5 unassigned persons with unique roles (Top, Jungle, Mid, ADC, Support) and unique champions.
+
+    1. Test case: `group`<br>
+       Expected: One or more teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Use `listteam` to verify teams were created.
+
+    1. Test case: Have exactly 10 unassigned persons (2 per role) with unique champions, then run `group`<br>
+       Expected: 2 teams are created with 0 persons remaining unassigned.
+
+    1. Test case: Have 12 unassigned persons (mixed roles) then run `group`<br>
+       Expected: As many complete teams as possible are created. The success message indicates how many persons remain unassigned.
+
+1. Auto-grouping with insufficient persons
+
+    1. Test case: Have only 4 unassigned persons with 4 different roles, then run `group`<br>
+       Expected: No teams created. Error message indicates insufficient persons for all required roles.
+
+    1. Test case: Have 5 unassigned persons but missing one required role (e.g., no Support), then run `group`<br>
+       Expected: No teams created. Error message indicates at least one person per role is required.
+
+    1. Test case: Run `group` when all persons are already assigned to teams<br>
+       Expected: Error message "No unassigned persons available to form teams."
+
+1. Auto-grouping with champion conflicts
+
+    1. Prerequisites: Have 10 unassigned persons (2 per role) where 2 persons play the same champion and have the same role.
+
+    1. Test case: Run `group`<br>
+       Expected: One team is created with the higher-ranked person of the duplicate champion. The second person with the duplicate champion remains unassigned (along with 4 others).
+
+### Ungrouping teams
+
+1. Ungrouping a single team
+
+    1. Prerequisites: Have at least one team created. Use `listteam` to verify.
+
+    1. Test case: `ungroup 1`<br>
+       Expected: The first team is disbanded. Success message shows which team was removed. All 5 members of the team become unassigned and appear in the person list again.
+
+    1. Test case: `ungroup 0`<br>
+       Expected: No team is disbanded. Error message "Invalid command format!" shown.
+
+    1. Test case: `ungroup x` (where x is larger than the number of teams)<br>
+       Expected: No team is disbanded. Error message "The team index provided is invalid" shown.
+
+    1. Other incorrect ungroup commands to try: `ungroup`, `ungroup abc`, `ungroup -1`<br>
+       Expected: Similar error messages for invalid format or invalid index.
+
+1. Ungrouping all teams
+
+    1. Prerequisites: Have multiple teams created. Use `listteam` to see them.
+
+    1. Test case: `ungroup all`<br>
+       Expected: All teams are disbanded. Success message shows "Successfully removed X team(s). All persons are now unassigned." Verify with `listteam` that no teams remain. Verify with `list` that all persons are back in the unassigned pool.
+
+    1. Test case: `ungroup ALL` (case-insensitive)<br>
+       Expected: Same as above. The command is case-insensitive.
+
+    1. Test case: Run `ungroup all` when there are no teams<br>
+       Expected: Error message "No teams to remove."
+
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-    1. {explain how to simulate a missing/corrupted file, and the expected behavior}_
+    1. {explain how to simulate a missing/corrupted file, and the expected behavior}
 
 1. { more test cases … }
