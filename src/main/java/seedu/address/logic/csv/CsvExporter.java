@@ -51,7 +51,7 @@ public final class CsvExporter {
             int losses = WlReflect.losses(p);
             int matches = wins + losses;
             String wr = matches == 0 ? "0.0" : String.format(java.util.Locale.US, "%.1f", (wins * 100.0) / matches);
-            String avg = tryGetAvgGrade(p);
+            String avg = String.valueOf(p.getStats().getValue());
             lines.add(String.join(",",
                     csv(p.getName().toString()),
                     csv(p.getRole().toString()),
