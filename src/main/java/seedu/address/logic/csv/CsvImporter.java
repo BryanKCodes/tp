@@ -118,7 +118,7 @@ public final class CsvImporter {
                         model.addPerson(candidate);
                         imported++;
                     }
-                } catch (Exception ex) {
+                } catch (IllegalArgumentException iae) {
                     invalid++;
                 }
             }
@@ -174,7 +174,7 @@ public final class CsvImporter {
         static PlayerRow parse(List<String> cols, HeaderType type) {
             switch (type) {
             case H4:
-                if (cols.size() < 4) {
+                if (cols.size() != 4) {
                     throw new IllegalArgumentException("bad cols");
                 }
                 return new PlayerRow(
@@ -186,12 +186,11 @@ public final class CsvImporter {
                         0
                 );
             case H6:
-                if (cols.size() < 6) {
+                if (cols.size() != 6) {
                     throw new IllegalArgumentException("bad cols");
                 }
-                int wins = tryParseInt(cols.get(4).trim(), 0);
-                int losses = tryParseInt(cols.get(5).trim(), 0);
-                // If more columns exist (WinRate%, AvgGrade), they are intentionally ignored.
+                int wins = parseNonNegativeInt(cols.get(4).trim(), "Wins");
+                int losses = parseNonNegativeInt(cols.get(5).trim(), "Losses");
                 return new PlayerRow(
                         cols.get(0).trim(),
                         cols.get(1).trim(),
@@ -206,11 +205,15 @@ public final class CsvImporter {
             }
         }
 
-        private static int tryParseInt(String s, int def) {
+        private static int parseNonNegativeInt(String raw, String colName) {
             try {
-                return Integer.parseInt(s);
-            } catch (Exception e) {
-                return def;
+                int v = Integer.parseInt(raw);
+                if (v < 0) {
+                    throw new IllegalArgumentException(colName + " must be a non-negative integer");
+                }
+                return v;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(colName + " must be an integer");
             }
         }
     }
