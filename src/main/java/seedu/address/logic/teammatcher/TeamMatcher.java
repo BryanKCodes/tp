@@ -65,8 +65,9 @@ public class TeamMatcher {
     }
 
     /**
-     * Validates that there is at least one player for each required role.
-     * @throws InsufficientPlayersException if any role is missing.
+     * Validates that there is at least one person for each required role.
+     *
+     * @throws InsufficientPersonsException if any role is missing.
      */
     private void validateMinimumPlayers(Map<Role, List<Person>> playersByRole)
             throws InsufficientPlayersException {
