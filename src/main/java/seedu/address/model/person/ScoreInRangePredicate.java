@@ -17,7 +17,7 @@ public class ScoreInRangePredicate implements Predicate<Person> {
 
     @Override
     public boolean test(Person person) {
-        return person.getStats().getValue() >= threshold;
+        return person.getStats().value >= threshold;
     }
 
     @Override

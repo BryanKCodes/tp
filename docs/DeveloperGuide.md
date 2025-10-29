@@ -369,14 +369,14 @@ Any leftover unassigned players remain in the pool and can be used in future aut
 
 **Target user profile**:
 
-* gaming coaches or team managers who need to manage a significant number of players
+* gaming coaches or team managers who need to manage a significant number of people
 * prefer lightweight desktop apps over complex web platforms
 * can type fast and are comfortable with CLI-style interactions
 * want quick ways to form balanced teams for training or mock matches
 * are reasonably comfortable using simple technical tools
-* have many players of varying skill levels and roles to balance
+* have many people of varying skill levels and roles to balance
 
-**Value proposition**: manage players and create balanced teams faster and more efficiently than a typical spreadsheet
+**Value proposition**: manage people and create balanced teams faster and more efficiently than a typical spreadsheet
 or mouse/GUI-driven app.
 
 ### User stories
@@ -385,12 +385,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​ | I want to …​                                     | So that I can…​                                   |
 |----------|---------|--------------------------------------------------|---------------------------------------------------|
-| `* * *`  | coach   | add new players with their in-game IDs           | track and manage them in the system               |
-| `* * *`  | coach   | update a player’s details                        | always have accurate and current information      |
-| `* * *`  | coach   | record each player’s primary and secondary roles | assign them to suitable teams                     |
-| `* * *`  | coach   | log each player’s preferred champions            | avoid role duplication and build effective teams  |
-| `* * *`  | coach   | filter players by role, rank, or skill rating    | quickly find suitable team compositions           |
-| `* * *`  | coach   | create practice teams of 5 players               | simulate real match conditions                    |
+| `* * *`  | coach   | add new people with their in-game IDs           | track and manage them in the system               |
+| `* * *`  | coach   | update a person’s details                        | always have accurate and current information      |
+| `* * *`  | coach   | record each person’s primary and secondary roles | assign them to suitable teams                     |
+| `* * *`  | coach   | log each person’s preferred champions            | avoid role duplication and build effective teams  |
+| `* * *`  | coach   | filter people by role, rank, or skill rating    | quickly find suitable team compositions           |
+| `* * *`  | coach   | create practice teams of 5 people               | simulate real match conditions                    |
 | `* *`    | coach   | balance teams automatically by skill level       | ensure matches are fair and competitive           |
 | `* *`    | coach   | manually adjust teams after creation             | fine-tune rosters to meet specific training needs |
 | `* *`    | coach   | see role distribution in each team               | avoid having duplicate roles in the same lineup   |
@@ -404,13 +404,13 @@ otherwise)
 
 ---
 
-### Use case: Add a player
+### Use case: Add a person
 
 **MSS**
 
-1. User requests to add a player by providing name, rank, role, and champion.
-2. SummonersBook creates the player entry and stores it.
-3. SummonersBook confirms that the player has been added.
+1. User requests to add a person by providing name, rank, role, and champion.
+2. SummonersBook creates the person entry and stores it.
+3. SummonersBook confirms that the person has been added.
 
 **Extensions**
 
@@ -420,12 +420,12 @@ otherwise)
 
 ---
 
-### Use case: View a player
+### Use case: View a person
 
 **MSS**
 
-1. User requests to view a player by specifying the index.
-2. SummonersBook displays the player’s details.
+1. User requests to view a person by specifying the index.
+2. SummonersBook displays the person’s details.
 
 **Extensions**
 
@@ -435,14 +435,14 @@ otherwise)
 
 ---
 
-### Use case: Delete a player
+### Use case: Delete a person
 
 **MSS**
 
-1. User requests to list players.
-2. SummonersBook shows a list of players.
-3. User requests to delete a specific player by index.
-4. SummonersBook deletes the player.
+1. User requests to list people.
+2. SummonersBook shows a list of people.
+3. User requests to delete a specific person by index.
+4. SummonersBook deletes the person.
 
 **Extensions**
 
@@ -455,32 +455,32 @@ otherwise)
 
 ---
 
-### Use case: Find players
+### Use case: Find people
 
 **MSS**
 
-1. User requests to find players by specifying search criteria (role, rank, etc.).
-2. SummonersBook displays all players matching the criteria.
+1. User requests to find people by specifying search criteria (role, rank, etc.).
+2. SummonersBook displays all people matching the criteria.
 
 **Extensions**
 
-- 2a. No players match the criteria.
-    - 2a1. SummonersBook shows “no players found.”
+- 2a. No people match the criteria.
+    - 2a1. SummonersBook shows “no people found.”
     - Use case ends.
 
 ---
 
-### Use case: Auto-group players (create teams)
+### Use case: Auto-group people (create teams)
 
 **MSS**
 
-1. User requests to group players into balanced teams.
+1. User requests to group people into balanced teams.
 2. SummonersBook creates the teams automatically.
 3. SummonersBook shows the newly formed teams.
 
 **Extensions**
 
-- 2a. Insufficient number of players to form teams.
+- 2a. Insufficient number of people to form teams.
     - 2a1. SummonersBook shows an error message.
     - Use case ends.
 
@@ -507,12 +507,77 @@ otherwise)
 **MSS**
 
 1. User requests to view a team by specifying its index.
-2. SummonersBook displays the players in the team.
+2. SummonersBook displays the people in the team.
 
 **Extensions**
 
-- 2a. The given index is invalid.
-    - 2a1. SummonersBook shows an error message.
+- 1a. The given index is invalid.
+    - 1a1. SummonersBook shows an error message.
+    - Use case ends.
+
+---
+
+### Use case: Filter people
+
+**MSS**
+
+1. User requests to filter the list of people based on their role, rank, champion, average score.
+2. SummonersBook displays the people that match the criteria.
+
+**Extension**
+
+- 1a. No flags are given (no role, rank, champion, score)
+  - 1a1. SummonersBook shows an error message.
+  - Use case ends.
+- 1b. Flags are given but no values are given
+  - 1b1. Show the full list of people.
+  - Use case ends
+- 1c. Invalid value for role or rank or champion or score
+  - 1c1. SummonersBook shows an error message.
+  - Use case ends.
+
+---
+
+### Use case: Add performance values
+
+**MSS**
+
+1. User requests to list people.
+2. SummonersBook shows a list of people.
+3. User requests to add a set of performance values (cpm, gd15, kda) to a specific person's stats by index.
+4. SummonersBook update the person's stats.
+
+**Extension**
+
+
+- 3a. The given index is invalid.
+    - 3a1. SummonersBook shows an error message.
+    - Use case ends.
+- 3b. Not all flags are given
+    - 3b1. SummonersBook shows an error message.
+    - Use case ends
+- 3b. All flags are given but no enough values are given
+    - 3b1. SummonersBook shows an error message.
+    - Use case ends
+- 3c. Invalid value for cpm or gd15 or kda
+    - 1c1. SummonersBook shows an error message.
+    - Use case ends.
+
+---
+
+### Use case: Delete the latest performance values
+
+**MSS**
+
+1. User requests to list people.
+2. SummonersBook shows a list of people.
+3. User requests to delete the latest set of performance values (cpm, gd15, kda) to a specific person's stats by index.
+4. SummonersBook update the person's stats.
+
+**Extension**
+
+- 3a. The given index is invalid.
+    - 3a1. SummonersBook shows an error message.
     - Use case ends.
 
 ---
@@ -546,12 +611,8 @@ otherwise)
 
 Given below are instructions to test the app manually.
 
-<box type="info" seamless>
-
 **Note:** These instructions only provide a starting point for testers to work on;
 testers are expected to do more *exploratory* testing.
-
-</box>
 
 ### Launch and shutdown
 
