@@ -21,14 +21,14 @@ import seedu.address.model.team.exceptions.DuplicateRoleException;
 import seedu.address.model.team.exceptions.InvalidTeamSizeException;
 
 /**
- * Creates a team consisting of 5 existing players, manually provided by the user
+ * Creates a team consisting of 5 existing persons, manually provided by the user
  */
 public class MakeGroupCommand extends Command {
 
     public static final String COMMAND_WORD = "makeGroup";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Creates a team of 5 players. "
-            + "All players must already exist in SummonersBook.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Creates a team of 5 persons. "
+            + "All persons must already exist in SummonersBook.\n"
             + "Parameters: "
             + PREFIX_NAME + "NAME1 "
             + PREFIX_NAME + "NAME2 "
@@ -43,19 +43,19 @@ public class MakeGroupCommand extends Command {
             + PREFIX_NAME + "Ella";
 
     public static final String MESSAGE_SUCCESS = "New team created: %1$s";
-    public static final String MESSAGE_INSUFFICIENT_PLAYERS = "Exactly 5 player names must be provided.";
-    public static final String MESSAGE_DUPLICATE_NAMES = "Duplicate player names found in the input.";
-    public static final String MESSAGE_PLAYER_NOT_FOUND = "Player '%1$s' does not exist in SummonersBook.";
-    public static final String MESSAGE_REUSED_PLAYERS = "Some players are already in other teams.";
+    public static final String MESSAGE_INSUFFICIENT_PERSONS = "Exactly 5 person names must be provided.";
+    public static final String MESSAGE_DUPLICATE_NAMES = "Duplicate person names found in the input.";
+    public static final String MESSAGE_PERSON_NOT_FOUND = "Person '%1$s' does not exist in SummonersBook.";
+    public static final String MESSAGE_REUSED_PERSON = "Some persons are already in other teams.";
 
-    private final List<Name> playerNames;
+    private final List<Name> personNames;
 
     /**
      * Creates a MakeGroupCommand to create a team with the specified players.
      */
-    public MakeGroupCommand(List<Name> playerNames) {
-        requireNonNull(playerNames);
-        this.playerNames = playerNames;
+    public MakeGroupCommand(List<Name> personNames) {
+        requireNonNull(personNames);
+        this.personNames = personNames;
     }
 
     @Override
@@ -63,25 +63,25 @@ public class MakeGroupCommand extends Command {
         requireNonNull(model);
 
         // === 1. Check number of players ===
-        if (playerNames.size() != 5) {
-            throw new CommandException(MESSAGE_INSUFFICIENT_PLAYERS);
+        if (personNames.size() != 5) {
+            throw new CommandException(MESSAGE_INSUFFICIENT_PERSONS);
         }
 
         // === 2. Check for duplicates in provided names ===
-        Set<Name> uniqueNames = new HashSet<>(playerNames);
-        if (uniqueNames.size() < playerNames.size()) {
+        Set<Name> uniqueNames = new HashSet<>(personNames);
+        if (uniqueNames.size() < personNames.size()) {
             throw new CommandException(MESSAGE_DUPLICATE_NAMES);
         }
 
-        // === 3. Fetch and validate all players ===
+        // === 3. Fetch and validate all persons ===
         Set<Person> teamMembers = new HashSet<>();
-        for (Name name : playerNames) {
+        for (Name name : personNames) {
             Optional<Person> personOpt = model.findPersonByName(name);
             if (personOpt.isEmpty()) {
-                throw new CommandException(String.format(MESSAGE_PLAYER_NOT_FOUND, name.fullName));
+                throw new CommandException(String.format(MESSAGE_PERSON_NOT_FOUND, name.fullName));
             }
             if (model.isPersonInAnyTeam(personOpt.get())) {
-                throw new CommandException(String.format(MESSAGE_REUSED_PLAYERS, name.fullName));
+                throw new CommandException(String.format(MESSAGE_REUSED_PERSON, name.fullName));
             }
             teamMembers.add(personOpt.get());
         }
@@ -102,13 +102,13 @@ public class MakeGroupCommand extends Command {
     public boolean equals(Object other) {
         return other == this
                 || (other instanceof MakeGroupCommand
-                && playerNames.equals(((MakeGroupCommand) other).playerNames));
+                && personNames.equals(((MakeGroupCommand) other).personNames));
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("playerNames", playerNames)
+                .add("personNames", personNames)
                 .toString();
     }
 }
