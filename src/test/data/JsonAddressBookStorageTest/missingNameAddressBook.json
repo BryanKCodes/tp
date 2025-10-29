@@ -1,0 +1,18 @@
+{
+  "persons": [
+    {
+      "id": "person-1",
+      "role": "mid",
+      "rank": "gold",
+      "champion": "Ahri",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    }
+  ],
+  "teams": []
+}
