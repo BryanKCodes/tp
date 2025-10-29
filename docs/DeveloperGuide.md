@@ -213,7 +213,7 @@ It allows users to display only the persons whose attributes match the given cri
 
 When the user executes a command such as:
 
-`filter rk Gold rl Mid`
+`filter rk/Gold rl/Mid`
 
 the app filters the list of persons based on the provided criteria.  
 In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid.
@@ -225,10 +225,10 @@ This functionality is supported by three key components:
 - **`Model#updateFilteredPersonList(Predicate<Person>)`** — applies the predicate to the main person list, updating the UI display.
 
 Each field type (e.g. rank, role, champion) within the same category uses **OR** logic:
-> Example: `rk Gold rk Silver` → persons with rank Gold **or** Silver.
+> Example: `rk/Gold rk/Silver` → persons with rank Gold **or** Silver.
 
 Across different field types, conditions are combined using **AND** logic:
-> Example: `rk Gold rk Silver rl Mid` → persons who are (Gold **or** Silver) **and** play Mid.
+> Example: `rk/Gold rk/Silver rl/Mid` → persons who are (Gold **or** Silver) **and** play Mid.
 
 ---
 
@@ -241,14 +241,14 @@ No filtering has been applied yet.
 ---
 
 **Step 2.**  
-The user executes `filter rk Gold`.  
+The user executes `filter rk/Gold`.  
 The `FilterCommandParser` creates a `FilterCommand` containing a `FilterPredicate` that checks each person’s rank.  
 `Model#updateFilteredPersonList(predicate)` is called, and the UI updates to show only matching entries.
 
 ---
 
 **Step 3.**  
-The user then runs `filter rk Gold rl Mid`.  
+The user then runs `filter rk/Gold rl/Mid`.  
 Now, the displayed list includes only persons whose rank is Gold **and** whose role is Mid.
 
 ---
@@ -291,7 +291,7 @@ The following sequence diagram illustrates how a filter command flows through th
 #### Implementation
 
 The auto-grouping feature is implemented through the `GroupCommand` and `TeamMatcher` classes.  
-It automatically creates balanced teams from all unassigned players, taking into account **player roles, ranks, and champions**.
+It automatically creates balanced teams from all unassigned persons, taking into account a person's **roles, ranks, and champions**.
 
 When the user executes:
 
@@ -302,7 +302,7 @@ the application attempts to form as many full teams as possible while respecting
 This functionality is supported by three key components:
 
 - **`GroupCommand`** — represents the command that performs auto-grouping.
-- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned players.
+- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned persons.
 - **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
 
 ---
@@ -310,15 +310,15 @@ This functionality is supported by three key components:
 #### Example Usage
 
 **Step 1.**  
-The user has a list of unassigned players with roles and ranks.  
-The application currently shows all players without any teams assigned.
+The user has a list of unassigned persons with roles and ranks.  
+The application currently shows all persons without any teams assigned.
 
 
 ---
 
 **Step 2.**  
 The user executes the `group` command.  
-The `GroupCommand` fetches all unassigned players via `Model#getUnassignedPersonList()`.  
+The `GroupCommand` fetches all unassigned persons via `Model#getUnassignedPersonList()`.  
 `TeamMatcher#matchTeams()` is called to form balanced teams.
 
 
@@ -334,11 +334,11 @@ Teams are successfully formed according to role, rank, and champion constraints.
 <box type="info" seamless>
 
 **Note:**  
-If there are insufficient players to form a full team (i.e., missing a required role), the command will notify the user with:
+If there are insufficient persons to form a full team (i.e., missing a required role), the command will notify the user with:
 
-`No teams could be formed. Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).`
+`No teams could be formed. Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).`
 
-Any leftover unassigned players remain in the pool and can be used in future auto-grouping operations.
+Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations.
 
 </box>
 
@@ -347,9 +347,9 @@ Any leftover unassigned players remain in the pool and can be used in future aut
 #### Design Considerations
 
 - **Current implementation:**  
-  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned players.
+  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned persons.
     - *Pros:* Ensures balanced teams with no duplicate champions and respects role requirements.
-    - *Cons:* Leftover players who do not complete a full team remain unassigned.
+    - *Cons:* Leftover persons who do not complete a full team remain unassigned.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -383,19 +383,17 @@ or mouse/GUI-driven app.
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​ | I want to …​                                     | So that I can…​                                   |
-|----------|---------|--------------------------------------------------|---------------------------------------------------|
-| `* * *`  | coach   | add new people with their in-game IDs           | track and manage them in the system               |
-| `* * *`  | coach   | update a person’s details                        | always have accurate and current information      |
-| `* * *`  | coach   | record each person’s primary and secondary roles | assign them to suitable teams                     |
-| `* * *`  | coach   | log each person’s preferred champions            | avoid role duplication and build effective teams  |
-| `* * *`  | coach   | filter people by role, rank, or skill rating    | quickly find suitable team compositions           |
-| `* * *`  | coach   | create practice teams of 5 people               | simulate real match conditions                    |
-| `* *`    | coach   | balance teams automatically by skill level       | ensure matches are fair and competitive           |
-| `* *`    | coach   | manually adjust teams after creation             | fine-tune rosters to meet specific training needs |
-| `* *`    | coach   | see role distribution in each team               | avoid having duplicate roles in the same lineup   |
-| `* *`    | coach   | label each newly created team                    | easily identify and manage them later             |
-| `* *`    | coach   | see a list of all created teams in a sidebar     | quickly view and select teams                     |
+| Priority | As a … | I want to …                                 | So that I can…                                  |
+|----------|---------|----------------------------------------------|---------------------------------------------------|
+| `* * *`  | coach   | add new people with their in-game names      | track and manage them in the system               |
+| `* * *`  | coach   | update a person’s details                    | always have accurate and current information      |
+| `* * *`  | coach   | record each person’s primary roles           | assign them to suitable teams                     |
+| `* * *`  | coach   | record each person’s preferred champions     | avoid role duplication and build effective teams  |
+| `* * *`  | coach   | filter people by role, rank, or score rating | quickly find suitable players for forming teams   |
+| `* * *`  | coach   | create practice teams of 5 people            | simulate real match conditions                    |
+| `* *`    | coach   | balance teams automatically by rank          | ensure matches are fair and competitive           |
+| `* *`    | coach   | see role distribution in each team           | avoid having duplicate roles in the same lineup   |
+| `* *`    | coach   | see a list of all created teams in a sidebar | quickly view teams                     |
 
 ### Use cases
 
@@ -630,7 +628,7 @@ testers are expected to do more *exploratory* testing.
     1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-1. _{ more test cases …​ }_
+1. _{ more test cases … }_
 
 ### Deleting a person
 
