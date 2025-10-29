@@ -67,28 +67,6 @@ public final class CsvExporter {
     }
 
     /**
-     * Attempts to obtain the average grade string from the given person reflectively.
-     * <p>
-     * If {@code Person#getStats()} or {@code Stats#getValue()} is unavailable
-     * (e.g., stats not merged yet), returns {@code "-"} as a fallback.
-     *
-     * @param person a {@link Person} object (treated reflectively)
-     * @return the formatted average grade string, or {@code "-"} if unavailable
-     */
-    private static String tryGetAvgGrade(Object person) {
-        try {
-            Object stats = person.getClass().getMethod("getStats").invoke(person);
-            if (stats == null) {
-                return "-";
-            }
-            Object v = stats.getClass().getMethod("getValue").invoke(stats);
-            return String.valueOf(v);
-        } catch (ReflectiveOperationException e) {
-            return "-"; // Stats not merged yet or method absent
-        }
-    }
-
-    /**
      * Exports all teams currently stored in the model to a CSV file at the specified path.
      * <p>
      * The exported file includes the following columns:
