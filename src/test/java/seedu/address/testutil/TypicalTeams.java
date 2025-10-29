@@ -45,7 +45,7 @@ public class TypicalTeams {
     public static AddressBook getTypicalAddressBookWithTeams() {
         AddressBook ab = new AddressBook();
 
-        // Add the players to the address book first
+        // Add the persons to the address book first
         for (Person person : TEAM_A_ROSTER) {
             ab.addPerson(person);
         }
