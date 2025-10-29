@@ -21,7 +21,7 @@ public class Messages {
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
     public static final String MESSAGE_PERSON_IN_TEAM =
-                "This person is currently in a team. Please remove them from the team first.";
+                "This person is currently in a team.";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

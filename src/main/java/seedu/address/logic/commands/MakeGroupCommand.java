@@ -25,7 +25,7 @@ import seedu.address.model.team.exceptions.InvalidTeamSizeException;
  */
 public class MakeGroupCommand extends Command {
 
-    public static final String COMMAND_WORD = "makegroup";
+    public static final String COMMAND_WORD = "makeGroup";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Creates a team of 5 players. "
             + "All players must already exist in SummonersBook.\n"
