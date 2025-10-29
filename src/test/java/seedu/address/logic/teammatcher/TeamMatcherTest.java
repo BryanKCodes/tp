@@ -289,4 +289,47 @@ public class TeamMatcherTest {
         // Should only form 1 team due to champion conflicts
         assertEquals(1, teams.size());
     }
+
+    @Test
+    public void matchTeams_exactlyFivePersons_formsOneTeam() throws Exception {
+        // Test covers the case where we have exactly 5 persons (one per role)
+        Person top = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Lee Sin").build();
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        List<Person> persons = Arrays.asList(top, jungle, mid, adc, support);
+        List<Team> teams = teamMatcher.matchTeams(persons);
+
+        // Should form exactly 1 team
+        assertEquals(1, teams.size());
+        assertEquals(5, teams.get(0).getPersons().size());
+    }
+
+    @Test
+    public void matchTeams_roleKeyMissingInMap_throwsInsufficientPersonsException() {
+        // Create persons with only 4 out of 5 required roles (no Top role at all)
+        Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Lee Sin").build();
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        List<Person> persons = Arrays.asList(jungle, mid, adc, support);
+
+        InsufficientPersonsException exception = assertThrows(
+                InsufficientPersonsException.class, () -> teamMatcher.matchTeams(persons));
+
+        // Should complain about missing Top role
+        assertTrue(exception.getMessage().contains("Top"));
+    }
 }
