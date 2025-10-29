@@ -47,5 +47,10 @@ public class ViewTeamCommand extends Command {
         return other == this
                 || (other instanceof ViewTeamCommand && index.equals(((ViewTeamCommand) other).index));
     }
+
+    @Override
+    public int hashCode() {
+        return index.hashCode();
+    }
 }
 
