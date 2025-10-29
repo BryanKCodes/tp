@@ -213,7 +213,7 @@ It allows users to display only the persons whose attributes match the given cri
 
 When the user executes a command such as:
 
-`filter rk Gold rl Mid`
+`filter rk/Gold rl/Mid`
 
 the app filters the list of persons based on the provided criteria.  
 In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid.
@@ -225,10 +225,10 @@ This functionality is supported by three key components:
 - **`Model#updateFilteredPersonList(Predicate<Person>)`** — applies the predicate to the main person list, updating the UI display.
 
 Each field type (e.g. rank, role, champion) within the same category uses **OR** logic:
-> Example: `rk Gold rk Silver` → persons with rank Gold **or** Silver.
+> Example: `rk/Gold rk/Silver` → persons with rank Gold **or** Silver.
 
 Across different field types, conditions are combined using **AND** logic:
-> Example: `rk Gold rk Silver rl Mid` → persons who are (Gold **or** Silver) **and** play Mid.
+> Example: `rk/Gold rk/Silver rl/Mid` → persons who are (Gold **or** Silver) **and** play Mid.
 
 ---
 
@@ -241,14 +241,14 @@ No filtering has been applied yet.
 ---
 
 **Step 2.**  
-The user executes `filter rk Gold`.  
+The user executes `filter rk/Gold`.  
 The `FilterCommandParser` creates a `FilterCommand` containing a `FilterPredicate` that checks each person’s rank.  
 `Model#updateFilteredPersonList(predicate)` is called, and the UI updates to show only matching entries.
 
 ---
 
 **Step 3.**  
-The user then runs `filter rk Gold rl Mid`.  
+The user then runs `filter rk/Gold rl/Mid`.  
 Now, the displayed list includes only persons whose rank is Gold **and** whose role is Mid.
 
 ---
