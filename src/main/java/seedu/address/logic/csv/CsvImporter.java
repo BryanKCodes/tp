@@ -34,6 +34,9 @@ import seedu.address.model.tag.Tag;
  */
 public final class CsvImporter {
 
+    /** Max number of individual row errors shown in the import summary. */
+    public static final int MAX_SAMPLE_ERRORS = 5;
+
     /**
      * Result summary for an import operation.
      */
@@ -41,6 +44,7 @@ public final class CsvImporter {
         public final int imported;
         public final int duplicates;
         public final int invalid;
+        public final List<String> sampleErrors;
 
         /**
          * Constructs a result with counts.
@@ -49,10 +53,11 @@ public final class CsvImporter {
          * @param duplicates number of rows skipped as duplicates
          * @param invalid    number of rows that failed validation/parsing
          */
-        Result(int imported, int duplicates, int invalid) {
+        Result(int imported, int duplicates, int invalid, List<String> sampleErrors) {
             this.imported = imported;
             this.duplicates = duplicates;
             this.invalid = invalid;
+            this.sampleErrors = sampleErrors;
         }
     }
 
@@ -80,20 +85,34 @@ public final class CsvImporter {
         int imported = 0;
         int duplicates = 0;
         int invalid = 0;
+        List<String> sampleErrors = new ArrayList<>();
 
         try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String header = br.readLine();
             if (header == null) {
-                throw new InvalidCsvException("Empty CSV");
+                throw new InvalidCsvException("Empty CSV. Expected header: "
+                        + "'Name,Role,Rank,Champion' or 'Name,Role,Rank,Champion,Wins,Losses'.");
             }
 
             HeaderType type = HeaderType.from(header);
             if (type == HeaderType.UNKNOWN) {
-                throw new InvalidCsvException("Unexpected header: " + header);
+                // normalise for a clearer message
+                String sanitized = Arrays.stream(header.split(",", -1))
+                        .map(s -> s.trim())
+                        .reduce((a,b) -> a + "," + b).orElse(header).trim();
+                int cols = sanitized.isEmpty() ? 0 : sanitized.split(",", -1).length;
+
+                throw new InvalidCsvException(
+                        "Invalid header (" + cols + " column(s)): '" + sanitized + "'.\n"
+                                + "Expected either:\n"
+                                + "  - Name,Role,Rank,Champion\n"
+                                + "  - Name,Role,Rank,Champion,Wins,Losses");
             }
 
+            int lineNo = 1;
             String line;
             while ((line = br.readLine()) != null) {
+                lineNo++;
                 if (line.isBlank()) {
                     continue;
                 }
@@ -120,12 +139,15 @@ public final class CsvImporter {
                     }
                 } catch (IllegalArgumentException iae) {
                     invalid++;
+                    if (sampleErrors.size() < 5) {
+                        sampleErrors.add("line " + lineNo + ": " + iae.getMessage());
+                    }
                 }
             }
         }
 
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
-        return new Result(imported, duplicates, invalid);
+        return new Result(imported, duplicates, invalid, sampleErrors);
     }
 
     /**
