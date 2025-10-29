@@ -106,4 +106,64 @@ public class JsonAddressBookStorageTest {
     public void saveAddressBook_nullFilePath_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> saveAddressBook(new AddressBook(), null));
     }
+
+    @Test
+    public void readAddressBook_personInMultipleTeams_throwsException() {
+        // PersonAlreadyInTeamException is a runtime exception that should be caught
+        assertThrows(Exception.class, () -> readAddressBook("personInMultipleTeamsAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_teamWithDuplicateRoles_throwsException() {
+        // DuplicateRoleException is a runtime exception that should be caught
+        assertThrows(Exception.class, () -> readAddressBook("teamWithDuplicateRolesAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_teamWithDuplicateChampions_throwsException() {
+        // DuplicateChampionException is a runtime exception that should be caught
+        assertThrows(Exception.class, () -> readAddressBook("teamWithDuplicateChampionsAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_teamWithInvalidSize_throwsException() {
+        // InvalidTeamSizeException is a runtime exception that should be caught
+        assertThrows(Exception.class, () -> readAddressBook("teamWithInvalidSizeAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_invalidRank_throwsDataLoadingException() {
+        // Invalid rank should throw IllegalValueException -> DataLoadingException
+        assertThrows(DataLoadingException.class, () -> readAddressBook("invalidRankAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_invalidRole_throwsDataLoadingException() {
+        // Invalid role should throw IllegalValueException -> DataLoadingException
+        assertThrows(DataLoadingException.class, () -> readAddressBook("invalidRoleAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_invalidChampion_throwsDataLoadingException() {
+        // Empty champion should throw IllegalValueException -> DataLoadingException
+        assertThrows(DataLoadingException.class, () -> readAddressBook("invalidChampionAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_missingName_throwsDataLoadingException() {
+        // Missing name field should throw IllegalValueException -> DataLoadingException
+        assertThrows(DataLoadingException.class, () -> readAddressBook("missingNameAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_invalidStatsType_throwsDataLoadingException() {
+        // String in numeric stats field should throw DataLoadingException during JSON parsing
+        assertThrows(DataLoadingException.class, () -> readAddressBook("invalidStatsTypeAddressBook.json"));
+    }
+
+    @Test
+    public void readAddressBook_invalidTag_throwsDataLoadingException() {
+        // Tag with special characters should throw IllegalValueException -> DataLoadingException
+        assertThrows(DataLoadingException.class, () -> readAddressBook("invalidTagAddressBook.json"));
+    }
 }

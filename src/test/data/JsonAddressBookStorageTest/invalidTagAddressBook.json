@@ -1,0 +1,19 @@
+{
+  "persons": [
+    {
+      "id": "person-1",
+      "name": "Alice Pauline",
+      "role": "mid",
+      "rank": "gold",
+      "champion": "Ahri",
+      "tags": ["invalid tag!@#"],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    }
+  ],
+  "teams": []
+}
