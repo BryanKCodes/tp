@@ -23,7 +23,7 @@ public class JsonAdaptedTeamTest {
     private static final int DUMMY_WINS = 0;
     private static final int DUMMY_LOSSES = 0;
 
-    // Only invalid as it does not match any of the team's player's IDs
+    // Only invalid as it does not match any of the team's person's IDs
     private static final String INVALID_PERSON_ID = "invalid-id-123";
 
     @Test

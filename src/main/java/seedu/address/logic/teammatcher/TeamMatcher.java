@@ -14,7 +14,7 @@ import seedu.address.model.team.Team;
 
 /**
  * A class responsible for matching unassigned persons into balanced teams.
- * Uses a role-based matching algorithm that considers player ranks and champions.
+ * Uses a role-based matching algorithm that considers person ranks and champions.
  *
  * This class follows the Single Responsibility Principle by focusing solely on team matching logic.
  */
@@ -35,25 +35,25 @@ public class TeamMatcher {
      * Algorithm:
      * 1. Groups persons by role
      * 2. Sorts each role group by rank (highest to lowest)
-     * 3. Iteratively forms teams by selecting one player per role
+     * 3. Iteratively forms teams by selecting one person per role
      * 4. Ensures no duplicate champions within each team
      *
      * @param unassignedPersons List of persons not currently in any team.
      * @return List of teams that can be formed.
-     * @throws InsufficientPlayersException if there are not enough players to form at least one complete team.
+     * @throws InsufficientPersonsException if there are not enough persons to form at least one complete team.
      */
-    public List<Team> matchTeams(List<Person> unassignedPersons) throws InsufficientPlayersException {
+    public List<Team> matchTeams(List<Person> unassignedPersons) throws InsufficientPersonsException {
         // Group by role
-        Map<Role, List<Person>> playersByRole = groupByRole(unassignedPersons);
+        Map<Role, List<Person>> personsByRole = groupByRole(unassignedPersons);
 
-        // Validate we have at least one player per role
-        validateMinimumPlayers(playersByRole);
+        // Validate we have at least one person per role
+        validateMinimumPersons(personsByRole);
 
         // Create defensive copies and sort each role group by rank
-        Map<Role, List<Person>> sortedPlayersByRole = createSortedCopy(playersByRole);
+        Map<Role, List<Person>> sortedPersonsByRole = createSortedCopy(personsByRole);
 
         // Form teams
-        return formTeams(sortedPlayersByRole);
+        return formTeams(sortedPersonsByRole);
     }
 
     /**
@@ -69,32 +69,32 @@ public class TeamMatcher {
      *
      * @throws InsufficientPersonsException if any role is missing.
      */
-    private void validateMinimumPlayers(Map<Role, List<Person>> playersByRole)
-            throws InsufficientPlayersException {
+    private void validateMinimumPersons(Map<Role, List<Person>> personsByRole)
+            throws InsufficientPersonsException {
         for (Role role : REQUIRED_ROLES) {
-            if (!playersByRole.containsKey(role) || playersByRole.get(role).isEmpty()) {
-                throw new InsufficientPlayersException(
-                        "Cannot form a team: No players available for role " + role + ".");
+            if (!personsByRole.containsKey(role) || personsByRole.get(role).isEmpty()) {
+                throw new InsufficientPersonsException(
+                        "Cannot form a team: No persons available for role " + role + ".");
             }
         }
     }
 
     /**
-     * Creates a sorted defensive copy of the players by role map.
-     * Each role's player list is sorted by rank (highest to lowest).
+     * Creates a sorted defensive copy of the persons by role map.
+     * Each role's person list is sorted by rank (highest to lowest).
      * Uses Rank's natural ordering (Comparable) in reverse.
      *
-     * @param playersByRole Original map of players grouped by role (not modified).
-     * @return New map with sorted copies of player lists.
+     * @param personsByRole Original map of persons grouped by role (not modified).
+     * @return New map with sorted copies of person lists.
      */
-    private Map<Role, List<Person>> createSortedCopy(Map<Role, List<Person>> playersByRole) {
+    private Map<Role, List<Person>> createSortedCopy(Map<Role, List<Person>> personsByRole) {
         Comparator<Person> rankComparator = Comparator.comparing(Person::getRank).reversed();
         Map<Role, List<Person>> sortedCopy = new HashMap<>();
 
-        for (Map.Entry<Role, List<Person>> entry : playersByRole.entrySet()) {
-            List<Person> sortedPlayers = new ArrayList<>(entry.getValue());
-            sortedPlayers.sort(rankComparator);
-            sortedCopy.put(entry.getKey(), sortedPlayers);
+        for (Map.Entry<Role, List<Person>> entry : personsByRole.entrySet()) {
+            List<Person> sortedPersons = new ArrayList<>(entry.getValue());
+            sortedPersons.sort(rankComparator);
+            sortedCopy.put(entry.getKey(), sortedPersons);
         }
 
         return sortedCopy;
@@ -103,31 +103,31 @@ public class TeamMatcher {
     /**
      * Forms as many complete teams as possible from the sorted role groups.
      * Ensures no duplicate champions within each team.
-     * Modifies the input map by removing players as they are assigned to teams.
+     * Modifies the input map by removing persons as they are assigned to teams.
      *
-     * @param playersByRole Map of roles to lists of players (will be modified).
-     * @return List of teams formed from the players.
+     * @param personsByRole Map of roles to lists of persons (will be modified).
+     * @return List of teams formed from the persons.
      */
-    private List<Team> formTeams(Map<Role, List<Person>> playersByRole) {
+    private List<Team> formTeams(Map<Role, List<Person>> personsByRole) {
         List<Team> teams = new ArrayList<>();
 
         // Keep forming teams until we can't form any more complete teams
-        while (canFormTeam(playersByRole)) {
+        while (canFormTeam(personsByRole)) {
             List<Person> teamMembers = new ArrayList<>();
 
-            // Try to select one player from each role
+            // Try to select one person from each role
             for (Role role : REQUIRED_ROLES) {
-                List<Person> availablePlayers = playersByRole.get(role);
-                Optional<Person> selectedPlayer = selectPlayerWithoutChampionConflict(availablePlayers, teamMembers);
+                List<Person> availablePersons = personsByRole.get(role);
+                Optional<Person> selectedPerson = selectPersonWithoutChampionConflict(availablePersons, teamMembers);
 
-                if (selectedPlayer.isEmpty()) {
+                if (selectedPerson.isEmpty()) {
                     // Can't form a complete team without champion conflicts
-                    // Put back the players we've selected and stop
+                    // Put back the persons we've selected and stop
                     return teams;
                 }
 
-                teamMembers.add(selectedPlayer.get());
-                availablePlayers.remove(selectedPlayer.get());
+                teamMembers.add(selectedPerson.get());
+                availablePersons.remove(selectedPerson.get());
             }
 
             // Successfully formed a team
@@ -142,9 +142,9 @@ public class TeamMatcher {
     /**
      * Checks if we can potentially form at least one more complete team.
      */
-    private boolean canFormTeam(Map<Role, List<Person>> playersByRole) {
+    private boolean canFormTeam(Map<Role, List<Person>> personsByRole) {
         for (Role role : REQUIRED_ROLES) {
-            if (!playersByRole.containsKey(role) || playersByRole.get(role).isEmpty()) {
+            if (!personsByRole.containsKey(role) || personsByRole.get(role).isEmpty()) {
                 return false;
             }
         }
@@ -152,16 +152,16 @@ public class TeamMatcher {
     }
 
     /**
-     * Selects a player from the available list who doesn't have a champion conflict
+     * Selects a person from the available list who doesn't have a champion conflict
      * with already selected team members.
      *
-     * @param availablePlayers List of players to choose from.
+     * @param availablePersons List of persons to choose from.
      * @param selectedMembers Already selected team members.
-     * @return The selected player, or Optional.empty() if no valid player can be found.
+     * @return The selected person, or Optional.empty() if no valid person can be found.
      */
-    private Optional<Person> selectPlayerWithoutChampionConflict(List<Person> availablePlayers,
+    private Optional<Person> selectPersonWithoutChampionConflict(List<Person> availablePersons,
                                                                   List<Person> selectedMembers) {
-        for (Person candidate : availablePlayers) {
+        for (Person candidate : availablePersons) {
             if (!hasChampionConflict(candidate, selectedMembers)) {
                 return Optional.of(candidate);
             }

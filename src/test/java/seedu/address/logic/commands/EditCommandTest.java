@@ -219,7 +219,7 @@ public class EditCommandTest {
     @Test
     public void execute_editPersonNotInAnyTeam_onlyUpdatesPerson() {
         Model model = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
-        Person nonTeamPerson = new PersonBuilder().withName("Teamless Player").withRole("mid").withChampion("Ahri")
+        Person nonTeamPerson = new PersonBuilder().withName("Teamless Person").withRole("mid").withChampion("Ahri")
                 .build();
         model.addPerson(nonTeamPerson);
 
