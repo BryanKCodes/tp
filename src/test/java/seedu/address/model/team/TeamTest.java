@@ -22,28 +22,28 @@ public class TeamTest {
     private static final int DUMMY_WINS = 0;
     private static final int DUMMY_LOSSES = 0;
 
-    // Valid team with 5 players: unique roles and unique champions
-    private static final Person TOP_PERSON = new PersonBuilder().withName("Top Player")
+    // Valid team with 5 persons: unique roles and unique champions
+    private static final Person TOP_PERSON = new PersonBuilder().withName("Top Person")
             .withRole("top").withChampion("Garen").withRank("gold").build();
-    private static final Person JUNGLE_PERSON = new PersonBuilder().withName("Jungle Player")
+    private static final Person JUNGLE_PERSON = new PersonBuilder().withName("Jungle Person")
             .withRole("jungle").withChampion("Lee Sin").withRank("platinum").build();
-    private static final Person MID_PERSON = new PersonBuilder().withName("Mid Player")
+    private static final Person MID_PERSON = new PersonBuilder().withName("Mid Person")
             .withRole("mid").withChampion("Ahri").withRank("diamond").build();
-    private static final Person ADC_PERSON = new PersonBuilder().withName("ADC Player")
+    private static final Person ADC_PERSON = new PersonBuilder().withName("ADC Person")
             .withRole("adc").withChampion("Jinx").withRank("gold").build();
-    private static final Person SUPPORT_PERSON = new PersonBuilder().withName("Support Player")
+    private static final Person SUPPORT_PERSON = new PersonBuilder().withName("Support Person")
             .withRole("support").withChampion("Thresh").withRank("platinum").build();
-    private static final Person EXTRA_PERSON = new PersonBuilder().withName("Extra Player")
+    private static final Person EXTRA_PERSON = new PersonBuilder().withName("Extra Person")
             .withRole("top").withChampion("Ahri").withRank("master").build();
 
     private static final List<Person> VALID_PERSONS = Arrays.asList(
             TOP_PERSON, JUNGLE_PERSON, MID_PERSON, ADC_PERSON, SUPPORT_PERSON);
 
-    // Invalid: Only 4 players
+    // Invalid: Only 4 persons
     private static final List<Person> INVALID_PERSONS_SIZE_FOUR = Arrays.asList(
             TOP_PERSON, JUNGLE_PERSON, MID_PERSON, ADC_PERSON);
 
-    // Invalid: 6 players
+    // Invalid: 6 persons
     private static final List<Person> INVALID_PERSONS_SIZE_SIX = Arrays.asList(
             TOP_PERSON, JUNGLE_PERSON, MID_PERSON, ADC_PERSON, SUPPORT_PERSON, EXTRA_PERSON);
 
@@ -101,7 +101,7 @@ public class TeamTest {
         DuplicateRoleException exception = assertThrows(
                 DuplicateRoleException.class, () -> new Team(INVALID_PERSONS_DUPLICATE_ROLE));
 
-        // Check that exception contains information about the conflicting players
+        // Check that exception contains information about the conflicting persons
         assertNotNull(exception.getPerson1());
         assertNotNull(exception.getPerson2());
         assertEquals(exception.getPerson1().getRole(), exception.getPerson2().getRole());
@@ -113,7 +113,7 @@ public class TeamTest {
         DuplicateChampionException exception = assertThrows(
                 DuplicateChampionException.class, () -> new Team(INVALID_PERSONS_DUPLICATE_CHAMPIONS));
 
-        // Check that exception contains information about the conflicting players
+        // Check that exception contains information about the conflicting persons
         assertNotNull(exception.getPerson1());
         assertNotNull(exception.getPerson2());
         assertEquals(exception.getPerson1().getChampion(), exception.getPerson2().getChampion());
@@ -144,7 +144,7 @@ public class TeamTest {
         List<Person> returnedList = team.getPersons();
 
         // Modify the returned list
-        Person newPerson = new PersonBuilder().withName("New Player")
+        Person newPerson = new PersonBuilder().withName("New Person")
                 .withRole("top").withChampion("Darius").build();
         returnedList.add(newPerson);
 

@@ -28,7 +28,7 @@ public class UngroupCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "Removed team: %1$s";
     public static final String MESSAGE_SUCCESS_ALL = "Successfully removed %1$d team(s). "
-            + "All players are now unassigned.";
+            + "All persons are now unassigned.";
     public static final String MESSAGE_NO_TEAMS = "No teams to remove.";
 
     private final Index targetIndex;
