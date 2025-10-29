@@ -164,6 +164,32 @@ public class UngroupCommandTest {
     }
 
     @Test
+    public void hashCode_test() {
+        UngroupCommand ungroupFirstCommand = new UngroupCommand(INDEX_FIRST_TEAM);
+        UngroupCommand ungroupSecondCommand = new UngroupCommand(INDEX_SECOND_TEAM);
+        UngroupCommand ungroupAllCommand = new UngroupCommand();
+        UngroupCommand ungroupAllCommand2 = new UngroupCommand();
+
+        // same values -> same hash code
+        UngroupCommand ungroupFirstCommandCopy = new UngroupCommand(INDEX_FIRST_TEAM);
+        assertEquals(ungroupFirstCommand.hashCode(), ungroupFirstCommandCopy.hashCode());
+
+        // both remove all -> same hash code
+        assertEquals(ungroupAllCommand.hashCode(), ungroupAllCommand2.hashCode());
+
+        // different index -> different hash code (highly likely but not guaranteed)
+        assertFalse(ungroupFirstCommand.hashCode() == ungroupSecondCommand.hashCode());
+
+        // remove all vs remove specific -> different hash code (highly likely but not guaranteed)
+        assertFalse(ungroupAllCommand.hashCode() == ungroupFirstCommand.hashCode());
+
+        // hash code is consistent across multiple calls
+        int firstHash = ungroupFirstCommand.hashCode();
+        assertEquals(firstHash, ungroupFirstCommand.hashCode());
+        assertEquals(firstHash, ungroupFirstCommand.hashCode());
+    }
+
+    @Test
     public void toStringMethod() {
         Index targetIndex = Index.fromOneBased(1);
         UngroupCommand ungroupCommand = new UngroupCommand(targetIndex);
