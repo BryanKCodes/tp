@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -27,30 +28,48 @@ public class ViewTeamCommand extends Command {
     private final Index index;
 
     public ViewTeamCommand(Index index) {
+        requireNonNull(index, "Index cannot be null");
         this.index = index;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        requireNonNull(model);
+        requireNonNull(model, "Model cannot be null");
         List<Team> teams = model.getFilteredTeamList();
         if (index.getZeroBased() >= teams.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_TEAM_DISPLAYED_INDEX);
         }
         Team team = teams.get(index.getZeroBased());
+        assert team != null : "Team at valid index should not be null";
+
         String label = "Team " + index.getOneBased(); // user-facing team number
         return CommandResult.showTeamStats(String.format(MESSAGE_SUCCESS, label), team);
     }
 
     @Override
     public boolean equals(Object other) {
-        return other == this
-                || (other instanceof ViewTeamCommand && index.equals(((ViewTeamCommand) other).index));
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof ViewTeamCommand)) {
+            return false;
+        }
+
+        ViewTeamCommand otherCommand = (ViewTeamCommand) other;
+        return index.equals(otherCommand.index);
     }
 
     @Override
     public int hashCode() {
         return index.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .add("index", index)
+                .toString();
     }
 }
 
