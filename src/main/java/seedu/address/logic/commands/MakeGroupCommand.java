@@ -51,7 +51,7 @@ public class MakeGroupCommand extends Command {
     private final List<Name> personNames;
 
     /**
-     * Creates a MakeGroupCommand to create a team with the specified players.
+     * Creates a MakeGroupCommand to create a team with the specified persons.
      */
     public MakeGroupCommand(List<Name> personNames) {
         requireNonNull(personNames);
@@ -62,7 +62,7 @@ public class MakeGroupCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        // === 1. Check number of players ===
+        // === 1. Check number of persons ===
         if (personNames.size() != 5) {
             throw new CommandException(MESSAGE_INSUFFICIENT_PERSONS);
         }
