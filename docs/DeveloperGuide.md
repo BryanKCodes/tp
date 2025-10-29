@@ -291,7 +291,7 @@ The following sequence diagram illustrates how a filter command flows through th
 #### Implementation
 
 The auto-grouping feature is implemented through the `GroupCommand` and `TeamMatcher` classes.  
-It automatically creates balanced teams from all unassigned players, taking into account **player roles, ranks, and champions**.
+It automatically creates balanced teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
 
 When the user executes:
 
@@ -302,7 +302,7 @@ the application attempts to form as many full teams as possible while respecting
 This functionality is supported by three key components:
 
 - **`GroupCommand`** — represents the command that performs auto-grouping.
-- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned players.
+- **`TeamMatcher`** — contains the algorithm for forming teams from unassigned persons.
 - **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
 
 ---
@@ -310,15 +310,15 @@ This functionality is supported by three key components:
 #### Example Usage
 
 **Step 1.**  
-The user has a list of unassigned players with roles and ranks.  
-The application currently shows all players without any teams assigned.
+The user has a list of unassigned persons with roles and ranks.  
+The application currently shows all persons without any teams assigned.
 
 
 ---
 
 **Step 2.**  
 The user executes the `group` command.  
-The `GroupCommand` fetches all unassigned players via `Model#getUnassignedPersonList()`.  
+The `GroupCommand` fetches all unassigned persons via `Model#getUnassignedPersonList()`.  
 `TeamMatcher#matchTeams()` is called to form balanced teams.
 
 
@@ -334,11 +334,11 @@ Teams are successfully formed according to role, rank, and champion constraints.
 <box type="info" seamless>
 
 **Note:**  
-If there are insufficient players to form a full team (i.e., missing a required role), the command will notify the user with:
+If there are insufficient persons to form a full team (i.e., missing a required role), the command will notify the user with:
 
-`No teams could be formed. Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).`
+`No teams could be formed. Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).`
 
-Any leftover unassigned players remain in the pool and can be used in future auto-grouping operations.
+Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations.
 
 </box>
 
@@ -347,9 +347,9 @@ Any leftover unassigned players remain in the pool and can be used in future aut
 #### Design Considerations
 
 - **Current implementation:**  
-  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned players.
+  Uses `TeamMatcher` to automatically form teams from the current pool of unassigned persons.
     - *Pros:* Ensures balanced teams with no duplicate champions and respects role requirements.
-    - *Cons:* Leftover players who do not complete a full team remain unassigned.
+    - *Cons:* Leftover persons who do not complete a full team remain unassigned.
 
 --------------------------------------------------------------------------------------------------------------------
 

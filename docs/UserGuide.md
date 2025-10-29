@@ -204,7 +204,7 @@ Format:
 Creates a new team with the specified people.
 
 **Format:**  
-`makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
+`makegroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
 
 #### Rules & Notes
 - Each person must **already exist** in the person list.
@@ -336,7 +336,7 @@ Action               | Format
 **Filter people**   | `filter [rl/ROLE ...] [rk/RANK ...]`
 **Edit person**      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
 **Auto-group teams** | `group`
-**Manually create team** | `makegroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
+**Manually create team** | `makegroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
 **Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
 **Add performance values** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
 **Delete performance values** | `deleteStats INDEX`
