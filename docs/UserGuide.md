@@ -184,8 +184,8 @@ Command | Purpose | Format
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players/teams [to PATH]`
-[`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export players [to/PATH]` `export teams [to/PATH]`
+[`import`](#importing-player-data-import) | Import players from CSV | `import players from/PATH` `import players from/PATH`
 
 ### Utility
 
@@ -578,8 +578,8 @@ Exports player or team data from SummonersBook into a CSV file. You can export e
 
 **Format:**
 ```
-export players [to CUSTOM_PATH]
-export teams [to CUSTOM_PATH]
+export players [to/CUSTOM_PATH]
+export teams [to/CUSTOM_PATH]
 ```
 
 **Notes:**
@@ -593,7 +593,7 @@ export teams [to CUSTOM_PATH]
 * `export players`
   Exports all player data to `data/players.csv`.
 
-* `export teams to data/myTeams.csv`
+* `export teams to/data/myTeams.csv`
   Exports all team data to a custom location.
 
 **Success message:**
@@ -606,7 +606,7 @@ Exported players to data/players.csv
 Imports player information from a CSV file into SummonersBook. This is useful for restoring saved data or onboarding new players quickly.
 
 **Format:**
-`import players from FILE_PATH`
+`import players from/FILE_PATH`
 
 **Notes:**
 * The CSV file must be properly formatted. Supported headers include:
@@ -616,10 +616,10 @@ Imports player information from a CSV file into SummonersBook. This is useful fo
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
 **Examples:**
-* `import players from data/players.csv`
+* `import players from/data/players.csv`
   Imports players from the default export location.
 
-* `import players from data/backup.csv`
+* `import players from/data/backup.csv`
   Imports players from a backup file.
 
 **Success message:**
@@ -790,9 +790,9 @@ Action | Format | Example
 ### Data Import/Export
 Action | Format                     | Example
 -------|----------------------------|--------
-**Export players** | `export players [to PATH]` | `export players`
-**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
-**Import players** | `import players from/PATH` | `import players from data/players.csv`
+**Export players** | `export players [to/PATH]` | `export players`
+**Export teams** | `export teams [to/PATH]`   | `export teams to/data/myTeams.csv`
+**Import players** | `import players from/PATH` | `import players from/data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
