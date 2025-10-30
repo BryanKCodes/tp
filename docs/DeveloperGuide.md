@@ -1420,10 +1420,10 @@ testers are expected to do more *exploratory* testing.
        TestPlayer2,Top,Silver,Garen
        ```
 
-    1. Test case: `import players from/data/test_import.csv`<br>
+    1. Test case: `import players from data/test_import.csv`<br>
        Expected: Players are imported. Success message shows "Imported X players, skipped Y duplicates, Z invalid row(s)."
 
-    1. Test case: `import players from/nonexistent.csv`<br>
+    1. Test case: `import players from nonexistent.csv`<br>
        Expected: No players imported. Error message "Failed to import: file not found."
 
     1. Test case: Import a CSV with invalid data (e.g., invalid rank values)<br>
