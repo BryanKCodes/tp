@@ -186,7 +186,17 @@ Command | Purpose | Format
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5`
 [`listteam`](#listing-all-teams-listteam) | Show all teams | `listteam`
+[`viewteam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
+[`win`](#recording-a-team-win-win) | Record a win for a team | `win TEAM_INDEX`
+[`lose`](#recording-a-team-loss-lose) | Record a loss for a team | `lose TEAM_INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
+
+### Data Import/Export
+
+Command | Purpose | Format
+--------|---------|-------
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export players/teams [to PATH]`
+[`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
 
 ### Utility
 
@@ -503,6 +513,67 @@ Shows a list of all teams in SummonersBook.
 
 **Format:** `listteam`
 
+### Viewing team details: `viewteam`
+
+Displays detailed information about a team in a popup window, including member roster, win/loss record, and a visual pie chart showing the team's win ratio.
+
+**Format:**
+`viewteam INDEX`
+
+**Notes:**
+* `INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
+* The window displays:
+    - Team name (e.g., "Team 1")
+    - All players in the team with their roles
+    - Win/Loss record
+    - Pie chart visualizing win ratio
+* Statistics automatically update when you use `win` or `lose` commands.
+
+**Examples:**
+* `viewteam 1`
+  Opens Team 1's detailed overview with pie chart.
+
+* `viewteam 3`
+  Opens Team 3's statistics window.
+
+### Recording a team win: `win`
+
+Updates a team's record by adding one win. Useful after a scrimmage or tournament game to keep performance stats accurate.
+
+**Format:**
+`win TEAM_INDEX`
+
+**Notes:**
+* `TEAM_INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
+* The team's total wins increase by 1 automatically.
+* Team performance charts (in `viewteam`) will reflect updated win/loss ratios.
+
+**Examples:**
+* `win 2`
+  Adds one win to Team 2's record.
+
+* `win 1`
+  Adds one win to Team 1's record.
+
+### Recording a team loss: `lose`
+
+Records a loss for the specified team. Helps maintain accurate win/loss tracking and pie chart statistics in the team overview.
+
+**Format:**
+`lose TEAM_INDEX`
+
+**Notes:**
+* `TEAM_INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
+* The team's total losses increase by 1 automatically.
+* Team statistics in `viewteam` will update to reflect the new record.
+
+**Examples:**
+* `lose 2`
+  Adds one loss to Team 2's record.
+
+* `lose 3`
+  Adds one loss to Team 3's record.
+
 ### Disbanding teams: `ungroup`
 
 Removes one or more teams from the system, returning their members to the unassigned pool.
@@ -522,6 +593,67 @@ Removes one or more teams from the system, returning their members to the unassi
 
 * `ungroup all`
   Disbands all teams, making all players unassigned.
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+## Data Import/Export
+
+### Exporting data: `export`
+
+Exports player or team data from SummonersBook into a CSV file. You can export either players or teams, optionally specifying a custom file path.
+
+**Format:**
+```
+export players [to CUSTOM_PATH]
+export teams [to CUSTOM_PATH]
+```
+
+**Notes:**
+* If no path is provided, exports are saved to:
+    - `data/players.csv` for player data
+    - `data/teams.csv` for team data
+* Each CSV file contains structured data for easy re-import or analysis (e.g., Excel, Google Sheets).
+* Custom paths must end with `.csv`.
+
+**Examples:**
+* `export players`
+  Exports all player data to `data/players.csv`.
+
+* `export teams to data/myTeams.csv`
+  Exports all team data to a custom location.
+
+**Success message:**
+```
+Exported players to data/players.csv
+```
+
+### Importing player data: `import`
+
+Imports player information from a CSV file into SummonersBook. This is useful for restoring saved data or onboarding new players quickly.
+
+**Format:**
+`import players from FILE_PATH`
+
+**Notes:**
+* The CSV file must be properly formatted. Supported headers include:
+    - `Name,Role,Rank,Champion`
+    - or `Name,Role,Rank,Champion,Wins,Losses`
+* Duplicate player entries (by name and role) will be ignored automatically.
+* The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
+
+**Examples:**
+* `import players from data/players.csv`
+  Imports players from the default export location.
+
+* `import players from data/backup.csv`
+  Imports players from a backup file.
+
+**Success message:**
+```
+Imported 10 players, skipped 0 duplicates, 0 invalid row(s).
+```
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -679,7 +811,17 @@ Action | Format | Example
 **Auto-group teams** | `group` | `group`
 **Manually create team** | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5` | `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
 **List all teams** | `listteam` | `listteam`
+**View team details** | `viewteam INDEX` | `viewteam 1`
+**Record win** | `win TEAM_INDEX` | `win 2`
+**Record loss** | `lose TEAM_INDEX` | `lose 2`
 **Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
+
+### Data Import/Export
+Action | Format                     | Example
+-------|----------------------------|--------
+**Export players** | `export players [to PATH]` | `export players`
+**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
+**Import players** | `import players from/PATH` | `import players from data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
