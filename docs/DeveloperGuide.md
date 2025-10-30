@@ -269,7 +269,8 @@ The `list` command can also be used to reset the view and display everyone.
 
 The following sequence diagram illustrates how a filter command flows through the app:
 
-<puml src="diagrams/FilterCommandSequenceDiagram.puml" alt="FilterCommandSequenceDiagram" />
+<puml src="diagrams/FilterCommandExecutionSequenceDiagram.puml" alt="FilterCommandSequenceDiagram" />
+<puml src="diagrams/FilterCommandParserSequenceDiagram.puml" alt="FilterCommandSequenceDiagram" />
 
 ---
 
