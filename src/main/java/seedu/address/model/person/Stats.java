@@ -30,6 +30,12 @@ public class Stats {
                     + "Gold difference at 15m (gd15) must be an integer between -10 000 and 10 000;\n"
                     + "Kill/Death/Assist (kda) must be an integer or decimal between 0.0 and 200.0";
 
+    public static final float MAX_CPM = 40.0F;
+    public static final float MIN_CPM = 0.0F;
+    public static final int MIN_GD15 = -10000;
+    public static final int MAX_GD15 = 10000;
+    public static final float MIN_KDA = 0.0F;
+    public static final float MAX_KDA = 200.0F;
     /** The average score. */
     public final float value;
 
@@ -166,17 +172,17 @@ public class Stats {
         }
 
         // Check cpm constraint
-        if (x < 0 || x > 40) {
+        if (x < MIN_CPM || x > MAX_CPM) {
             return false;
         }
 
         // Check gd15 constraint
-        if (y < -10000 || y > 10000) {
+        if (y < MIN_GD15 || y > MAX_GD15) {
             return false;
         }
 
         // Check kda constraint
-        if (z < 0 || z > 200) {
+        if (z < MIN_KDA || z > MAX_KDA) {
             return false;
         }
 
