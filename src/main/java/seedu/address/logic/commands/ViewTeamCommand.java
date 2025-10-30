@@ -60,7 +60,7 @@ public class ViewTeamCommand extends Command {
         assert team != null : "Team at valid index should not be null";
 
         String label = "Team " + index.getOneBased(); // user-facing team number
-        return CommandResult.showTeamStats(String.format(MESSAGE_SUCCESS, label), team);
+        return CommandResult.showTeamDetail(String.format(MESSAGE_SUCCESS, label), team);
     }
 
     /**
