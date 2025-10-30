@@ -45,9 +45,9 @@ class JsonAdaptedPerson {
                              @JsonProperty("rank") String rank,
                              @JsonProperty("champion") String champion,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("stats") JsonAdaptedStats stats,
                              @JsonProperty("wins") int wins,
-                             @JsonProperty("losses") int losses,
-                             @JsonProperty("stats") JsonAdaptedStats stats) {
+                             @JsonProperty("losses") int losses) {
         this.id = id;
         this.name = name;
         this.role = role;
@@ -73,9 +73,9 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        stats = new JsonAdaptedStats(source.getStats());
         wins = source.getWins();
         losses = source.getLosses();
-        stats = new JsonAdaptedStats(source.getStats());
     }
 
     /**
