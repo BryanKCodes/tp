@@ -5,11 +5,16 @@ import static seedu.address.logic.commands.CommandTestUtil.CPM_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.CPM_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.GD15_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.GD15_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_CPM_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_GD15_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_KDA_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.KDA_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_CPM_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_GD15_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_KDA_AMY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CPM;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_GD15;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_KDA;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -19,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddStatsCommand;
+import seedu.address.model.person.Stats;
 
 /**
  * Unit tests for {@link AddStatsCommandParser}.
@@ -112,5 +118,29 @@ public class AddStatsCommandParserTest {
         String input = idx.getOneBased() + CPM_DESC_BOB + GD15_DESC_BOB + " " + PREFIX_KDA + "0.5";
         AddStatsCommand expected = new AddStatsCommand(idx, "5.9", "-500", "0.5");
         assertParseSuccess(parser, input, expected);
+    }
+
+    @Test
+    public void parse_allRequiredFieldsPresentWithDifferentValues_failure() {
+        // sanity check with another set to ensure no accidental coupling to a single test case
+        Index idx = INDEX_FIRST_PERSON;
+        String input = idx.getOneBased() + CPM_DESC_BOB + GD15_DESC_BOB + " " + INVALID_KDA_DESC;
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
+        input = idx.getOneBased() + CPM_DESC_BOB + INVALID_GD15_DESC + " " + PREFIX_KDA + "-0.5";
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
+        input = idx.getOneBased() + CPM_DESC_BOB + " " + PREFIX_GD15 + "1000000" + " " + PREFIX_KDA + "0.5";
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
+        input = idx.getOneBased() + CPM_DESC_BOB + INVALID_GD15_DESC + " " + PREFIX_KDA + "0.5";
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
+        input = idx.getOneBased() + INVALID_CPM_DESC + GD15_DESC_BOB + " " + PREFIX_KDA + "0.5";
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
+        input = idx.getOneBased() + " " + PREFIX_CPM + "-2" + GD15_DESC_BOB + " " + PREFIX_KDA + "0.5";
+        assertParseFailure(parser, input, Stats.MESSAGE_CONSTRAINTS);
+
     }
 }
