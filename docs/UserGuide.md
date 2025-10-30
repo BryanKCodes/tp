@@ -25,22 +25,37 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 
 ### Step 1: Install (One-Time Setup)
 
-1. Ensure you have Java `17` or above installed on your computer.<br>
-   **Mac users:** Follow [this Mac-specific guide](https://se-education.org/guides/tutorials/javaInstallationMac.html) for JDK installation.
+1. Ensure you have Java 17 or above installed on your computer.<br>
+    - You can check your version by opening a terminal or command prompt and running: java -version
+        - If Java is not installed or the version is older than 17:
+          Mac users: Follow [this Mac-specific guide](https://se-education.org/guides/tutorials/javaInstallationMac.html) for installation.
+          Windows/Linux: Download and install the latest Java Development Kit (JDK) from [Oracle's website](https://www.oracle.com/java/technologies/downloads/)
 
-2. Download the latest `summonersbook.jar` file from [here](https://github.com/AY2526S1-CS2103T-F08b-1/tp/releases).
+2. Download the latest version of SummonersBook from our [official website](https://github.com/AY2526S1-CS2103T-F08b-1/tp/releases).
+    - Download the latest `summonersbook.jar` file available.
 
 3. Place the file in a folder you want to use as the home folder for SummonersBook.
+    - For convenience, you can create a new folder on your Desktop and place `summonersbook.jar` file in the new folder.
 
-4. Open a command terminal, navigate (`cd`) to the folder containing the jar file, and run:
-   ```
-   java -jar summonersbook.jar
-   ```
+---
+### Step 2: Running SummonersBook
+1. Open a terminal or command prompt:
 
-5. The application window should appear in a few seconds, showing some sample data:
-   ![Ui](images/Ui.png)
+    - Windows: Press `Win + R`, type `cmd`, and hit `Enter`.
+    - Mac/Linux: Open the Terminal app. You can find the Terminal app in `Finder -> Application -> Utilities`
 
-### Step 2: Your First Team (2-Minute Tutorial)
+2. Navigate to the folder where you placed the `summonersbook.jar` file. For example:
+    - `cd /path/to/your/folder`
+
+3. Run the application by entering this command in your terminal: `java -jar summonersbook.jar`
+
+4. After a few seconds, the SummonersBook window will appear with some sample data.
+    - You can clear the sample data before adding your own, as it will not be automatically overwritten.
+
+The SummonersBook window should look like the image below:
+![Ui](images/Ui.png)
+
+### Step 3: Your First Team (2-Minute Tutorial)
 
 Let's form your first balanced team to see SummonersBook in action!
 
@@ -122,7 +137,7 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
    ```
    filter rl/Support rk/Diamond rk/Master
    ```
-   → Shows only Diamond and Master support players.
+   → Shows only Diamond and Master ranked Support players.
 
 2. **Check detailed stats for the top candidate:**
    ```
@@ -167,7 +182,7 @@ Command | Purpose | Format
 [`add`](#adding-a-player-add) | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
 [`list`](#listing-all-players-list) | Show all players | `list`
 [`find`](#finding-players-by-name-find) | Search players by name | `find KEYWORD [MORE_KEYWORDS...]`
-[`filter`](#filtering-players-filter) | Filter by role/rank | `filter [rl/ROLE ...] [rk/RANK ...]`
+[`filter`](#filtering-players-filter) | Filter by role/rank | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`
 [`view`](#viewing-detailed-player-information-view) | View detailed player stats | `view INDEX`
 [`edit`](#editing-a-player-edit) | Update player details | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
 [`delete`](#deleting-a-player-delete) | Remove a player | `delete INDEX`
@@ -184,8 +199,7 @@ Command | Purpose | Format
 Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
-[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5`
-[`listteam`](#listing-all-teams-listteam) | Show all teams | `listteam`
+[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup i1 i2 i3 i4 i5`
 [`viewteam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
 [`win`](#recording-a-team-win-win) | Record a win for a team | `win TEAM_INDEX`
 [`lose`](#recording-a-team-loss-lose) | Record a loss for a team | `lose TEAM_INDEX`
@@ -195,7 +209,7 @@ Command | Purpose | Format
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players/teams [to PATH]`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export players or export teams [to/PATH]`
 [`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
 
 ### Utility
@@ -221,7 +235,7 @@ Command | Purpose | Format
 * Parameters are _**case-insensitive**_ (except for `name`)
 
 * Items in square brackets are optional.<br>
-  e.g., `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]` can be used as `find rk/Gold`.
+  e.g., `filter [rl/ROLE] [rk/RANK] [c/CHAMPION] [s/SCORE]` can be used as `filter rk/Gold`.
 
 * Items with `…` after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
@@ -289,11 +303,13 @@ Narrows the player list using one or more filters.
 Matching is **case-insensitive**.
 
 You can filter by:
-- `rl/` — role (exact match)
-- `rk/` — rank (exact match)
+- `rl/` — role (exact match), can be used multiple times
+- `rk/` — rank (exact match), can be used multiple times
+- `c/` — champion (exact match), can be used multiple times
+- `s/` — score (shows players with score rating greater or equal to the given value), supply it **only once**!
 
 **Format (any order, at least one filter):**
-`filter [rl/ROLE ...] [rk/RANK ...]`
+`filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`
 
 **How filtering works:**
 - Filters of **different types** (e.g. `rl/` and `rk/`) are combined with **AND**.
@@ -465,8 +481,6 @@ The algorithm follows these steps:
 
 <box type="tip" seamless>
 
-**Pro Tip:** Run `listteam` after grouping to see your new teams instantly. Most coaches keep the team list visible during scrims.
-
 </box>
 
 <box type="warning" seamless>
@@ -490,28 +504,20 @@ The algorithm follows these steps:
 Creates a new team with the specified players.
 
 **Format:**
-`makeGroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
+`makeGroup i1 i2 i3 i4 i5`
 
 <box type="info" seamless>
 
 **Rules & Notes:**
-- Each player must **already exist** in the player list.
 - Players **cannot already belong** to another team.
-- All five players must have **unique roles** (no duplicates).
-- Name field is **case-sensitive!**
+- All five players must have **unique roles** and **different champions** (no duplicates).
 - If any player is invalid or unavailable, the command will fail with a clear error message.
 
 </box>
 
 **Examples:**
-- `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
-  Creates a new team with those five members.
-
-### Listing all teams: `listteam`
-
-Shows a list of all teams in SummonersBook.
-
-**Format:** `listteam`
+- `makeGroup 1 2 3 4 5`
+  Creates a new team with the 1st, 2nd, 3rd, 4th and 5th players in the **currently displayed list**.
 
 ### Viewing team details: `viewteam`
 
@@ -606,8 +612,8 @@ Exports player or team data from SummonersBook into a CSV file. You can export e
 
 **Format:**
 ```
-export players [to CUSTOM_PATH]
-export teams [to CUSTOM_PATH]
+export players [to/CUSTOM_PATH]
+export teams [to/CUSTOM_PATH]
 ```
 
 **Notes:**
@@ -621,12 +627,12 @@ export teams [to CUSTOM_PATH]
 * `export players`
   Exports all player data to `data/players.csv`.
 
-* `export teams to data/myTeams.csv`
+* `export teams to/data/myTeams.csv`
   Exports all team data to a custom location.
 
 **Success message:**
 ```
-Exported players to data/players.csv
+Exported players to/data/players.csv
 ```
 
 ### Importing player data: `import`
@@ -708,7 +714,7 @@ Always **back up the file** before making changes, and only edit it if you are c
 
 **Problem:** You tried to delete a player who is assigned to a team.
 
-**Solution:** Remove them from the team first:
+**Solution:** Ungroup the player's current team first:
 1. `ungroup 1` (disband their team)
 2. `delete 5` (now you can delete the player)
 
@@ -758,16 +764,16 @@ view 2               # OK - refers to 2nd player in filtered list
 **A**: Install the app on the other computer and overwrite the empty data file it creates with the file from your previous SummonersBook home folder (located at `[JAR file location]/data/addressbook.json`).
 
 **Q:** Why can't I delete a player who's on a team?<br>
-**A:** Team rosters must always have 5 players. Remove the player from their team (via `ungroup` and re-group) before deleting.
+**A:** Team rosters must always have 5 players. Ungroup the player's current team (via `ungroup`), then delete the player.
 
-**Q:** How are teams named when using `group`?<br>
-**A:** Sequentially (`Team A`, `Team B`, …), skipping any existing names to avoid conflicts.
+**Q:** How are teams named when using `makeGroup` or `group`?<br>
+**A:** Sequentially (`Team 1`, `Team 2`, …)
 
 **Q:** Can I undo a command?<br>
 **A:** SummonersBook does not currently support undo. However, data is auto-saved after each command, so you can manually revert by editing the data file (advanced users only) or re-entering the data.
 
 **Q:** What's the difference between `find` and `filter`?<br>
-**A:** `find` searches by player **name** (keywords), while `filter` narrows by **attributes** (role, rank). Use `find` for "Who was that player called John?" and `filter` for "Show me all Diamond supports".
+**A:** `find` searches by player **name** (keywords), while `filter` narrows by **attributes** (role, rank, champion, score rating). Use `find` for "Who was that player called John?" and `filter` for "Show me all Diamond supports".
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -789,15 +795,15 @@ view 2               # OK - refers to 2nd player in filtered list
 ## Command Summary
 
 ### Player Management
-Action | Format | Example
--------|--------|--------
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION` | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-**List all players** | `list` | `list`
-**Find by name** | `find KEYWORD [MORE_KEYWORDS...]` | `find john`
-**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...]` | `filter rl/Mid rk/Diamond`
-**View player details** | `view INDEX` | `view 1`
-**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]` | `edit 1 rl/Top rk/Diamond`
-**Delete player** | `delete INDEX` | `delete 3`
+Action | Format                                                              | Example
+-------|---------------------------------------------------------------------|--------
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`                             | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**List all players** | `list`                                                              | `list`
+**Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                   | `find john`
+**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE ...]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
+**View player details** | `view INDEX`                                                        | `view 1`
+**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`      | `edit 1 rl/Top rk/Diamond`
+**Delete player** | `delete INDEX`                                                      | `delete 3`
 
 ### Performance Tracking
 Action | Format | Example
@@ -806,21 +812,20 @@ Action | Format | Example
 **Delete stats** | `deleteStats INDEX` | `deleteStats 1`
 
 ### Team Management
-Action | Format | Example
--------|--------|--------
-**Auto-group teams** | `group` | `group`
-**Manually create team** | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5` | `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
-**List all teams** | `listteam` | `listteam`
-**View team details** | `viewteam INDEX` | `viewteam 1`
-**Record win** | `win TEAM_INDEX` | `win 2`
-**Record loss** | `lose TEAM_INDEX` | `lose 2`
+Action | Format                           | Example
+-------|----------------------------------|--------
+**Auto-group teams** | `group`                          | `group`
+**Manually create team** | `makeGroup i1 i2 i3 i4 i5`       | `makeGroup 1 2 3 4 5`
+**View team details** | `viewteam INDEX`                 | `viewteam 1`
+**Record win** | `win TEAM_INDEX`                 | `win 2`
+**Record loss** | `lose TEAM_INDEX`                | `lose 2`
 **Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
 
 ### Data Import/Export
 Action | Format                     | Example
 -------|----------------------------|--------
-**Export players** | `export players [to PATH]` | `export players`
-**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
+**Export players** | `export players [to/PATH]` | `export players`
+**Export teams** | `export teams [to/PATH]`   | `export teams to/data/myTeams.csv`
 **Import players** | `import players from/PATH` | `import players from data/players.csv`
 
 ### Utility Commands
@@ -831,3 +836,4 @@ Action | Format | Example
 **Exit** | `exit` | `exit`
 
 [Back to Top](#summonersbook-user-guide)
+
