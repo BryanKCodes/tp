@@ -59,16 +59,13 @@ public class CsvImporterTest {
     }
 
     @Test
-    public void importPlayers_extendedHeaderWithWrAvg_ignoresExtraColumns() throws Exception {
+    public void importPlayers_extendedHeaderWithWrAvg_rejectedAsInvalid() throws Exception {
         Path csv = tempDir.resolve("players_wr_avg.csv");
         Files.write(csv, List.of(
                 "Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade",
                 "Eve,Support,Silver,Thresh,3,2,60.0,7.5"
         ));
-        CsvImporter.Result r = CsvImporter.importPlayers(model, csv);
-        assertEquals(1, r.imported);
-        assertEquals(0, r.duplicates);
-        assertEquals(0, r.invalid);
+        assertThrows(InvalidCsvException.class, () -> CsvImporter.importPlayers(model, csv));
     }
 
     @Test

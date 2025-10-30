@@ -18,7 +18,6 @@ import seedu.address.model.Model;
  * <ul>
  *     <li>{@code Name,Role,Rank,Champion}</li>
  *     <li>{@code Name,Role,Rank,Champion,Wins,Losses}</li>
- *     <li>{@code Name,Role,Rank,Champion,Wins,Losses,AvgGrade}</li>
  * </ul>
  * Each imported player is added to the model unless a duplicate already exists.
  */
@@ -55,17 +54,26 @@ public class ImportCommand extends Command {
         requireNonNull(model);
         try {
             CsvImporter.Result r = CsvImporter.importPlayers(model, path);
-            String msg = String.format("Imported %d players, skipped %d duplicates, %d invalid row(s).",
-                    r.imported, r.duplicates, r.invalid);
-            return new CommandResult(msg);
+            StringBuilder msg = new StringBuilder(
+                    String.format("Imported %d players, skipped %d duplicates, %d invalid row(s).",
+                            r.imported, r.duplicates, r.invalid));
+
+            // Show sample invalid rows if any
+            if (r.invalid > 0 && r.sampleErrors != null && !r.sampleErrors.isEmpty()) {
+                msg.append("\nExamples of invalid rows:\n  - ");
+                msg.append(String.join("\n  - ", r.sampleErrors));
+                if (r.invalid > r.sampleErrors.size()) {
+                    msg.append("\n  ... (showing up to ")
+                            .append(CsvImporter.MAX_SAMPLE_ERRORS)
+                            .append(" errors)");
+                }
+            }
+
+            return new CommandResult(msg.toString());
         } catch (NoSuchFileException e) {
             throw new CommandException("Failed to import: file not found.");
         } catch (InvalidCsvException e) {
-            throw new CommandException(
-                    "Invalid file format. Expected header: "
-                            + "'Name,Role,Rank,Champion' or "
-                            + "'Name,Role,Rank,Champion,Wins,Losses' or "
-                            + "'Name,Role,Rank,Champion,Wins,Losses,AvgGrade'.");
+            throw new CommandException(e.getMessage());
         } catch (ParseException e) {
             throw new CommandException("Invalid value: " + e.getMessage());
         } catch (Exception e) {
