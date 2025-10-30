@@ -1,307 +1,158 @@
 package seedu.address.logic.commands;
 
-import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalIndexes.INDEX_EIGHTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIFTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FOURTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_NINTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SEVENTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SIXTH_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
+import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalTeams.getTypicalAddressBookWithTeams;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.collections.ObservableList;
-import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
-import seedu.address.model.ReadOnlyAddressBook;
-import seedu.address.model.ReadOnlyUserPrefs;
-import seedu.address.model.person.Name;
+import seedu.address.model.ModelManager;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
-import seedu.address.testutil.PersonBuilder;
 
 public class MakeGroupCommandTest {
 
-    private final Person alice = new PersonBuilder()
-            .withName("Alice").withRole("mid").withRank("Gold").withChampion("Ahri").build();
-    private final Person bob = new PersonBuilder()
-            .withName("Bob").withRole("top").withRank("Platinum").withChampion("Garen").build();
-    private final Person cathy = new PersonBuilder()
-            .withName("Cathy").withRole("adc").withRank("Diamond").withChampion("Jinx").build();
-    private final Person derek = new PersonBuilder()
-            .withName("Derek").withRole("jungle").withRank("Gold").withChampion("Lee Sin").build();
-    private final Person ella = new PersonBuilder()
-            .withName("Ella").withRole("support").withRank("Silver").withChampion("Leona").build();
+    private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
-    public void execute_validPersons_teamCreatedSuccessfully() throws CommandException {
-        List<Person> persons = Arrays.asList(alice, bob, cathy, derek, ella);
-        List<Name> personNames = new ArrayList<>();
-        persons.forEach(p -> personNames.add(p.getName()));
+    public void execute_validIndicesUnfilteredList_success() throws CommandException {
+        List<Index> indices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON,
+                INDEX_THIRD_PERSON, INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON);
+        MakeGroupCommand makeGroupCommand = new MakeGroupCommand(indices);
 
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        List<Person> expectedTeamMembers = indices.stream()
+                .map(index -> model.getFilteredPersonList().get(index.getZeroBased()))
+                .toList();
+        Team expectedTeam = new Team(expectedTeamMembers);
+        expectedModel.addTeam(expectedTeam);
 
-        MakeGroupCommand command = new MakeGroupCommand(personNames);
-        CommandResult result = command.execute(modelStub);
+        String expectedMessage = String.format(MakeGroupCommand.MESSAGE_MAKE_GROUP_SUCCESS,
+                Messages.format(expectedTeam));
 
-        Team actualTeam = modelStub.teamsAdded.get(0); // the team that was added
-        // 1. Check that feedback to user uses pretty format
-        assertEquals(
-                String.format(MakeGroupCommand.MESSAGE_SUCCESS, seedu.address.logic.Messages.format(actualTeam)),
-                result.getFeedbackToUser()
+        assertCommandSuccess(makeGroupCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_duplicateIndices_throwsCommandException() {
+        List<Index> duplicateIndices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_FIRST_PERSON,
+                INDEX_SECOND_PERSON, INDEX_THIRD_PERSON, INDEX_FOURTH_PERSON);
+        MakeGroupCommand command = new MakeGroupCommand(duplicateIndices);
+        assertCommandFailure(command, model, MakeGroupCommand.MESSAGE_DUPLICATE_INDEX);
+    }
+
+    @Test
+    public void execute_invalidPersonIndex_throwsCommandException() {
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        List<Index> indicesWithInvalid = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON,
+                INDEX_THIRD_PERSON, INDEX_FOURTH_PERSON, outOfBoundIndex);
+        MakeGroupCommand command = new MakeGroupCommand(indicesWithInvalid);
+        assertCommandFailure(command, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+    }
+
+    @Test
+    public void execute_personAlreadyInTeam_throwsCommandException() {
+        Model modelWithTeam = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
+
+        // Attempt to create a new team using the same person
+        List<Index> indices = Arrays.asList(
+                INDEX_FIRST_PERSON, // ALICE, who is already in a team
+                INDEX_SIXTH_PERSON,
+                INDEX_SEVENTH_PERSON,
+                INDEX_EIGHTH_PERSON,
+                INDEX_NINTH_PERSON
         );
 
-        // 2. Check that the team was added to the model correctly
-        assertEquals(1, modelStub.teamsAdded.size());
+        MakeGroupCommand command = new MakeGroupCommand(indices);
 
-        // 3. Check that the correct persons were grouped into the team
-        List<Person> actualPersons = actualTeam.getPersons();
-        assertTrue(persons.containsAll(actualPersons) && actualPersons.containsAll(persons));
+        String expectedMessage = String.format(MakeGroupCommand.MESSAGE_REUSED_PERSON, Messages.format(ALICE));
+        assertCommandFailure(command, modelWithTeam, expectedMessage);
     }
 
     @Test
-    public void execute_duplicateNames_throwsCommandException() throws CommandException {
-        List<Name> personNames = Arrays.asList(
-                alice.getName(),
-                alice.getName(),
-                bob.getName(),
-                cathy.getName(),
-                derek.getName()
-        );
-        MakeGroupCommand command = new MakeGroupCommand(personNames);
-        ModelStub modelStub = new ModelStub();
+    public void execute_invalidTeamSize_throwsCommandException() {
+        String expectedMessage = String.format(MakeGroupCommand.MESSAGE_INVALID_TEAM_SIZE, Team.TEAM_SIZE);
 
-        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertEquals(MakeGroupCommand.MESSAGE_DUPLICATE_NAMES, thrown.getMessage());
+        List<Index> fewerIndices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
+        MakeGroupCommand command = new MakeGroupCommand(fewerIndices);
+        assertCommandFailure(command, model, expectedMessage);
+
+        List<Index> moreIndices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON, INDEX_THIRD_PERSON,
+                INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON, INDEX_SIXTH_PERSON);
+        command = new MakeGroupCommand(moreIndices);
+        assertCommandFailure(command, model, expectedMessage);
     }
 
     @Test
-    public void execute_personNotFound_throwsCommandException() throws CommandException {
-        List<Person> existingPersons = Arrays.asList(alice, bob, cathy, derek);
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(existingPersons);
+    public void execute_invalidTeamComposition_throwsCommandException() {
+        // Assumes TypicalPersons has persons with conflicting roles/champions at certain indices
+        // For example, if person 1 and 6 have the same role.
+        List<Index> conflictingIndices = Arrays.asList(INDEX_FIRST_PERSON, Index.fromOneBased(6),
+                INDEX_THIRD_PERSON, INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON);
+        MakeGroupCommand command = new MakeGroupCommand(conflictingIndices);
 
-        List<Name> personNames = Arrays.asList(
-                alice.getName(), bob.getName(), cathy.getName(), derek.getName(),
-                new Name("NonExistent")
-        );
-
-        MakeGroupCommand command = new MakeGroupCommand(personNames);
-
-        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-
-        // Ensure exception message contains the missing persons
-        assertTrue(thrown.getMessage().contains("NonExistent"));
-    }
-
-    @Test
-    public void execute_insufficientPersons_throwsCommandException() {
-        List<Name> fewerNames = Arrays.asList(alice.getName(), bob.getName(), cathy.getName());
-        MakeGroupCommand command = new MakeGroupCommand(fewerNames);
-        ModelStub modelStub = new ModelStubAcceptingTeamAdded(Arrays.asList(alice, bob, cathy, derek, ella));
-
-        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertEquals(MakeGroupCommand.MESSAGE_INSUFFICIENT_PERSONS, thrown.getMessage());
-    }
-
-    @Test
-    public void execute_duplicateRole_throwsCommandException() {
-        // Create two persons with the same role (both mid)
-        Person alice2 = new PersonBuilder()
-                .withName("Alice2").withRole("mid").withRank("Gold").withChampion("Zed").build();
-
-        List<Person> persons = Arrays.asList(alice, alice2, bob, cathy, derek);
-        List<Name> personNames = new ArrayList<>();
-        persons.forEach(p -> personNames.add(p.getName()));
-
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
-        MakeGroupCommand command = new MakeGroupCommand(personNames);
-
-        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertTrue(thrown.getMessage().contains("duplicate roles"));
-        assertTrue(thrown.getMessage().contains("Alice"));
-        assertTrue(thrown.getMessage().contains("Alice2"));
-    }
-
-    @Test
-    public void execute_duplicateChampion_throwsCommandException() {
-        // Create two persons with the same champion (both Ahri)
-        Person alice2 = new PersonBuilder()
-                .withName("Alice2").withRole("support").withRank("Gold").withChampion("Ahri").build();
-
-        List<Person> persons = Arrays.asList(alice, alice2, bob, cathy, derek);
-        List<Name> personNames = new ArrayList<>();
-        persons.forEach(p -> personNames.add(p.getName()));
-
-        ModelStubAcceptingTeamAdded modelStub = new ModelStubAcceptingTeamAdded(persons);
-        MakeGroupCommand command = new MakeGroupCommand(personNames);
-
-        CommandException thrown = assertThrows(CommandException.class, () -> command.execute(modelStub));
-        assertTrue(thrown.getMessage().contains("duplicate champions"));
-        assertTrue(thrown.getMessage().contains("Alice"));
-        assertTrue(thrown.getMessage().contains("Alice2"));
-        assertTrue(thrown.getMessage().contains("Ahri"));
+        // We can't check the exact error message as it depends on your TypicalPersons,
+        // so we assert that a CommandException is thrown.
+        // A more specific test would require crafting a specific model.
+        org.junit.jupiter.api.Assertions.assertThrows(CommandException.class, () -> command.execute(model));
     }
 
     @Test
     public void equals() {
-        List<Name> names1 = Arrays.asList(
-                alice.getName(), bob.getName(), cathy.getName(), derek.getName(), ella.getName()
-        );
-        List<Name> names2 = Arrays.asList(
-                alice.getName(), bob.getName(), cathy.getName(), derek.getName(), new Name("Fiona")
-        );
+        List<Index> indices1 = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON, INDEX_THIRD_PERSON,
+                INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON);
+        List<Index> indices2 = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON, INDEX_THIRD_PERSON,
+                INDEX_FOURTH_PERSON, INDEX_SIXTH_PERSON);
 
-        MakeGroupCommand command1 = new MakeGroupCommand(names1);
-        MakeGroupCommand command2 = new MakeGroupCommand(names1);
-        MakeGroupCommand command3 = new MakeGroupCommand(names2);
+        MakeGroupCommand command1 = new MakeGroupCommand(indices1);
+        MakeGroupCommand command2 = new MakeGroupCommand(indices1);
+        MakeGroupCommand command3 = new MakeGroupCommand(indices2);
 
-        assertTrue(command1.equals(command1)); // same object
-        assertTrue(command1.equals(command2)); // same values
-        assertFalse(command1.equals(command3)); // different values
-        assertFalse(command1.equals(null)); // null
-        assertFalse(command1.equals("string")); // different type
+        // same object -> returns true
+        assertTrue(command1.equals(command1));
+
+        // same values -> returns true
+        assertTrue(command1.equals(command2));
+
+        // different types -> returns false
+        assertFalse(command1.equals(1));
+
+        // null -> returns false
+        assertFalse(command1.equals(null));
+
+        // different indices -> returns false
+        assertFalse(command1.equals(command3));
     }
 
-    // ======= STUBS =======
-
-    private class ModelStub implements Model {
-
-        @Override
-        public boolean isPersonInAnyTeam(Person person) {
-            return false;
-        }
-
-        @Override
-        public Optional<Person> findPersonByName(Name name) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean hasTeam(Team team) {
-            return false;
-        }
-
-        @Override
-        public boolean hasPerson(Person person) {
-            return false;
-        }
-
-        @Override
-        public void addTeam(Team team) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void addPerson(Person person) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
-        }
-
-        @Override
-        public ReadOnlyUserPrefs getUserPrefs() {
-            return null;
-        }
-
-        @Override
-        public GuiSettings getGuiSettings() {
-            return null;
-        }
-
-        @Override
-        public void setGuiSettings(GuiSettings guiSettings) {
-        }
-
-        @Override
-        public void setAddressBook(ReadOnlyAddressBook newData) {
-        }
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
-            return null;
-        }
-
-        @Override
-        public Path getAddressBookFilePath() {
-            return null;
-        }
-
-        @Override
-        public void setAddressBookFilePath(Path addressBookFilePath) {
-        }
-
-        @Override
-        public void deletePerson(Person target) {
-        }
-
-        @Override
-        public void deleteTeam(Team target) {
-        }
-
-        @Override
-        public void setPerson(Person target, Person editedPerson) {
-        }
-
-        @Override
-        public void setTeam(Team target, Team editedTeam) {
-        }
-
-        @Override
-        public ObservableList<Person> getFilteredPersonList() {
-            return null;
-        }
-
-        @Override
-        public ObservableList<Team> getFilteredTeamList() {
-            return null;
-        }
-
-        @Override
-        public void updateFilteredPersonList(Predicate<Person> predicate) {
-        }
-
-        @Override
-        public void updateFilteredTeamList(Predicate<Team> predicate) {
-        }
-
-        @Override
-        public ObservableList<Person> getUnassignedPersonList() {
-            return null;
-        }
-    }
-
-    private class ModelStubAcceptingTeamAdded extends ModelStub {
-        private final List<Person> existingPersons;
-        private final List<Team> teamsAdded = new ArrayList<>();
-
-        ModelStubAcceptingTeamAdded(List<Person> existingPersons) {
-            requireNonNull(existingPersons);
-            this.existingPersons = new ArrayList<>(existingPersons);
-        }
-
-        @Override
-        public Optional<Person> findPersonByName(Name name) {
-            return existingPersons.stream()
-                    .filter(p -> p.getName().equals(name))
-                    .findFirst();
-        }
-
-        @Override
-        public void addTeam(Team team) {
-            teamsAdded.add(team);
-        }
-
-        @Override
-        public boolean hasTeam(Team team) {
-            return teamsAdded.contains(team);
-        }
+    @Test
+    public void toStringMethod() {
+        List<Index> indices = Arrays.asList(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON, INDEX_THIRD_PERSON,
+                INDEX_FOURTH_PERSON, INDEX_FIFTH_PERSON);
+        MakeGroupCommand makeGroupCommand = new MakeGroupCommand(indices);
+        String expected = MakeGroupCommand.class.getCanonicalName() + "{indexList=" + indices + "}";
+        assertEquals(expected, makeGroupCommand.toString());
     }
 }

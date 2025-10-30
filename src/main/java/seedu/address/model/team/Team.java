@@ -5,9 +5,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
@@ -91,7 +89,7 @@ public class Team {
      * Validates that the team has exactly 5 persons with unique roles and unique champions.
      *
      * @param persons List of persons to validate.
-     * @throws InvalidTeamSizeException   if team does not have exactly 5 players.
+     * @throws InvalidTeamSizeException   if team does not have exactly 5 persons.
      * @throws DuplicateRoleException     if team has duplicate roles.
      * @throws DuplicateChampionException if team has duplicate champions.
      */
@@ -101,7 +99,7 @@ public class Team {
             throw new InvalidTeamSizeException(persons.size());
         }
 
-        // Pairwise conflict check for all players
+        // Pairwise conflict check for all persons
         for (int i = 0; i < persons.size(); i++) {
             for (int j = i + 1; j < persons.size(); j++) {
                 checkConflict(persons.get(i), persons.get(j));
@@ -169,37 +167,18 @@ public class Team {
     }
 
     /**
-     * Returns true if both teams have the same players.
+     * Returns true if both teams have the same persons.
      * This defines a weaker notion of equality between two teams.
+     * <p>
+     * It is provided for potential future extensions where partial team comparison may be required.
+     * Currently, it behaves identically to {@link #equals(Object)}
      */
     public boolean isSameTeam(Team otherTeam) {
-        if (otherTeam == this) {
-            return true;
-        }
-
-        if (otherTeam == null) {
-            return false;
-        }
-
-        // Compare player IDs to determine if it's the same team formation
-        if (this.persons.size() != otherTeam.persons.size()) {
-            return false;
-        }
-
-        // Compare members by ID, ignoring order
-        Set<String> thisIds = this.persons.stream()
-                .map(p -> p.getId().toString())
-                .collect(Collectors.toSet());
-
-        Set<String> otherIds = otherTeam.persons.stream()
-                .map(p -> p.getId().toString())
-                .collect(Collectors.toSet());
-
-        return thisIds.equals(otherIds);
+        return this.equals(otherTeam);
     }
 
     /**
-     * Returns true if both teams have the same identity and data fields.
+     * Returns true if both teams have the same data fields.
      * This defines a stronger notion of equality between two teams.
      */
     @Override
@@ -214,13 +193,12 @@ public class Team {
         }
 
         Team otherTeam = (Team) other;
-        return id.equals(otherTeam.id)
-                && persons.equals(otherTeam.persons);
+        return persons.equals(otherTeam.persons);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, persons);
+        return Objects.hash(persons);
     }
 
     @Override

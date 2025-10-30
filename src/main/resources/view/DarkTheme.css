@@ -308,16 +308,8 @@
     -fx-padding: 8 1 8 1;
 }
 
-.person_details_label {
+.details_label {
     -fx-padding: 1px 10px 1px 8px;
-    -fx-background-radius: 10px;
-    -fx-font-size: 0.8em;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e1e1e;
-}
-
-.team_details_label {
-    -fx-padding: 3px 8px 3px 8px;
     -fx-background-radius: 10px;
     -fx-font-size: 0.8em;
     -fx-font-weight: bold;

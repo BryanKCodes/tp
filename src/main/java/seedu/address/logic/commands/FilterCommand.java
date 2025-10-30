@@ -111,10 +111,12 @@ public class FilterCommand extends Command {
      * corresponding field value of the person.
      */
     public static class FilterPersonDescriptor {
+        private static final float DEFAULT_SCORE_THRESHOLD = 0.0F;
+
         private Set<Role> roles;
         private Set<Rank> ranks;
         private Set<Champion> champions;
-        private Float scoreThreshold = 0.0F;
+        private Float scoreThreshold = DEFAULT_SCORE_THRESHOLD;
 
         public FilterPersonDescriptor() {}
 
@@ -133,9 +135,9 @@ public class FilterCommand extends Command {
          * Returns true if at least one field is filtered.
          */
         public boolean isAnyFieldFiltered() {
-            boolean hasOtherFilters = CollectionUtil.isAnyNonNull(roles, ranks, champions);
-            boolean hasScoreFilter = scoreThreshold != null && scoreThreshold > 0.0F;
-            return hasOtherFilters || hasScoreFilter;
+            boolean x = CollectionUtil.isAnyNonNull(roles, ranks, champions);
+            boolean y = scoreThreshold != null && scoreThreshold > DEFAULT_SCORE_THRESHOLD;
+            return x || y;
         }
 
         /**

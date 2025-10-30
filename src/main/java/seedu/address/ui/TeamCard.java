@@ -23,35 +23,15 @@ public class TeamCard extends UiPart<Region> {
     @FXML
     private Label teamName;
     @FXML
-    private Label top;
+    private HBox topPersonDetails;
     @FXML
-    private Label topName;
+    private HBox junglePersonDetails;
     @FXML
-    private Label jungle;
+    private HBox midPersonDetails;
     @FXML
-    private Label jungleName;
+    private HBox adcPersonDetails;
     @FXML
-    private Label mid;
-    @FXML
-    private Label midName;
-    @FXML
-    private Label adc;
-    @FXML
-    private Label adcName;
-    @FXML
-    private Label support;
-    @FXML
-    private Label supportName;
-    @FXML
-    private Label topRank;
-    @FXML
-    private Label jungleRank;
-    @FXML
-    private Label midRank;
-    @FXML
-    private Label adcRank;
-    @FXML
-    private Label supportRank;
+    private HBox supportPersonDetails;
 
 
     /**
@@ -64,25 +44,21 @@ public class TeamCard extends UiPart<Region> {
         teamName.setText("Team " + displayedIndex);
 
         for (Person person : team.getPersons()) {
-            String role = person.getRole().value;
-            String name = person.getName().fullName;
-            String rank = person.getRank().value;
-
             switch (person.getRole().toString().toUpperCase()) {
             case "TOP":
-                configureRoleLabels(top, topName, topRank, role, name, rank);
+                populatePersonDetails(topPersonDetails, person);
                 break;
             case "JUNGLE":
-                configureRoleLabels(jungle, jungleName, jungleRank, role, name, rank);
+                populatePersonDetails(junglePersonDetails, person);
                 break;
             case "MID":
-                configureRoleLabels(mid, midName, midRank, role, name, rank);
+                populatePersonDetails(midPersonDetails, person);
                 break;
             case "ADC":
-                configureRoleLabels(adc, adcName, adcRank, role, name, rank);
+                populatePersonDetails(adcPersonDetails, person);
                 break;
             case "SUPPORT":
-                configureRoleLabels(support, supportName, supportRank, role, name, rank);
+                populatePersonDetails(supportPersonDetails, person);
                 break;
             default:
                 break;
@@ -91,14 +67,25 @@ public class TeamCard extends UiPart<Region> {
     }
 
     /**
-     * Helper method to set the text and style for role, name, and rank labels.
+     * A clean helper method to create and add all UI components for a single person's details.
+     *
+     * @param personDetails The HBox container for the person's info.
+     * @param person The person to display in the row.
      */
-    private void configureRoleLabels(Label roleLabel, Label nameLabel, Label rankLabel,
-                                      String role, String name, String rank) {
-        roleLabel.setText(role);
-        nameLabel.setText(name);
-        rankLabel.setText(rank);
-        roleLabel.getStyleClass().add("role_" + role.toLowerCase());
-        rankLabel.getStyleClass().add(rank.toLowerCase() + "_rank");
+    private void populatePersonDetails(HBox personDetails, Person person) {
+        Label bulletPoint = new Label("•");
+        bulletPoint.getStyleClass().add("bullet_point");
+
+        Label nameLabel = new Label(person.getName().fullName);
+        nameLabel.getStyleClass().add("cell_small_label");
+        nameLabel.setMinWidth(120);
+
+        StyledLabel roleLabel = new StyledLabel(person.getRole().value, "role", "details_label");
+        StyledLabel rankLabel = new StyledLabel(person.getRank().value, "rank", "details_label");
+        StyledLabel championLabel = new StyledLabel(person.getChampion().value, "champion", "details_label");
+
+        personDetails.getChildren().clear();
+        personDetails.getChildren().addAll(bulletPoint, roleLabel.getRoot(), rankLabel.getRoot(),
+                championLabel.getRoot(), nameLabel);
     }
 }

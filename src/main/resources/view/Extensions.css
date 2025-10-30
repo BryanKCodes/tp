@@ -28,7 +28,7 @@
     -fx-text-fill: white;
 }
 
-/* Generic styles for ALL charts */
+
 .line-chart {
     -fx-background-color: #383838;
 }
@@ -47,46 +47,46 @@
     -fx-tick-label-fill: #b5b5b5;
 }
 
-.chart-series-line {
+/* Performance Chart Styles (Green) */
+#performanceChart .chart-series-line.series0 {
+    -fx-stroke: #4CAF50;
     -fx-stroke-width: 2px;
 }
-
-.chart-line-symbol {
+#performanceChart .chart-line-symbol.series0 {
+    -fx-background-color: #4CAF50, white;
+    -fx-background-insets: 0, 2;
     -fx-padding: 3px;
 }
 
-/* Performance Chart Styles */
-.performance-chart .chart-series-line {
-    -fx-stroke: #4CAF50; /* Green */
+/* CS Per Minute Chart Styles (Blue) */
+#csChart .chart-series-line.series0 {
+    -fx-stroke: #2196F3;
+    -fx-stroke-width: 2px;
 }
-
-.performance-chart .chart-line-symbol {
-    -fx-background-color: #4CAF50, white;
-}
-
-/* CS Per Minute Chart Styles */
-.cs-chart .chart-series-line {
-    -fx-stroke: #2196F3; /* Blue */
-}
-
-.cs-chart .chart-line-symbol {
+#csChart .chart-line-symbol.series0 {
     -fx-background-color: #2196F3, white;
+    -fx-background-insets: 0, 2;
+    -fx-padding: 3px;
 }
 
-/* KDA Chart Styles */
-.kda-chart .chart-series-line {
-    -fx-stroke: #f44336; /* Red */
+/* KDA Chart Styles (Red) */
+#kdaChart .chart-series-line.series0 {
+    -fx-stroke: #f44336;
+    -fx-stroke-width: 2px;
 }
-
-.kda-chart .chart-line-symbol {
+#kdaChart .chart-line-symbol.series0 {
     -fx-background-color: #f44336, white;
+    -fx-background-insets: 0, 2;
+    -fx-padding: 3px;
 }
 
-/* Gold Difference Chart Styles */
-.gold-diff-chart .chart-series-line {
-    -fx-stroke: #FFD700; /* Gold */
+/* Gold Difference Chart Styles (Gold) */
+#goldDiffChart .chart-series-line.series0 {
+    -fx-stroke: #FFD700;
+    -fx-stroke-width: 2px;
 }
-
-.gold-diff-chart .chart-line-symbol {
+#goldDiffChart .chart-line-symbol.series0 {
     -fx-background-color: #FFD700, white;
+    -fx-background-insets: 0, 2;
+    -fx-padding: 3px;
 }
