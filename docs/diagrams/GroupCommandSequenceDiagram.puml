@@ -59,11 +59,6 @@ deactivate Model
 GroupCommand -> TeamMatcher : matchTeams(unassignedPersons)
 activate TeamMatcher
 
-TeamMatcher -> TeamMatcher : groupByRole()
-TeamMatcher -> TeamMatcher : validateMinimumPersons()
-TeamMatcher -> TeamMatcher : createSortedCopy()
-TeamMatcher -> TeamMatcher : formTeams()
-
 TeamMatcher --> GroupCommand : teams
 deactivate TeamMatcher
 

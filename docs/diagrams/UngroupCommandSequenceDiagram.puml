@@ -55,18 +55,11 @@ activate Model
 Model --> UngroupCommand : teamList
 deactivate Model
 
-UngroupCommand -> UngroupCommand : validate index
-
-UngroupCommand -> UngroupCommand : executeRemoveSingle(m, teamList)
-activate UngroupCommand
-
 UngroupCommand -> Model : deleteTeam(team)
 activate Model
 
 Model --> UngroupCommand
 deactivate Model
-
-deactivate UngroupCommand
 
 create CommandResult
 UngroupCommand -> CommandResult

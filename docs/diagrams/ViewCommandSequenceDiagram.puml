@@ -60,8 +60,6 @@ activate Model
 Model --> ViewCommand : personList
 deactivate Model
 
-ViewCommand -> ViewCommand : validate index
-
 create CommandResult
 ViewCommand -> CommandResult : showPersonDetail(message, person)
 activate CommandResult
@@ -99,9 +97,6 @@ deactivate PersonDetailWindow
 
 MainWindow -> PersonDetailWindow : setPerson(person)
 activate PersonDetailWindow
-
-PersonDetailWindow -> PersonDetailWindow : displayPersonDetails()
-PersonDetailWindow -> PersonDetailWindow : displayCharts()
 
 PersonDetailWindow --> MainWindow
 deactivate PersonDetailWindow
