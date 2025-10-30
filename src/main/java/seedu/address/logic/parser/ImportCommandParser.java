@@ -18,6 +18,9 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class ImportCommandParser implements Parser<ImportCommand> {
 
+    private static final String PLAYERS_KEYWORD = "players";
+    private static final String FROM_KEYWORD = "from";
+
     /**
      * Parses the given user input and returns an {@link ImportCommand}.
      * <p>
@@ -30,13 +33,29 @@ public class ImportCommandParser implements Parser<ImportCommand> {
     @Override
     public ImportCommand parse(String args) throws ParseException {
         String trimmed = args.trim();
-        // Expected input example: "players from data/players.csv"
-        String[] parts = trimmed.split("\\s+");
-        if (parts.length < 3 || !parts[0].equalsIgnoreCase("players") || !parts[1].equalsIgnoreCase("from")) {
+
+        if (!trimmed.toLowerCase().startsWith(PLAYERS_KEYWORD)) {
             throw new ParseException(ImportCommand.MESSAGE_USAGE);
         }
-        Path path = Paths.get(trimmed.substring(trimmed.toLowerCase().indexOf("from") + 5));
-        return new ImportCommand(path);
+
+        String afterPlayers = trimmed.substring(PLAYERS_KEYWORD.length()).trim();
+
+        if (!afterPlayers.toLowerCase().startsWith(FROM_KEYWORD)) {
+            throw new ParseException(ImportCommand.MESSAGE_USAGE);
+        }
+
+        String pathString = afterPlayers.substring(FROM_KEYWORD.length()).trim();
+
+        if (pathString.isEmpty()) {
+            throw new ParseException("File path cannot be empty.\n" + ImportCommand.MESSAGE_USAGE);
+        }
+
+        try {
+            Path path = Paths.get(pathString);
+            return new ImportCommand(path);
+        } catch (Exception e) {
+            throw new ParseException("Invalid file path: " + pathString);
+        }
     }
 }
 
