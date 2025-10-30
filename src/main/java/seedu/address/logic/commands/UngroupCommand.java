@@ -121,15 +121,10 @@ public class UngroupCommand extends Command {
         }
 
         UngroupCommand otherCommand = (UngroupCommand) other;
-        if (removeAll && otherCommand.removeAll) {
-            return true;
-        }
 
-        if (!removeAll && !otherCommand.removeAll) {
-            return targetIndex.equals(otherCommand.targetIndex);
-        }
-
-        return false;
+        // Both must agree on the 'removeAll' flag, and if not removing all, indices must match.
+        return this.removeAll == otherCommand.removeAll
+                && Objects.equals(this.targetIndex, otherCommand.targetIndex);
     }
 
     @Override
