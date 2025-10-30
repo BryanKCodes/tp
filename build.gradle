@@ -67,7 +67,7 @@ dependencies {
 }
 
 shadowJar {
-    archiveFileName = 'summonersboom.jar'
+    archiveFileName = 'summonersbook.jar'
 }
 
 run {
