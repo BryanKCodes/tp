@@ -26,9 +26,9 @@ public class Stats {
      * Constraints message shown when invalid stat values are provided.
      */
     public static final String MESSAGE_CONSTRAINTS =
-            "CS per minute must be an integer between 0 and 40; "
-                    + "Gold difference at 15m must be a decimal between -10,000 and 10,000; "
-                    + "KDA must be a decimal between 0.0 and 200.0";
+            "Creeps score per minute (cpm) must be an integer or decimal between 0.0 and 40.0;\n"
+                    + "Gold difference at 15m (gd15) must be an integer between -10 000 and 10 000;\n"
+                    + "Kill/Death/Assist (kda) must be an integer or decimal between 0.0 and 200.0";
 
     /** The average score. */
     public final float value;
