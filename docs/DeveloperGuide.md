@@ -208,14 +208,14 @@ This section describes some noteworthy details on how certain features are imple
 
 #### Implementation
 
-The filter feature is implemented through the `FilterCommand` and `FilterPredicate` classes.  
+The filter feature is implemented through the `FilterCommand` and `FilterPredicate` classes.
 It allows users to display only the persons whose attributes match the given criteria — such as name, role, rank, or champion.
 
 When the user executes a command such as:
 
 `filter rk/Gold rl/Mid`
 
-the app filters the list of persons based on the provided criteria.  
+the app filters the list of persons based on the provided criteria.
 In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid.
 
 This functionality is supported by three key components:
@@ -234,29 +234,29 @@ Across different field types, conditions are combined using **AND** logic:
 
 #### Example Usage
 
-**Step 1.**  
-When the app starts, all persons are displayed.  
+**Step 1.**
+When the app starts, all persons are displayed.
 No filtering has been applied yet.
 
 ---
 
-**Step 2.**  
-The user executes `filter rk/Gold`.  
-The `FilterCommandParser` creates a `FilterCommand` containing a `FilterPredicate` that checks each person’s rank.  
+**Step 2.**
+The user executes `filter rk/Gold`.
+The `FilterCommandParser` creates a `FilterCommand` containing a `FilterPredicate` that checks each person’s rank.
 `Model#updateFilteredPersonList(predicate)` is called, and the UI updates to show only matching entries.
 
 ---
 
-**Step 3.**  
-The user then runs `filter rk/Gold rl/Mid`.  
+**Step 3.**
+The user then runs `filter rk/Gold rl/Mid`.
 Now, the displayed list includes only persons whose rank is Gold **and** whose role is Mid.
 
 ---
 
 <box type="info" seamless>
 
-**Note:**  
-If no valid parameters are provided, all persons are shown.  
+**Note:**
+If no valid parameters are provided, all persons are shown.
 The `list` command can also be used to reset the view and display everyone.
 
 </box>
@@ -275,12 +275,12 @@ The following sequence diagram illustrates how a filter command flows through th
 
 **Aspect: How filtering is executed**
 
-- **Alternative 1 (current implementation):**  
+- **Alternative 1 (current implementation):**
   Apply filtering by setting a predicate using `Model#updateFilteredPersonList(predicate)`.
     - *Pros:* Simple and efficient. Leverages JavaFX’s built-in `FilteredList`.
     - *Cons:* Each new filter replaces the previous one.
 
-- **Alternative 2:**  
+- **Alternative 2:**
   Maintain a list of active filters that are combined dynamically.
     - *Pros:* Enables cumulative filtering (e.g. filter by role, then by rank later).
     - *Cons:* Adds complexity and state management overhead.
