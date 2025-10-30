@@ -15,6 +15,8 @@
 
 <fx:root resizable="true" title="Player Details"
          type="javafx.stage.Stage"
+         width="1100" height="800"
+         minWidth="700" minHeight="700"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
 
@@ -131,4 +133,3 @@
         </Scene>
     </scene>
 </fx:root>
-
