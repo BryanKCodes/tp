@@ -34,7 +34,7 @@ public class FilterCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE);
 
     private static final String MESSAGE_NOT_FILTERED =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_NOT_FILTERED);
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE);
 
     private final FilterCommandParser parser = new FilterCommandParser();
 

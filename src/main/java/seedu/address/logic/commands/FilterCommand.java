@@ -41,19 +41,16 @@ public class FilterCommand extends Command {
     public static final String COMMAND_WORD = "filter";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filter out players based on their "
-            + "rank, role and champion (case-insensitive)"
-            + "and displays them as a list with index numbers.\n"
+            + "rank, role, champion, and score in the player list.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_RANK + "RANK]... "
             + "[" + PREFIX_ROLE + "ROLE]... "
             + "[" + PREFIX_CHAMPION + "CHAMPION]... "
-            + "[" + PREFIX_SCORE + "SCORE] "
+            + "[" + PREFIX_SCORE + "SCORE]... (at least one field must be provided)\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_RANK + "Diamond "
             + PREFIX_CHAMPION + "Yasuo"
             + PREFIX_SCORE + "2.4";
-
-    public static final String MESSAGE_NOT_FILTERED = "At least one field to filter must be provided.";
 
     private final RankContainsKeywordsPredicate rankPredicate;
     private final RoleContainsKeywordsPredicate rolePredicate;
