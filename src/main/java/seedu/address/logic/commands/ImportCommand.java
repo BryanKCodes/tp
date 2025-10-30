@@ -53,32 +53,35 @@ public class ImportCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         try {
-            CsvImporter.Result r = CsvImporter.importPlayers(model, path);
-            StringBuilder msg = new StringBuilder(
-                    String.format("Imported %d players, skipped %d duplicates, %d invalid row(s).",
-                            r.imported, r.duplicates, r.invalid));
-
-            // Show sample invalid rows if any
-            if (r.invalid > 0 && r.sampleErrors != null && !r.sampleErrors.isEmpty()) {
-                msg.append("\nExamples of invalid rows:\n  - ");
-                msg.append(String.join("\n  - ", r.sampleErrors));
-                if (r.invalid > r.sampleErrors.size()) {
-                    msg.append("\n  ... (showing up to ")
-                            .append(CsvImporter.MAX_SAMPLE_ERRORS)
-                            .append(" errors)");
-                }
-            }
-
-            return new CommandResult(msg.toString());
+            CsvImporter.Result result = CsvImporter.importPlayers(model, path);
+            return new CommandResult(buildSuccessMessage(result));
         } catch (NoSuchFileException e) {
-            throw new CommandException("Failed to import: file not found.");
-        } catch (InvalidCsvException e) {
+            throw new CommandException("Failed to import: file not found at " + path);
+        } catch (InvalidCsvException | ParseException e) {
             throw new CommandException(e.getMessage());
-        } catch (ParseException e) {
-            throw new CommandException("Invalid value: " + e.getMessage());
         } catch (Exception e) {
             throw new CommandException("Failed to import: " + e.getMessage());
         }
+    }
+
+    private String buildSuccessMessage(CsvImporter.Result result) {
+        StringBuilder msg = new StringBuilder(
+                String.format("Imported %d player(s), skipped %d duplicate(s), %d invalid row(s).",
+                        result.imported, result.duplicates, result.invalid));
+
+        if (result.invalid > 0 && !result.sampleErrors.isEmpty()) {
+            msg.append("\nExamples of invalid rows:\n  - ")
+                    .append(String.join("\n  - ", result.sampleErrors));
+
+            if (result.invalid > result.sampleErrors.size()) {
+                msg.append("\n  ... (showing ")
+                        .append(result.sampleErrors.size())
+                        .append(" of ")
+                        .append(result.invalid)
+                        .append(" errors)");
+            }
+        }
+        return msg.toString();
     }
 
     @Override

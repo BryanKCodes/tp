@@ -265,19 +265,21 @@ public final class CsvImporter {
             switch (type) {
             case H4:
                 if (cols.size() != 4) {
-                    throw new IllegalArgumentException("bad cols");
+                    throw new IllegalArgumentException(
+                            "Expected 4 columns (Name,Role,Rank,Champion) but found " + cols.size());
                 }
                 return new PlayerRow(
-                        cols.get(0).trim(),
-                        cols.get(1).trim(),
-                        cols.get(2).trim(),
-                        cols.get(3).trim(),
+                        validateNotEmpty(cols.get(0).trim(), "Name"),
+                        validateNotEmpty(cols.get(1).trim(), "Role"),
+                        validateNotEmpty(cols.get(2).trim(), "Rank"),
+                        validateNotEmpty(cols.get(3).trim(), "Champion"),
                         0,
                         0
                 );
             case H6:
                 if (cols.size() != 6) {
-                    throw new IllegalArgumentException("bad cols");
+                    throw new IllegalArgumentException(
+                            "Expected 6 columns (Name,Role,Rank,Champion,Wins,Losses) but found " + cols.size());
                 }
                 int wins = parseNonNegativeInt(cols.get(4).trim(), "Wins");
                 int losses = parseNonNegativeInt(cols.get(5).trim(), "Losses");
@@ -291,8 +293,15 @@ public final class CsvImporter {
                 );
 
             default:
-                throw new IllegalArgumentException("unknown header type");
+                throw new IllegalArgumentException("Unsupported header type");
             }
+        }
+
+        private static String validateNotEmpty(String value, String fieldName) {
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException(fieldName + " cannot be empty");
+            }
+            return value;
         }
 
         private static int parseNonNegativeInt(String raw, String colName) {
