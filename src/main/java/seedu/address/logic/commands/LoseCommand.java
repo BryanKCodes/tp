@@ -82,6 +82,7 @@ public class LoseCommand extends Command {
                 personToEdit.getRank(),
                 personToEdit.getChampion(),
                 personToEdit.getTags(),
+                personToEdit.getStats(),
                 personToEdit.getWins(),
                 personToEdit.getLosses() + 1);
     }

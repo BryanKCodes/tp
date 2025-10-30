@@ -28,6 +28,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.team.Team;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
@@ -130,11 +131,12 @@ public class EditCommand extends Command {
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Champion updatedChampion = editPersonDescriptor.getChampion().orElse(personToEdit.getChampion());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        Stats stats = personToEdit.getStats();
         int wins = personToEdit.getWins();
         int losses = personToEdit.getLosses();
 
         // Preserve id from the original person
-        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, wins, losses);
+        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, stats, wins, losses);
     }
 
     private static Team createEditedTeam(Team teamToEdit, Person personToEdit, Person editedPerson) {

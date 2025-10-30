@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import seedu.address.logic.csv.exceptions.InvalidCsvException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -163,14 +164,15 @@ public final class CsvImporter {
 
     private static Person createPerson(PlayerRow row) {
         return new Person(
+                UUID.randomUUID().toString(),
                 new Name(row.name),
                 new Role(row.role),
                 new Rank(row.rank),
                 new Champion(row.champion),
                 Collections.<Tag>emptySet(),
+                new Stats(),
                 row.wins,
-                row.losses,
-                new Stats()
+                row.losses
         );
     }
 
