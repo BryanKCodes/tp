@@ -5,9 +5,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
@@ -171,35 +169,16 @@ public class Team {
     /**
      * Returns true if both teams have the same persons.
      * This defines a weaker notion of equality between two teams.
+     * <p>
+     * It is provided for potential future extensions where partial team comparison may be required.
+     * Currently, it behaves identically to {@link #equals(Object)}
      */
     public boolean isSameTeam(Team otherTeam) {
-        if (otherTeam == this) {
-            return true;
-        }
-
-        if (otherTeam == null) {
-            return false;
-        }
-
-        // Compare person IDs to determine if it's the same team formation
-        if (this.persons.size() != otherTeam.persons.size()) {
-            return false;
-        }
-
-        // Compare members by ID, ignoring order
-        Set<String> thisIds = this.persons.stream()
-                .map(p -> p.getId().toString())
-                .collect(Collectors.toSet());
-
-        Set<String> otherIds = otherTeam.persons.stream()
-                .map(p -> p.getId().toString())
-                .collect(Collectors.toSet());
-
-        return thisIds.equals(otherIds);
+        return this.equals(otherTeam);
     }
 
     /**
-     * Returns true if both teams have the same identity and data fields.
+     * Returns true if both teams have the same data fields.
      * This defines a stronger notion of equality between two teams.
      */
     @Override
@@ -214,13 +193,12 @@ public class Team {
         }
 
         Team otherTeam = (Team) other;
-        return id.equals(otherTeam.id)
-                && persons.equals(otherTeam.persons);
+        return persons.equals(otherTeam.persons);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, persons);
+        return Objects.hash(persons);
     }
 
     @Override

@@ -52,7 +52,7 @@ fast, SummonersBook helps you manage people and form balanced teams faster than 
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
   as `add n/Faker rk/Grandmaster rl/ADC c/Sivir`.
 
-* Parameters are _**case-insensitive**_
+* Parameters are _**case-insensitive**_ (except for `name`)
 
 * Items in square brackets are optional.<br>
   e.g., `find [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION]` can be used as `find rk/Gold`.
@@ -131,6 +131,7 @@ Failure outputs (examples):
 Searches for people by **keyword(s)** in their **name**.
 If multiple keywords are given, people with at least 1 keyword in their name will be shown.
 Matching is **case-insensitive** and based on **whole words only** (not partial matches!).
+This is for convenience (even though e.g. `gamerval115` and `GamerVal115` can both be in the system)
 
 **Format:**
 `find KEYWORD [MORE_KEYWORDS...]`
@@ -240,21 +241,22 @@ Shows the number of teams created, their members, and how many people remain una
 * `group`
   Forms balanced teams from all unassigned people.
 
-### Manually creating a team: `makegroup`
+### Manually creating a team: `makeGroup`
 
 Creates a new team with the specified people.
 
 **Format:**  
-`makegroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
+`makeGroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
 
 #### Rules & Notes
 - Each person must **already exist** in the person list.
 - People **cannot already belong** to another team.
 - All five people must have **unique roles** (no duplicates).
-- If any person name is invalid or unavailable, the command will fail with a clear error message.
+- Name field is **case-sensitive!**
+- If any person is invalid or unavailable, the command will fail with a clear error message.
 
 #### Examples
-- `makegroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`  
+- `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`  
 Creates a new team with those five members.
 
 
@@ -388,7 +390,7 @@ Action               | Format
 **Filter people**   | `filter [rl/ROLE ...] [rk/RANK ...]`
 **Edit person**      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
 **Auto-group teams** | `group`
-**Manually create team** | `makegroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
+**Manually create team** | `makeGroup n/PERSON_1 n/PERSON_2 n/PERSON_3 n/PERSON_4 n/PERSON_5`
 **Ungroup teams**    | `ungroup TEAM_INDEX` · `ungroup all`
 **Add performance values** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
 **Delete performance values** | `deleteStats INDEX`

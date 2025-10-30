@@ -751,19 +751,17 @@ or mouse/GUI-driven app.
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​ | I want to …​                                     | So that I can…​                                   |
-|----------|---------|--------------------------------------------------|---------------------------------------------------|
-| `* * *`  | coach   | add new people with their in-game IDs           | track and manage them in the system               |
-| `* * *`  | coach   | update a person’s details                        | always have accurate and current information      |
-| `* * *`  | coach   | record each person’s primary and secondary roles | assign them to suitable teams                     |
-| `* * *`  | coach   | log each person’s preferred champions            | avoid role duplication and build effective teams  |
-| `* * *`  | coach   | filter people by role, rank, or skill rating    | quickly find suitable team compositions           |
-| `* * *`  | coach   | create practice teams of 5 people               | simulate real match conditions                    |
-| `* *`    | coach   | balance teams automatically by skill level       | ensure matches are fair and competitive           |
-| `* *`    | coach   | manually adjust teams after creation             | fine-tune rosters to meet specific training needs |
-| `* *`    | coach   | see role distribution in each team               | avoid having duplicate roles in the same lineup   |
-| `* *`    | coach   | label each newly created team                    | easily identify and manage them later             |
-| `* *`    | coach   | see a list of all created teams in a sidebar     | quickly view and select teams                     |
+| Priority | As a … | I want to …                                 | So that I can…                                  |
+|----------|---------|----------------------------------------------|---------------------------------------------------|
+| `* * *`  | coach   | add new people with their in-game names      | track and manage them in the system               |
+| `* * *`  | coach   | update a person’s details                    | always have accurate and current information      |
+| `* * *`  | coach   | record each person’s primary roles           | assign them to suitable teams                     |
+| `* * *`  | coach   | record each person’s preferred champions     | avoid role duplication and build effective teams  |
+| `* * *`  | coach   | filter people by role, rank, or score rating | quickly find suitable players for forming teams   |
+| `* * *`  | coach   | create practice teams of 5 people            | simulate real match conditions                    |
+| `* *`    | coach   | balance teams automatically by rank          | ensure matches are fair and competitive           |
+| `* *`    | coach   | see role distribution in each team           | avoid having duplicate roles in the same lineup   |
+| `* *`    | coach   | see a list of all created teams in a sidebar | quickly view teams                     |
 
 ### Use cases
 
@@ -998,7 +996,7 @@ testers are expected to do more *exploratory* testing.
     1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-1. _{ more test cases …​ }_
+1. _{ more test cases … }_
 
 ### Deleting a person
 
