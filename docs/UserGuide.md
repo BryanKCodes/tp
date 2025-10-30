@@ -19,10 +19,7 @@ Manage your player roster and form balanced 5v5 teams **in seconds** instead of 
 
 If you're comfortable with typing commands (like using Slack or Discord), SummonersBook will be 3x faster than spreadsheets or traditional apps.
 
-<!-- * Table of Contents -->
-<page-nav-print />
-
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## Quick Start
 
@@ -42,8 +39,6 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 
 5. The application window should appear in a few seconds, showing some sample data:
    ![Ui](images/Ui.png)
-
----
 
 ### Step 2: Your First Team (2-Minute Tutorial)
 
@@ -73,8 +68,6 @@ listteam
 
 🎉 **Done!** You just formed a balanced team in under 30 seconds.
 
----
-
 ### Step 3: Learn the Essentials
 
 Now that you've seen the magic, explore these core commands:
@@ -84,13 +77,15 @@ Now that you've seen the magic, explore these core commands:
 
 Refer to the [Features](#features) section below for complete details on all commands.
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
+
+---
 
 ## Common Workflows
 
 These workflows show you how to accomplish typical coaching tasks with SummonersBook.
 
-### 🎯 Workflow 1: Preparing for Scrimmage Night
+### Workflow 1: Preparing for Scrimmage Night
 
 **Your goal:** You have 15 players and need to form 3 balanced teams for practice matches.
 
@@ -117,9 +112,7 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 
 **Time saved:** ~45 minutes compared to manual balancing in spreadsheets.
 
----
-
-### 🎯 Workflow 2: Finding Substitutes Mid-Tournament
+### Workflow 2: Finding Substitutes Mid-Tournament
 
 **Your goal:** Your support player is unavailable. Find high-rank support substitutes quickly.
 
@@ -139,9 +132,7 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 
 **Time saved:** ~10 minutes compared to manually scrolling through your entire roster.
 
----
-
-### 🎯 Workflow 3: Post-Match Performance Tracking
+### Workflow 3: Post-Match Performance Tracking
 
 **Your goal:** Record player performance after a scrimmage to track improvement over time.
 
@@ -161,7 +152,53 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 
 **Insight:** Spot underperforming players or rising stars instantly with visual trends.
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+## Feature Summary
+
+Click on any command to jump to its detailed explanation.
+
+### Player Management
+
+Command | Purpose | Format
+--------|---------|-------
+[`add`](#adding-a-player-add) | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
+[`list`](#listing-all-players-list) | Show all players | `list`
+[`find`](#finding-players-by-name-find) | Search players by name | `find KEYWORD [MORE_KEYWORDS...]`
+[`filter`](#filtering-players-filter) | Filter by role/rank | `filter [rl/ROLE ...] [rk/RANK ...]`
+[`view`](#viewing-detailed-player-information-view) | View detailed player stats | `view INDEX`
+[`edit`](#editing-a-player-edit) | Update player details | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+[`delete`](#deleting-a-player-delete) | Remove a player | `delete INDEX`
+
+### Performance Tracking
+
+Command | Purpose | Format
+--------|---------|-------
+[`addStats`](#adding-performance-stats-addstats) | Record match performance | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+[`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry | `deleteStats INDEX`
+
+### Team Management
+
+Command | Purpose | Format
+--------|---------|-------
+[`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
+[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5`
+[`listteam`](#listing-all-teams-listteam) | Show all teams | `listteam`
+[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
+
+### Utility
+
+Command | Purpose | Format
+--------|---------|-------
+[`help`](#viewing-help-help) | Open help window | `help`
+[`clear`](#clearing-all-data-clear) | Delete all data | `clear`
+[`exit`](#exiting-the-program-exit) | Close application | `exit`
+
+[Back to Top](#summonersbook-user-guide)
+
+---
 
 ## Features
 
@@ -190,101 +227,11 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines
   as space characters surrounding line-breaks may be omitted when copied over to the application.
 
-## Core Daily Commands
-
-These are the commands you'll use most often as a coach.
-
-### 🎯 Auto-grouping players into teams: `group`
-
-Automatically forms as many balanced teams of five as possible from **unassigned** players using an intelligent matching algorithm.
-
-**Format:**
-`group`
-
-#### How it works
-The algorithm follows these steps:
-1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
-2. Sorts each role group by rank (highest to lowest) to prioritize balanced skill distribution.
-3. Iteratively forms teams by selecting one player from each role.
-4. Ensures no duplicate champions within each team to avoid conflicts.
-5. Continues creating teams until there are insufficient players to form a complete team.
-
-<box type="tip" seamless>
-
-**💡 Pro Tip:** Run `listteam` after grouping to see your new teams instantly. Most coaches keep the team list visible during scrims.
-
-</box>
-
-<box type="warning" seamless>
-
-**⚠️ Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
-
-</box>
-
-#### Notes
-* At least one unassigned player for each of the five roles is required to form a team.
-* Only players **not already in a team** are considered.
-* If champion conflicts prevent forming a team, the algorithm stops and reports how many teams were created.
-* Any remaining unassigned players stay in the pool and can be grouped later.
-
-#### Examples
-* `group`
-  Forms balanced teams from all unassigned players.
-
 ---
 
-### 👀 Viewing detailed player information : `view`
+## Player Management
 
-Opens a detailed window showing comprehensive information about a player, including their performance statistics visualized in graphs.
-
-**Format:**
-`view INDEX`
-
-#### Notes
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-* The window displays:
-  - Basic information (name, role, rank, champion, tags)
-  - Win/loss record
-  - Performance score over time
-  - CS per minute trends
-  - KDA trends
-  - Gold difference at 15 minutes trends
-* Up to the latest 10 matches are shown in the performance graphs.
-
-#### Examples
-* `view 1`
-  Opens a detailed window for the 1st player in the list.
-
-* `view 5`
-  Opens a detailed window for the 5th player in the list.
-
----
-
-### 🔍 Filtering players : `filter`
-
-Narrows the player list using one or more filters.
-Matching is **case-insensitive**.
-
-You can filter by:
-- `rl/` — role (exact match)
-- `rk/` — rank (exact match)
-
-**Format (any order, at least one filter):**
-`filter [rl/ROLE ...] [rk/RANK ...]`
-
-#### How filtering works
-- Filters of **different types** (e.g. `rl/` and `rk/`) are combined with **AND**.
-- Filters **within the same type** (e.g. multiple `rl/` values) are combined with **OR**.
-- Matching is **case-insensitive** and **exact**
-
-#### Examples
-- `filter rl/Mid Jungle` — players who are **Mid OR Jungle**.
-- `filter rl/Mid rk/Gold` — players who are **Mid AND Gold**.
-- `filter rl/Mid rl/Jungle rk/Gold rk/Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
-
----
-
-### ➕ Adding a player: `add`
+### Adding a player: `add`
 
 Adds a new player with mandatory details to your roster.
 
@@ -296,19 +243,239 @@ Adds a new player with mandatory details to your roster.
 * `add n/Faker rk/Grandmaster rl/ADC c/Sivir`
 * `add n/Imissher rk/Gold rl/Support c/Thresh`
 
+### Listing all players: `list`
+
+Shows a list of all players in your SummonersBook roster.
+
+**Format:** `list`
+
+<box type="tip" seamless>
+
+**Pro Tip:** Use this command to reset any filters and see your full roster again.
+
+</box>
+
+### Finding players by name: `find`
+
+Searches for players by **keyword(s)** in their **name**.
+If multiple keywords are given, players with at least 1 keyword in their name will be shown.
+
+**Format:**
+`find KEYWORD [MORE_KEYWORDS...]`
+
+**How it works:**
+- Matching is **case-insensitive**
+- Based on **whole words only** (not partial matches)
+- OR logic: returns players matching ANY keyword
+
+**Examples:**
+- `find joanne lim` — finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
+- `find john` — finds **John Doe** and **John Smith**.
+- `find jo` — finds **Jo Lin**, but **not** "John Doe" or "John Smith" (whole word match).
+
+### Filtering players: `filter`
+
+Narrows the player list using one or more filters.
+Matching is **case-insensitive**.
+
+You can filter by:
+- `rl/` — role (exact match)
+- `rk/` — rank (exact match)
+
+**Format (any order, at least one filter):**
+`filter [rl/ROLE ...] [rk/RANK ...]`
+
+**How filtering works:**
+- Filters of **different types** (e.g. `rl/` and `rk/`) are combined with **AND**.
+- Filters **within the same type** (e.g. multiple `rl/` values) are combined with **OR**.
+- Matching is **case-insensitive** and **exact**
+
+**Examples:**
+- `filter rl/Mid Jungle` — players who are **Mid OR Jungle**.
+- `filter rl/Mid rk/Gold` — players who are **Mid AND Gold**.
+- `filter rl/Mid rl/Jungle rk/Gold rk/Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
+
+### Viewing detailed player information: `view`
+
+Opens a detailed window showing comprehensive information about a player, including their performance statistics visualized in graphs.
+
+**Format:**
+`view INDEX`
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* The window displays:
+    - Basic information (name, role, rank, champion, tags)
+    - Win/loss record
+    - Performance score over time
+    - CS per minute trends
+    - KDA trends
+    - Gold difference at 15 minutes trends
+* Up to the latest 10 matches are shown in the performance graphs.
+
+**Examples:**
+* `view 1`
+  Opens a detailed window for the 1st player in the list.
+
+* `view 5`
+  Opens a detailed window for the 5th player in the list.
+
+### Editing a player: `edit`
+
+Updates an existing player's details in your roster.
+
+**Format:**
+`edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+
+<box type="warning" seamless>
+
+**Important:** Players that have already been added to a team cannot be edited. Remove them from the team first using `ungroup`.
+
+</box>
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* At least one field to edit must be provided.
+* Existing values are **overwritten** by the new input.
+* Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
+
+**Examples:**
+* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`
+  Updates the 1st player's name, role, rank, and champion.
+
+* `edit 2 t/`
+  Clears all tags of the 2nd player.
+
+* `edit 3 rl/Top rk/Gold`
+  Updates the 3rd player's role and rank.
+
+### Deleting a player: `delete`
+
+Removes a player permanently from your roster.
+
+**Format:**
+`delete INDEX`
+
+<box type="warning" seamless>
+
+**Important:** You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
+
+</box>
+
+**Notes:**
+* Deletes the player at the specified `INDEX`.
+* The index refers to the index number shown in the displayed player list.
+* The index **must be a positive integer** 1, 2, 3, …
+
+**Example:**
+`delete 3`
+
+**Success output:**
+`Deleted Player: <NAME>.`
+
+**Failure outputs:**
+- `The player index provided is invalid.`
+- `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+## Performance Tracking
+
+### Adding performance stats: `addStats`
+
+Records a new set of performance values for a player after a match:
+- Creep score per minute (CPM)
+- Gold difference at 15th minute (GD15)
+- Kill/Death/Assist score (KDA)
+
+**Format:**
+`addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* All fields must be provided.
+* CPM and KDA can be decimals or integers e.g., `cpm/9.8`, `kda/2`
+* Decimal point is a dot `.`
+* GD15 must be an integer e.g., `gd15/560`
+* These values will be recorded and the player's average performance score will be updated automatically.
+
+**Example with context:**
+After Faker's latest match, you recorded:
+- 8.8 CS per minute (excellent farming!)
+- +2000 gold lead at 15 min (dominant lane phase)
+- 6.0 KDA (great performance)
+
+```
+addStats 1 cpm/8.8 gd15/2000 kda/6.0
+```
+
+→ Faker's overall performance score updates automatically.
+→ View trends with `view 1`
+
+### Removing performance stats: `deleteStats`
+
+Deletes the most recent performance record for a player (useful for correcting mistakes).
+
+**Format:**
+`deleteStats INDEX`
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+* The most recent set of performance values (cpm, gd15, kda) will be deleted.
+* The player's average score will be recalculated automatically.
+
+**Example:**
+```
+deleteStats 1
+```
+Removes the latest performance entry for the 1st player in the list.
+
+[Back to Top](#summonersbook-user-guide)
+
 ---
 
 ## Team Management
 
-### 📋 Listing all teams: `listteam`
+### Auto-grouping players into teams: `group`
 
-Shows a list of all teams in SummonersBook.
+Automatically forms as many balanced teams of five as possible from **unassigned** players using an intelligent matching algorithm.
 
-**Format:** `listteam`
+**Format:**
+`group`
 
----
+**How it works:**
+The algorithm follows these steps:
+1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
+2. Sorts each role group by rank (highest to lowest) to prioritize balanced skill distribution.
+3. Iteratively forms teams by selecting one player from each role.
+4. Ensures no duplicate champions within each team to avoid conflicts.
+5. Continues creating teams until there are insufficient players to form a complete team.
 
-### 🛠️ Manually creating a team: `makeGroup`
+<box type="tip" seamless>
+
+**Pro Tip:** Run `listteam` after grouping to see your new teams instantly. Most coaches keep the team list visible during scrims.
+
+</box>
+
+<box type="warning" seamless>
+
+**Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
+
+</box>
+
+**Notes:**
+* At least one unassigned player for each of the five roles is required to form a team.
+* Only players **not already in a team** are considered.
+* If champion conflicts prevent forming a team, the algorithm stops and reports how many teams were created.
+* Any remaining unassigned players stay in the pool and can be grouped later.
+
+**Examples:**
+* `group`
+  Forms balanced teams from all unassigned players.
+
+### Manually creating a team: `makeGroup`
 
 Creates a new team with the specified players.
 
@@ -330,191 +497,45 @@ Creates a new team with the specified players.
 - `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
   Creates a new team with those five members.
 
----
+### Listing all teams: `listteam`
 
-### 💥 Disbanding teams : `ungroup`
+Shows a list of all teams in SummonersBook.
+
+**Format:** `listteam`
+
+### Disbanding teams: `ungroup`
 
 Removes one or more teams from the system, returning their members to the unassigned pool.
 
 **Format:**
 `ungroup INDEX` or `ungroup all`
 
-#### Notes
+**Notes:**
 * `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 * Use `all` (case-insensitive) to disband all teams at once.
 * After ungrouping, all team members become available for forming new teams.
 * If there are no teams, the command will show an error.
 
-#### Examples
+**Examples:**
 * `ungroup 1`
   Disbands the 1st team in the displayed team list.
 
 * `ungroup all`
   Disbands all teams, making all players unassigned.
 
----
-
-## Player Management
-
-### 📝 Editing a player : `edit`
-
-Updates an existing player's details in your roster.
-
-**Format:**
-`edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
-
-<box type="warning" seamless>
-
-**⚠️ Important:** Players that have already been added to a team cannot be edited. Remove them from the team first using `ungroup`.
-
-</box>
-
-#### Notes
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-* At least one field to edit must be provided.
-* Existing values are **overwritten** by the new input.
-* Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
-
-#### Examples
-* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`
-  Updates the 1st player's name, role, rank, and champion.
-
-* `edit 2 t/`
-  Clears all tags of the 2nd player.
-
-* `edit 3 rl/Top rk/Gold`
-  Updates the 3rd player's role and rank.
-
----
-
-### 🗑️ Deleting a player: `delete`
-
-Removes a player permanently from your roster.
-
-**Format:**
-`delete INDEX`
-
-<box type="warning" seamless>
-
-**⚠️ Important:** You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
-
-</box>
-
-#### Notes
-* Deletes the player at the specified `INDEX`.
-* The index refers to the index number shown in the displayed player list.
-* The index **must be a positive integer** 1, 2, 3, …
-
-#### Example:
-`delete 3`
-
-**Success output:**
-`Deleted Player: <NAME>.`
-
-**Failure outputs:**
-- `The player index provided is invalid.`
-- `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`
-
----
-
-### 📊 Adding performance stats : `addStats`
-
-Records a new set of performance values for a player after a match:
-- Creep score per minute (CPM)
-- Gold difference at 15th minute (GD15)
-- Kill/Death/Assist score (KDA)
-
-**Format:**
-`addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
-
-#### Notes
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-* All fields must be provided.
-* CPM and KDA can be decimals or integers e.g., `cpm/9.8`, `kda/2`
-* Decimal point is a dot `.`
-* GD15 must be an integer e.g., `gd15/560`
-* These values will be recorded and the player's average performance score will be updated automatically.
-
-#### Example with context:
-After Faker's latest match, you recorded:
-- 8.8 CS per minute (excellent farming!)
-- +2000 gold lead at 15 min (dominant lane phase)
-- 6.0 KDA (great performance)
-
-```
-addStats 1 cpm/8.8 gd15/2000 kda/6.0
-```
-
-→ Faker's overall performance score updates automatically.
-→ View trends with `view 1`
-
----
-
-### ❌ Removing performance stats : `deleteStats`
-
-Deletes the most recent performance record for a player (useful for correcting mistakes).
-
-**Format:**
-`deleteStats INDEX`
-
-#### Notes
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-* The most recent set of performance values (cpm, gd15, kda) will be deleted.
-* The player's average score will be recalculated automatically.
-
-#### Example:
-```
-deleteStats 1
-```
-Removes the latest performance entry for the 1st player in the list.
+[Back to Top](#summonersbook-user-guide)
 
 ---
 
 ## Utility Commands
 
-### 📋 Listing all players : `list`
-
-Shows a list of all players in your SummonersBook roster.
-
-**Format:** `list`
-
-<box type="tip" seamless>
-
-**💡 Pro Tip:** Use this command to reset any filters and see your full roster again.
-
-</box>
-
----
-
-### 🔎 Finding players by name : `find`
-
-Searches for players by **keyword(s)** in their **name**.
-If multiple keywords are given, players with at least 1 keyword in their name will be shown.
-
-**Format:**
-`find KEYWORD [MORE_KEYWORDS...]`
-
-#### How it works
-- Matching is **case-insensitive**
-- Based on **whole words only** (not partial matches)
-- OR logic: returns players matching ANY keyword
-
-#### Examples
-- `find joanne lim` — finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
-- `find john` — finds **John Doe** and **John Smith**.
-- `find jo` — finds **Jo Lin**, but **not** "John Doe" or "John Smith" (whole word match).
-
----
-
-### 📖 Viewing help : `help`
+### Viewing help: `help`
 
 Opens a help window displaying the full User Guide.
 
 **Format:** `help`
 
----
-
-### 🗑️ Clearing all data : `clear`
+### Clearing all data: `clear`
 
 Deletes all players and teams from SummonersBook.
 
@@ -522,13 +543,11 @@ Deletes all players and teams from SummonersBook.
 
 <box type="warning" seamless>
 
-**⚠️ Warning:** This action cannot be undone! Make sure to back up your data file before clearing.
+**Warning:** This action cannot be undone! Make sure to back up your data file before clearing.
 
 </box>
 
----
-
-### 🚪 Exiting the program : `exit`
+### Exiting the program: `exit`
 
 Closes the application.
 
@@ -547,7 +566,9 @@ Advanced users can edit this file directly if needed.
 Editing the data file incorrectly can **corrupt your data**, causing SummonersBook to start with an empty file.  
 Always **back up the file** before making changes, and only edit it if you are confident about the updates.
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
+
+---
 
 ## Troubleshooting
 
@@ -559,8 +580,6 @@ Always **back up the file** before making changes, and only edit it if you are c
 1. `ungroup 1` (disband their team)
 2. `delete 5` (now you can delete the player)
 
----
-
 ### "No teams could be formed"
 
 **Problem:** Not enough players or missing a required role when running `group`.
@@ -571,8 +590,6 @@ Always **back up the file** before making changes, and only edit it if you are c
 - Run `list` to see who's available (unassigned players show in the player list).
 
 **Quick fix:** Add missing role players with `add n/... rl/Support ...`
-
----
 
 ### "Invalid index" or "The player index provided is invalid"
 
@@ -590,8 +607,6 @@ view 5               # ERROR - only 3 players are displayed
 view 2               # OK - refers to 2nd player in filtered list
 ```
 
----
-
 ### "Duplicate champion detected" when creating teams
 
 **Problem:** Multiple players in the same team play the same champion.
@@ -601,7 +616,9 @@ view 2               # OK - refers to 2nd player in filtered list
 - Edit one player's champion: `edit 3 c/Yasuo`
 - Or use `group` (auto-grouping avoids champion conflicts automatically)
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
+
+---
 
 ## FAQ
 
@@ -620,9 +637,11 @@ view 2               # OK - refers to 2nd player in filtered list
 **Q:** What's the difference between `find` and `filter`?<br>
 **A:** `find` searches by player **name** (keywords), while `filter` narrows by **attributes** (role, rank). Use `find` for "Who was that player called John?" and `filter` for "Show me all Diamond supports".
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
 
-## Known issues
+---
+
+## Known Issues
 
 1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only
    the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the
@@ -631,38 +650,42 @@ view 2               # OK - refers to 2nd player in filtered list
    `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to
    manually restore the minimized Help Window.
 
---------------------------------------------------------------------------------------------------------------------
+[Back to Top](#summonersbook-user-guide)
+
+---
 
 ## Command Summary
-
-### Core Daily Commands
-Action | Format | Example
--------|--------|--------
-**Auto-group teams** | `group` | `group`
-**View player details** | `view INDEX` | `view 1`
-**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...]` | `filter rl/Mid rk/Diamond`
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION` | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-
-### Team Management
-Action | Format | Example
--------|--------|--------
-**List all teams** | `listteam` | `listteam`
-**Manually create team** | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5` | `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
-**Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
 
 ### Player Management
 Action | Format | Example
 -------|--------|--------
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION` | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**List all players** | `list` | `list`
+**Find by name** | `find KEYWORD [MORE_KEYWORDS...]` | `find john`
+**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...]` | `filter rl/Mid rk/Diamond`
+**View player details** | `view INDEX` | `view 1`
 **Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]` | `edit 1 rl/Top rk/Diamond`
 **Delete player** | `delete INDEX` | `delete 3`
+
+### Performance Tracking
+Action | Format | Example
+-------|--------|--------
 **Add stats** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA` | `addStats 1 cpm/8.8 gd15/450 kda/4.5`
 **Delete stats** | `deleteStats INDEX` | `deleteStats 1`
+
+### Team Management
+Action | Format | Example
+-------|--------|--------
+**Auto-group teams** | `group` | `group`
+**Manually create team** | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5` | `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
+**List all teams** | `listteam` | `listteam`
+**Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
 
 ### Utility Commands
 Action | Format | Example
 -------|--------|--------
-**List all players** | `list` | `list`
-**Find by name** | `find KEYWORD [MORE_KEYWORDS...]` | `find john`
 **Help** | `help` | `help`
 **Clear all** | `clear` | `clear`
 **Exit** | `exit` | `exit`
+
+[Back to Top](#summonersbook-user-guide)
