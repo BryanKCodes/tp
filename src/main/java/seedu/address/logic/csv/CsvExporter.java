@@ -73,29 +73,33 @@ public final class CsvExporter {
         lines.add(TEAMS_HEADER);
 
         for (Team t : model.getAddressBook().getTeamList()) {
-            // Case-insensitive role mapping
-            Map<String, String> roleToName = t.getPersons().stream()
-                    .collect(Collectors.toMap(
-                            p -> normaliseRole(p.getRole().toString()),
-                            p -> p.getName().toString()
-                    ));
+            try {
+                Map<String, String> roleToName = t.getPersons().stream()
+                        .collect(Collectors.toMap(
+                                p -> normaliseRole(p.getRole().toString()),
+                                p -> p.getName().toString()
+                        ));
 
-            int wins = t.getWins();
-            int losses = t.getLosses();
-            int matches = wins + losses;
-            String winRate = formatWinRate(wins, matches);
+                int wins = t.getWins();
+                int losses = t.getLosses();
+                String winRate = formatWinRate(wins, wins + losses);
 
-            lines.add(joinCsv(
-                    t.getId(),
-                    roleToName.getOrDefault("Top", ""),
-                    roleToName.getOrDefault("Jungle", ""),
-                    roleToName.getOrDefault("Mid", ""),
-                    roleToName.getOrDefault("Adc", ""),
-                    roleToName.getOrDefault("Support", ""),
-                    Integer.toString(wins),
-                    Integer.toString(losses),
-                    winRate
-            ));
+                lines.add(joinCsv(
+                        t.getId(),
+                        roleToName.getOrDefault("Top", ""),
+                        roleToName.getOrDefault("Jungle", ""),
+                        roleToName.getOrDefault("Mid", ""),
+                        roleToName.getOrDefault("Adc", ""),
+                        roleToName.getOrDefault("Support", ""),
+                        Integer.toString(wins),
+                        Integer.toString(losses),
+                        winRate
+                ));
+            } catch (IllegalStateException e) {
+                // should not happen if data integrity is maintained
+                throw new IOException("Data integrity error: Team '" + t.getId()
+                        + "' has duplicate roles. This indicates corrupted data.", e);
+            }
         }
         write(out, lines);
     }
