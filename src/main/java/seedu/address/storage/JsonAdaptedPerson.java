@@ -56,9 +56,9 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.stats = stats;
         this.wins = wins;
         this.losses = losses;
-        this.stats = stats;
     }
 
     /**
@@ -84,40 +84,82 @@ class JsonAdaptedPerson {
      * @throws IllegalValueException if there were any data constraints violated in the adapted person.
      */
     public Person toModelType() throws IllegalValueException {
+        final Set<Tag> modelTags = toModelTags();
+        final String modelId = requireId();
+        final Name modelName = parseName();
+        final Role modelRole = parseRole();
+        final Rank modelRank = parseRank();
+        final Champion modelChampion = parseChampion();
+        final Stats modelStats = (stats != null) ? stats.toModelType() : new Stats();
+
+        return new Person(modelId, modelName, modelRole, modelRank, modelChampion,
+                modelTags, modelStats, wins, losses);
+    }
+
+    /**
+     * Converts JSON tags to model tags.
+     */
+    private Set<Tag> toModelTags() throws IllegalValueException {
         final List<Tag> personTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
             personTags.add(tag.toModelType());
         }
+        return new HashSet<>(personTags);
+    }
 
+    /**
+     * Ensures the ID field is present.
+     */
+    private String requireId() throws IllegalValueException {
         if (id == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "ID"));
         }
-        final String modelId = id;
+        return id;
+    }
 
+    /**
+     * Parses and validates the Name field.
+     */
+    private Name parseName() throws IllegalValueException {
         if (name == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
         }
-        final Name modelName = new Name(name);
+        return new Name(name);
+    }
 
+    /**
+     * Parses and validates the Role field.
+     */
+    private Role parseRole() throws IllegalValueException {
         if (role == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Role.class.getSimpleName()));
         }
         if (!Role.isValidRole(role)) {
             throw new IllegalValueException(Role.MESSAGE_CONSTRAINTS);
         }
-        final Role modelRole = new Role(role);
+        return new Role(role);
+    }
 
+    /**
+     * Parses and validates the Rank field.
+     */
+    private Rank parseRank() throws IllegalValueException {
         if (rank == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Rank.class.getSimpleName()));
         }
         if (!Rank.isValidRank(rank)) {
             throw new IllegalValueException(Rank.MESSAGE_CONSTRAINTS);
         }
-        final Rank modelRank = new Rank(rank);
+        return new Rank(rank);
+    }
 
+    /**
+     * Parses and validates the Champion field.
+     */
+    private Champion parseChampion() throws IllegalValueException {
         if (champion == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
                     Champion.class.getSimpleName()));
@@ -125,13 +167,6 @@ class JsonAdaptedPerson {
         if (!Champion.isValidChampion(champion)) {
             throw new IllegalValueException(Champion.MESSAGE_CONSTRAINTS);
         }
-        final Champion modelChampion = new Champion(champion);
-
-        final Set<Tag> modelTags = new HashSet<>(personTags);
-
-        Stats modelStats = stats != null ? stats.toModelType() : new Stats();
-
-        return new Person(modelId, modelName, modelRole, modelRank, modelChampion, modelTags, wins, losses, modelStats);
+        return new Champion(champion);
     }
-
 }
