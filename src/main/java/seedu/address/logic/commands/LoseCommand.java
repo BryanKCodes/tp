@@ -22,7 +22,7 @@ public class LoseCommand extends Command {
     public static final String COMMAND_WORD = "lose";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Records a loss for the team and its persons identified by the index used in the displayed team list.\n"
+            + ": Records a loss for the team and its players identified by the index used in the displayed team list.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 

@@ -24,13 +24,13 @@ public class GroupCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Automatically creates balanced teams from all unassigned persons.\n"
-            + "The algorithm groups persons by role, sorts by rank, and ensures no duplicate champions per team.\n"
+            + "The algorithm groups players by role, sorts by rank, and ensures no duplicate champions per team.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_SUCCESS = "Successfully created %1$d team(s):\n%2$s\n\n"
-            + "%3$d person(s) remain unassigned.";
+            + "%3$d player(s) remain unassigned.";
     public static final String MESSAGE_NO_TEAMS_FORMED = "No teams could be formed. "
-            + "Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).";
+            + "Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).";
 
     private final TeamMatcher teamMatcher;
 
@@ -75,6 +75,9 @@ public class GroupCommand extends Command {
             throw new CommandException(MESSAGE_NO_TEAMS_FORMED);
         }
 
+        // Get the number of existing teams before adding
+        int existingTeamCount = model.getFilteredTeamList().size();
+
         // Add all teams to the model
         for (Team team : teams) {
             model.addTeam(team);
@@ -84,7 +87,7 @@ public class GroupCommand extends Command {
         int remainingPersons = model.getUnassignedPersonList().size();
 
         // Format the success message
-        String teamsFormatted = formatTeams(teams);
+        String teamsFormatted = formatTeams(teams, existingTeamCount);
         return new CommandResult(String.format(MESSAGE_SUCCESS,
                 teams.size(), teamsFormatted, remainingPersons));
     }
@@ -94,12 +97,13 @@ public class GroupCommand extends Command {
      * Each team is displayed on a separate line with its number and members.
      *
      * @param teams List of teams to format.
+     * @param startIndex Number of teams that existed before these were added.
      * @return Formatted string representation of teams.
      */
-    private String formatTeams(List<Team> teams) {
+    private String formatTeams(List<Team> teams, int startIndex) {
         assert !teams.isEmpty() : "formatTeams should only be called with non-empty teams list";
         return IntStream.range(0, teams.size())
-                .mapToObj(i -> String.format("Team %d: %s", i + 1, teams.get(i).toDisplayString()))
+                .mapToObj(i -> String.format("Team %d: %s", startIndex + i + 1, teams.get(i).toDisplayString()))
                 .collect(Collectors.joining("\n"));
     }
 
