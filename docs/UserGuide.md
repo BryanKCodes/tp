@@ -49,7 +49,7 @@ Let's form your first balanced team to see SummonersBook in action!
 ```
 add n/Faker rk/Grandmaster rl/Mid c/Azir
 add n/Zeus rk/Diamond rl/Top c/Gnar
-add n/Oner rk/Master rl/Jungle c/LeeSin
+add n/Oner rk/Master rl/Jungle c/Lee Sin
 add n/Gumayusi rk/Challenger rl/ADC c/Aphelios
 add n/Keria rk/Master rl/Support c/Thresh
 ```
@@ -60,13 +60,7 @@ add n/Keria rk/Master rl/Support c/Thresh
 group
 ```
 
-**c) View your new team:**
-
-```
-listteam
-```
-
-🎉 **Done!** You just formed a balanced team in under 30 seconds.
+🎉 **Done!** You just formed a balanced team in under 30 seconds. The team will appear in the team panel on the right.
 
 ### Step 3: Learn the Essentials
 
@@ -104,11 +98,7 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
    group
    ```
    → SummonersBook instantly creates up to 3 teams, balanced by rank and ensuring unique roles and champions.
-
-3. **View all team rosters:**
-   ```
-   listteam
-   ```
+   → Teams appear automatically in the team panel on the right side of the window.
 
 **Time saved:** ~45 minutes compared to manual balancing in spreadsheets.
 
@@ -184,9 +174,8 @@ Command | Purpose | Format
 Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
-[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5`
-[`listteam`](#listing-all-teams-listteam) | Show all teams | `listteam`
-[`viewteam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
+[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
+[`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
 [`win`](#recording-a-team-win-win) | Record a win for a team | `win TEAM_INDEX`
 [`lose`](#recording-a-team-loss-lose) | Record a loss for a team | `lose TEAM_INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
@@ -195,8 +184,8 @@ Command | Purpose | Format
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players/teams [to PATH]`
-[`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export players [to/PATH]` `export teams [to/PATH]`
+[`import`](#importing-player-data-import) | Import players from CSV | `import players from/PATH` `import players from/PATH`
 
 ### Utility
 
@@ -463,12 +452,6 @@ The algorithm follows these steps:
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
 
-<box type="tip" seamless>
-
-**Pro Tip:** Run `listteam` after grouping to see your new teams instantly. Most coaches keep the team list visible during scrims.
-
-</box>
-
 <box type="warning" seamless>
 
 **Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
@@ -487,92 +470,81 @@ The algorithm follows these steps:
 
 ### Manually creating a team: `makeGroup`
 
-Creates a new team with the specified players.
+Creates a new team with the specified players by their index numbers.
 
 **Format:**
-`makeGroup n/PLAYER_1 n/PLAYER_2 n/PLAYER_3 n/PLAYER_4 n/PLAYER_5`
+`makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
 
 <box type="info" seamless>
 
 **Rules & Notes:**
-- Each player must **already exist** in the player list.
+- Each index must refer to a player in the **currently displayed** player list.
 - Players **cannot already belong** to another team.
 - All five players must have **unique roles** (no duplicates).
-- Name field is **case-sensitive!**
-- If any player is invalid or unavailable, the command will fail with a clear error message.
+- All five players must have **unique champions** (no duplicates).
+- Exactly 5 index numbers must be provided.
+- Index numbers must not be duplicated.
+- If any index is invalid or player is unavailable, the command will fail with a clear error message.
 
 </box>
 
 **Examples:**
-- `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
-  Creates a new team with those five members.
+- `makeGroup 1 2 3 4 5`
+  Creates a new team with the 1st, 2nd, 3rd, 4th, and 5th players from the currently displayed list.
 
-### Listing all teams: `listteam`
+- `makeGroup 10 11 12 13 14`
+  Creates a team with players at indices 10-14.
 
-Shows a list of all teams in SummonersBook.
+---
 
-**Format:** `listteam`
+### 👁️ Viewing team details : `viewTeam`
 
-### Viewing team details: `viewteam`
-
-Displays detailed information about a team in a popup window, including member roster, win/loss record, and a visual pie chart showing the team's win ratio.
+Opens a detailed window showing comprehensive information about a team, including all members and team statistics.
 
 **Format:**
-`viewteam INDEX`
+`viewTeam INDEX`
 
-**Notes:**
-* `INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
-* The window displays:
-    - Team name (e.g., "Team 1")
-    - All players in the team with their roles
-    - Win/Loss record
-    - Pie chart visualizing win ratio
-* Statistics automatically update when you use `win` or `lose` commands.
+#### Notes
+* `INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* The window displays team member details and win/loss record.
 
-**Examples:**
-* `viewteam 1`
-  Opens Team 1's detailed overview with pie chart.
+#### Examples
+* `viewTeam 1`
+  Opens a detailed window for the 1st team in the list.
 
-* `viewteam 3`
-  Opens Team 3's statistics window.
+---
 
-### Recording a team win: `win`
+### 🏆 Recording a team win : `win`
 
-Updates a team's record by adding one win. Useful after a scrimmage or tournament game to keep performance stats accurate.
+Records a win for a team, updating both the team's record and all team members' individual records.
 
 **Format:**
 `win TEAM_INDEX`
 
-**Notes:**
-* `TEAM_INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
-* The team's total wins increase by 1 automatically.
-* Team performance charts (in `viewteam`) will reflect updated win/loss ratios.
+#### Notes
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* Both the team and all its members will have their win count incremented.
 
-**Examples:**
-* `win 2`
-  Adds one win to Team 2's record.
-
+#### Examples
 * `win 1`
-  Adds one win to Team 1's record.
+  Records a win for the 1st team in the list.
 
-### Recording a team loss: `lose`
+---
 
-Records a loss for the specified team. Helps maintain accurate win/loss tracking and pie chart statistics in the team overview.
+### 💔 Recording a team loss : `lose`
+
+Records a loss for a team, updating both the team's record and all team members' individual records.
 
 **Format:**
 `lose TEAM_INDEX`
 
-**Notes:**
-* `TEAM_INDEX` refers to the team number shown in the current displayed team list. Must be a positive integer (1, 2, 3…).
-* The team's total losses increase by 1 automatically.
-* Team statistics in `viewteam` will update to reflect the new record.
+#### Notes
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* Both the team and all its members will have their loss count incremented.
 
-**Examples:**
+#### Examples
 * `lose 2`
-  Adds one loss to Team 2's record.
-
-* `lose 3`
-  Adds one loss to Team 3's record.
+  Records a loss for the 2nd team in the list.
 
 ### Disbanding teams: `ungroup`
 
@@ -606,8 +578,8 @@ Exports player or team data from SummonersBook into a CSV file. You can export e
 
 **Format:**
 ```
-export players [to CUSTOM_PATH]
-export teams [to CUSTOM_PATH]
+export players [to/CUSTOM_PATH]
+export teams [to/CUSTOM_PATH]
 ```
 
 **Notes:**
@@ -621,7 +593,7 @@ export teams [to CUSTOM_PATH]
 * `export players`
   Exports all player data to `data/players.csv`.
 
-* `export teams to data/myTeams.csv`
+* `export teams to/data/myTeams.csv`
   Exports all team data to a custom location.
 
 **Success message:**
@@ -634,7 +606,7 @@ Exported players to data/players.csv
 Imports player information from a CSV file into SummonersBook. This is useful for restoring saved data or onboarding new players quickly.
 
 **Format:**
-`import players from FILE_PATH`
+`import players from/FILE_PATH`
 
 **Notes:**
 * The CSV file must be properly formatted. Supported headers include:
@@ -644,10 +616,10 @@ Imports player information from a CSV file into SummonersBook. This is useful fo
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
 **Examples:**
-* `import players from data/players.csv`
+* `import players from/data/players.csv`
   Imports players from the default export location.
 
-* `import players from data/backup.csv`
+* `import players from/data/backup.csv`
   Imports players from a backup file.
 
 **Success message:**
@@ -809,9 +781,8 @@ Action | Format | Example
 Action | Format | Example
 -------|--------|--------
 **Auto-group teams** | `group` | `group`
-**Manually create team** | `makeGroup n/P1 n/P2 n/P3 n/P4 n/P5` | `makeGroup n/Faker n/Oner n/Zeus n/Gumayusi n/Keria`
-**List all teams** | `listteam` | `listteam`
-**View team details** | `viewteam INDEX` | `viewteam 1`
+**Manually create team** | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` | `makeGroup 1 2 3 4 5`
+**View team details** | `viewTeam INDEX` | `viewTeam 1`
 **Record win** | `win TEAM_INDEX` | `win 2`
 **Record loss** | `lose TEAM_INDEX` | `lose 2`
 **Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
@@ -819,9 +790,9 @@ Action | Format | Example
 ### Data Import/Export
 Action | Format                     | Example
 -------|----------------------------|--------
-**Export players** | `export players [to PATH]` | `export players`
-**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
-**Import players** | `import players from/PATH` | `import players from data/players.csv`
+**Export players** | `export players [to/PATH]` | `export players`
+**Export teams** | `export teams [to/PATH]`   | `export teams to/data/myTeams.csv`
+**Import players** | `import players from/PATH` | `import players from/data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
