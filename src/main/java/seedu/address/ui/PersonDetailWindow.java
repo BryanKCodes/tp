@@ -106,64 +106,35 @@ public class PersonDetailWindow extends UiPart<Stage> {
 
     /**
      * Populates the charts with data from the person's stats.
-     * Charts are statically defined in FXML; only their data is populated here.
      */
     private void displayCharts() {
         Stats stats = person.getStats();
-
-        // Populate each chart with data
-        populatePerformanceChart(stats.getScores());
-        populateCsPerMinuteChart(stats.getCsPerMinute());
-        populateKdaChart(stats.getKdaScores());
-        populateGoldDifferenceChart(stats.getGoldDiffAt15());
+        // Delegate the configuration and population of each chart
+        setupChart(performanceChart, "Performance Score", "Performance Score", stats.getScores());
+        setupChart(csChart, "CS per Minute", "CS per Minute", stats.getCsPerMinute());
+        setupChart(kdaChart, "KDA", "KDA", stats.getKdaScores());
+        setupChart(goldDiffChart, "Gold Diff @15", "Gold Diff @15", stats.getGoldDiffAt15());
     }
 
     /**
-     * Populates the Performance Score chart with data.
+     * Configures and populates a single LineChart with a given set of statistical data.
      *
-     * @param scores The list of performance scores to display.
-     */
-    private void populatePerformanceChart(List<? extends Number> scores) {
-        String title = String.format("Performance Score Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
-        String yAxisLabel = "Performance Score";
-        XYChart.Series<Number, Number> series = createChartSeries(scores);
-        populateChart(performanceChart, title, yAxisLabel, series);
-    }
-
-    /**
-     * Populates the CS per Minute chart with data.
+     * This utility method orchestrates the entire setup for a chart by:
+     * 1. Generating a dynamic title based on the statistic's name.
+     * 2. Creating a data series from the provided list of data points.
+     * 3. Calling the lower-level {@link #populateChart} method to handle the final plotting and axis configuration.
      *
-     * @param csPerMinute The list of CS per minute values to display.
+     * @param chart      The {@code LineChart} instance to be configured. Must not be null.
+     * @param name       The base name for the statistic being displayed (e.g., "KDA", "Performance Score").
+     *                   This is used to dynamically generate the chart's title.
+     * @param yAxisLabel The text to display on the Y-axis of the chart.
+     * @param data       A list of numerical data points for the statistic. Must not be null.
      */
-    private void populateCsPerMinuteChart(List<? extends Number> csPerMinute) {
-        String title = String.format("CS per Minute Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
-        String yAxisLabel = "CS per Minute";
-        XYChart.Series<Number, Number> series = createChartSeries(csPerMinute);
-        populateChart(csChart, title, yAxisLabel, series);
-    }
-
-    /**
-     * Populates the KDA chart with data.
-     *
-     * @param kdaScores The list of KDA scores to display.
-     */
-    private void populateKdaChart(List<? extends Number> kdaScores) {
-        String title = String.format("KDA Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
-        String yAxisLabel = "KDA";
-        XYChart.Series<Number, Number> series = createChartSeries(kdaScores);
-        populateChart(kdaChart, title, yAxisLabel, series);
-    }
-
-    /**
-     * Populates the Gold Difference chart with data.
-     *
-     * @param goldDiffAt15 The list of gold difference at 15 minutes values to display.
-     */
-    private void populateGoldDifferenceChart(List<? extends Number> goldDiffAt15) {
-        String title = String.format("Gold Diff @15 Over Time (Latest %d)", MAX_DISPLAYED_MATCHES);
-        String yAxisLabel = "Gold Diff @15";
-        XYChart.Series<Number, Number> series = createChartSeries(goldDiffAt15);
-        populateChart(goldDiffChart, title, yAxisLabel, series);
+    private void setupChart(LineChart<Number, Number> chart, String name, String yAxisLabel,
+                            List<? extends Number> data) {
+        String title = String.format("%s Over Time (Latest %d)", name, MAX_DISPLAYED_MATCHES);
+        XYChart.Series<Number, Number> series = createChartSeries(data);
+        populateChart(chart, title, yAxisLabel, series);
     }
 
     /**
