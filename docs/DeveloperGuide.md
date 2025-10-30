@@ -332,6 +332,20 @@ The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamM
 
 ---
 
+#### Sequence Diagram
+
+The following sequence diagram illustrates how the `group` command flows through the system:
+
+<puml src="diagrams/GroupCommandSequenceDiagram.puml" alt="GroupCommandSequenceDiagram" />
+
+<box type="info" seamless>
+
+**Note:** The diagram shows the flow for a successful team formation. Error cases (e.g., insufficient persons) would result in a `CommandException` being thrown from `GroupCommand` before reaching `TeamMatcher`.
+
+</box>
+
+---
+
 #### Example Usage
 
 **Step 1.**
@@ -435,6 +449,20 @@ This design is pragmatic and maintainable: static structure is in FXML (easy to 
 
 ---
 
+#### Sequence Diagram
+
+The following sequence diagram illustrates how the `view` command triggers the person detail window:
+
+<puml src="diagrams/ViewCommandSequenceDiagram.puml" alt="ViewCommandSequenceDiagram" />
+
+<box type="info" seamless>
+
+**Note:** The diagram shows the interaction between Logic, Model, and UI layers. The `CommandResult` acts as the bridge, signaling the UI to show the person detail window without tight coupling between layers.
+
+</box>
+
+---
+
 #### Example Usage
 
 **Step 1.**
@@ -535,6 +563,20 @@ This functionality is supported by the following key components:
    - The `removeAll` flag is set to `true` and `targetIndex` is `null`.
 
 This design follows the **Factory Pattern** concept where different constructors create objects with different behaviors.
+
+---
+
+#### Sequence Diagram
+
+The following sequence diagram illustrates the `ungroup` command flow for removing a single team:
+
+<puml src="diagrams/UngroupCommandSequenceDiagram.puml" alt="UngroupCommandSequenceDiagram" />
+
+<box type="info" seamless>
+
+**Note:** This diagram shows the single team removal flow. For `ungroup all`, the flow is similar but `executeRemoveAll()` is called instead, which iterates through a defensive copy of the team list.
+
+</box>
 
 ---
 
