@@ -24,68 +24,34 @@ import seedu.address.model.team.Team;
  * The exported files can later be re-imported using {@code CsvImporter}.
  */
 public final class CsvExporter {
+
+    private static final String PLAYERS_HEADER = "Name,Role,Rank,Champion,Wins,Losses";
+    private static final String TEAMS_HEADER = "TeamId,Top,Jungle,Mid,Adc,Support,Wins,Losses,WinRate%";
+
     private CsvExporter() {
     }
 
     /**
-     * Exports all players currently stored in the model to a CSV file at the specified path.
-     * <p>
-     * The exported file includes the following columns:
-     * <pre>
-     * Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade
-     * </pre>
-     * Average grade values are extracted reflectively if {@code Person#getStats()} exists;
-     * otherwise, they are shown as {@code "-"}.
-     *
-     * @param model the {@link Model} containing players to export
-     * @param out   the output file path; parent directories are created if missing
-     * @throws IOException if an I/O error occurs during writing
+     * Exports all players in the model to a CSV with header:
+     * Name,Role,Rank,Champion,Wins,Losses
+     * (No Stats/AvgGrade are exported for consistency with import.)
      */
     public static void exportPlayers(Model model, Path out) throws IOException {
         requireNonNull(model);
         List<String> lines = new ArrayList<>();
-        lines.add("Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade");
+        lines.add(PLAYERS_HEADER);
 
         for (Person p : model.getAddressBook().getPersonList()) {
-            int wins = WlReflect.wins(p);
-            int losses = WlReflect.losses(p);
-            int matches = wins + losses;
-            String wr = matches == 0 ? "0.0" : String.format(java.util.Locale.US, "%.1f", (wins * 100.0) / matches);
-            String avg = tryGetAvgGrade(p);
             lines.add(String.join(",",
                     csv(p.getName().toString()),
                     csv(p.getRole().toString()),
                     csv(p.getRank().toString()),
                     csv(p.getChampion().toString()),
-                    Integer.toString(wins),
-                    Integer.toString(losses),
-                    wr,
-                    avg
+                    csv(Integer.toString(p.getWins())),
+                    csv(Integer.toString(p.getLosses()))
             ));
         }
         write(out, lines);
-    }
-
-    /**
-     * Attempts to obtain the average grade string from the given person reflectively.
-     * <p>
-     * If {@code Person#getStats()} or {@code Stats#getValue()} is unavailable
-     * (e.g., stats not merged yet), returns {@code "-"} as a fallback.
-     *
-     * @param person a {@link Person} object (treated reflectively)
-     * @return the formatted average grade string, or {@code "-"} if unavailable
-     */
-    private static String tryGetAvgGrade(Object person) {
-        try {
-            Object stats = person.getClass().getMethod("getStats").invoke(person);
-            if (stats == null) {
-                return "-";
-            }
-            Object v = stats.getClass().getMethod("getValue").invoke(stats);
-            return String.valueOf(v);
-        } catch (ReflectiveOperationException e) {
-            return "-"; // Stats not merged yet or method absent
-        }
     }
 
     /**
@@ -104,24 +70,24 @@ public final class CsvExporter {
     public static void exportTeams(Model model, Path out) throws IOException {
         requireNonNull(model);
         List<String> lines = new ArrayList<>();
-        lines.add("TeamId,Top,Jungle,Mid,Adc,Support,Wins,Losses,WinRate%");
+        lines.add(TEAMS_HEADER);
 
         for (Team t : model.getAddressBook().getTeamList()) {
             Map<String, String> roleToName = t.getPersons().stream()
                     .collect(Collectors.toMap(p -> p.getRole().toString(), p -> p.getName().toString()));
 
-            int wins = WlReflect.wins(t);
-            int losses = WlReflect.losses(t);
+            int wins = t.getWins();
+            int losses = t.getLosses();
             int matches = wins + losses;
             String wr = matches == 0 ? "0.0" : String.format(java.util.Locale.US, "%.1f", (wins * 100.0) / matches);
 
-            lines.add(String.join(",",
-                    csv(t.getId()),
-                    csv(roleToName.getOrDefault("Top", "")),
-                    csv(roleToName.getOrDefault("Jungle", "")),
-                    csv(roleToName.getOrDefault("Mid", "")),
-                    csv(roleToName.getOrDefault("Adc", "")),
-                    csv(roleToName.getOrDefault("Support", "")),
+            lines.add(joinCsv(
+                    t.getId(),
+                    roleToName.getOrDefault("Top", ""),
+                    roleToName.getOrDefault("Jungle", ""),
+                    roleToName.getOrDefault("Mid", ""),
+                    roleToName.getOrDefault("Adc", ""),
+                    roleToName.getOrDefault("Support", ""),
                     Integer.toString(wins),
                     Integer.toString(losses),
                     wr
@@ -144,6 +110,15 @@ public final class CsvExporter {
         }
         Files.write(out, lines, StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    /** Escapes a value and joins as CSV. */
+    private static String joinCsv(String... values) {
+        List<String> escaped = new ArrayList<>(values.length);
+        for (String v : values) {
+            escaped.add(csv(v));
+        }
+        return String.join(",", escaped);
     }
 
     /**

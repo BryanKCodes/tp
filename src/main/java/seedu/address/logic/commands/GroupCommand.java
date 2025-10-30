@@ -6,23 +6,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.teammatcher.InsufficientPlayersException;
+import seedu.address.logic.teammatcher.InsufficientPersonsException;
 import seedu.address.logic.teammatcher.TeamMatcher;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
 /**
- * Automatically creates balanced teams from unassigned players.
- * Uses a role-based matching algorithm that considers player ranks and champions.
+ * Automatically creates balanced teams from unassigned persons.
+ * Uses a role-based matching algorithm that considers person ranks and champions.
  */
 public class GroupCommand extends Command {
 
     public static final String COMMAND_WORD = "group";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Automatically creates balanced teams from all unassigned players.\n"
+            + ": Automatically creates balanced teams from all unassigned persons.\n"
             + "The algorithm groups players by role, sorts by rank, and ensures no duplicate champions per team.\n"
             + "Example: " + COMMAND_WORD;
 
@@ -57,17 +58,16 @@ public class GroupCommand extends Command {
 
         // Get all unassigned persons
         List<Person> unassignedPersons = model.getUnassignedPersonList();
-        int initialUnassignedCount = unassignedPersons.size();
 
         if (unassignedPersons.isEmpty()) {
-            throw new CommandException("No unassigned players available to form teams.");
+            throw new CommandException("No unassigned persons available to form teams.");
         }
 
         // Use TeamMatcher to form teams
         List<Team> teams;
         try {
             teams = teamMatcher.matchTeams(unassignedPersons);
-        } catch (InsufficientPlayersException e) {
+        } catch (InsufficientPersonsException e) {
             throw new CommandException(e.getMessage());
         }
 
@@ -75,30 +75,35 @@ public class GroupCommand extends Command {
             throw new CommandException(MESSAGE_NO_TEAMS_FORMED);
         }
 
+        // Get the number of existing teams before adding
+        int existingTeamCount = model.getFilteredTeamList().size();
+
         // Add all teams to the model
         for (Team team : teams) {
             model.addTeam(team);
         }
 
-        // Calculate remaining unassigned players
-        int playersUsed = teams.size() * Team.TEAM_SIZE;
-        assert playersUsed <= initialUnassignedCount : "Matcher should not use more players than available";
-        int remainingPlayers = initialUnassignedCount - playersUsed;
+        // Get the actual count of remaining unassigned persons from the model
+        int remainingPersons = model.getUnassignedPersonList().size();
 
         // Format the success message
-        String teamsFormatted = formatTeams(teams);
+        String teamsFormatted = formatTeams(teams, existingTeamCount);
         return new CommandResult(String.format(MESSAGE_SUCCESS,
-                teams.size(), teamsFormatted, remainingPlayers));
+                teams.size(), teamsFormatted, remainingPersons));
     }
 
     /**
      * Formats the list of teams for display.
      * Each team is displayed on a separate line with its number and members.
+     *
+     * @param teams List of teams to format.
+     * @param startIndex Number of teams that existed before these were added.
+     * @return Formatted string representation of teams.
      */
-    private String formatTeams(List<Team> teams) {
+    private String formatTeams(List<Team> teams, int startIndex) {
         assert !teams.isEmpty() : "formatTeams should only be called with non-empty teams list";
         return IntStream.range(0, teams.size())
-                .mapToObj(i -> String.format("Team %d: %s", i + 1, teams.get(i).toDisplayString()))
+                .mapToObj(i -> String.format("Team %d: %s", startIndex + i + 1, teams.get(i).toDisplayString()))
                 .collect(Collectors.joining("\n"));
     }
 
@@ -119,5 +124,12 @@ public class GroupCommand extends Command {
     @Override
     public int hashCode() {
         return teamMatcher.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .add("teamMatcher", teamMatcher)
+                .toString();
     }
 }

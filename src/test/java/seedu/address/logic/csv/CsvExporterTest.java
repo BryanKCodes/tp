@@ -36,7 +36,7 @@ public class CsvExporterTest {
         assertTrue(Files.exists(out));
 
         String content = Files.readString(out);
-        assertTrue(content.startsWith("Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade"));
+        assertTrue(content.startsWith("Name,Role,Rank,Champion,Wins,Losses"));
         // At least one known name appears
         assertTrue(content.contains(TypicalPersons.ALICE.getName().toString()));
     }

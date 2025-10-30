@@ -1,0 +1,82 @@
+{
+  "persons": [
+    {
+      "id": "person-1",
+      "name": "Alice Pauline",
+      "role": "mid",
+      "rank": "gold",
+      "champion": "Ahri",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    },
+    {
+      "id": "person-2",
+      "name": "Benson Meier",
+      "role": "top",
+      "rank": "silver",
+      "champion": "Ahri",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    },
+    {
+      "id": "person-3",
+      "name": "Carl Kurz",
+      "role": "jungle",
+      "rank": "platinum",
+      "champion": "Lee Sin",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    },
+    {
+      "id": "person-4",
+      "name": "Daniel Meier",
+      "role": "adc",
+      "rank": "gold",
+      "champion": "Caitlyn",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    },
+    {
+      "id": "person-5",
+      "name": "Elle Meyer",
+      "role": "support",
+      "rank": "diamond",
+      "champion": "Lulu",
+      "tags": [],
+      "stats": {
+        "csPerMinute": [],
+        "goldDiffAt15": [],
+        "kdaScores": [],
+        "scores": []
+      }
+    }
+  ],
+  "teams": [
+    {
+      "id": "team-1",
+      "personIds": ["person-1", "person-2", "person-3", "person-4", "person-5"],
+      "wins": 0,
+      "losses": 0
+    }
+  ]
+}

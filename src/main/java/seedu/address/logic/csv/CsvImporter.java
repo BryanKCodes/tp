@@ -9,8 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import seedu.address.logic.csv.exceptions.InvalidCsvException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -20,20 +22,21 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 
-
 /**
- * CSV importer for players. Supports multiple headers:
+ * CSV importer for players. Supports headers:
  * <ul>
  *   <li>{@code Name,Role,Rank,Champion}</li>
  *   <li>{@code Name,Role,Rank,Champion,Wins,Losses}</li>
- *   <li>{@code Name,Role,Rank,Champion,Wins,Losses,AvgGrade} (AvgGrade ignored)</li>
- *   <li>{@code Name,Role,Rank,Champion,Wins,Losses,WinRate%,AvgGrade} (WinRate% &amp; AvgGrade ignored)</li>
  * </ul>
- * <p>Win/Loss values are accepted but not injected into {@code Person} pre-merge; they are ignored safely.</p>
+ * <p>WinRate% is not supported and such files are rejected.</p>
  */
 public final class CsvImporter {
+
+    /** Max number of individual row errors shown in the import summary. */
+    public static final int MAX_SAMPLE_ERRORS = 5;
 
     /**
      * Result summary for an import operation.
@@ -42,6 +45,7 @@ public final class CsvImporter {
         public final int imported;
         public final int duplicates;
         public final int invalid;
+        public final List<String> sampleErrors;
 
         /**
          * Constructs a result with counts.
@@ -50,10 +54,11 @@ public final class CsvImporter {
          * @param duplicates number of rows skipped as duplicates
          * @param invalid    number of rows that failed validation/parsing
          */
-        Result(int imported, int duplicates, int invalid) {
+        Result(int imported, int duplicates, int invalid, List<String> sampleErrors) {
             this.imported = imported;
             this.duplicates = duplicates;
             this.invalid = invalid;
+            this.sampleErrors = sampleErrors;
         }
     }
 
@@ -74,87 +79,168 @@ public final class CsvImporter {
     public static Result importPlayers(Model model, Path path)
             throws IOException, InvalidCsvException, ParseException {
         requireNonNull(model);
+        validateFileExists(path);
+
+        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            HeaderType headerType = readAndValidateHeader(br);
+            Result result = processDataRows(model, br, headerType);
+            model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
+            return result;
+        }
+    }
+
+    private static void validateFileExists(Path path) throws NoSuchFileException {
         if (!Files.exists(path)) {
             throw new NoSuchFileException(path.toString());
         }
+    }
 
+    private static HeaderType readAndValidateHeader(BufferedReader br)
+            throws IOException, InvalidCsvException {
+        String header = br.readLine();
+        if (header == null) {
+            throw new InvalidCsvException("Empty CSV. Expected header: "
+                    + "'Name,Role,Rank,Champion' or 'Name,Role,Rank,Champion,Wins,Losses'.");
+        }
+
+        HeaderType type = HeaderType.from(header);
+        if (type == HeaderType.UNKNOWN) {
+            throw new InvalidCsvException(buildInvalidHeaderMessage(header));
+        }
+        return type;
+    }
+
+    private static String buildInvalidHeaderMessage(String header) {
+        String sanitized = Arrays.stream(header.split(",", -1))
+                .map(String::trim)
+                .reduce((a, b) -> a + "," + b)
+                .orElse(header)
+                .trim();
+        int cols = sanitized.isEmpty() ? 0 : sanitized.split(",", -1).length;
+
+        return "Invalid header (" + cols + " column(s)): '" + sanitized + "'.\n"
+                + "Expected either:\n"
+                + "  - Name,Role,Rank,Champion\n"
+                + "  - Name,Role,Rank,Champion,Wins,Losses";
+    }
+
+    private static Result processDataRows(Model model, BufferedReader br, HeaderType headerType)
+            throws IOException {
         int imported = 0;
         int duplicates = 0;
         int invalid = 0;
+        List<String> sampleErrors = new ArrayList<>();
 
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String header = br.readLine();
-            if (header == null) {
-                throw new InvalidCsvException("Empty CSV");
+        int lineNo = 1;
+        String line;
+        while ((line = br.readLine()) != null) {
+            lineNo++;
+            if (line.isBlank()) {
+                continue;
             }
 
-            HeaderType type = HeaderType.from(header);
-            if (type == HeaderType.UNKNOWN) {
-                throw new InvalidCsvException("Unexpected header: " + header);
-            }
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.isBlank()) {
-                    continue;
-                }
-                List<String> cols = parseCsvLine(line);
-
-                try {
-                    PlayerRow row = PlayerRow.parse(cols, type);
-                    Person candidate = new Person(
-                            new Name(row.name),
-                            new Role(row.role),
-                            new Rank(row.rank),
-                            new Champion(row.champion),
-                            Collections.<Tag>emptySet()
-                    );
-
-                    if (model.hasPerson(candidate)) {
-                        duplicates++;
-                    } else {
-                        model.addPerson(candidate);
-                        imported++;
-                    }
-                } catch (Exception ex) {
-                    invalid++;
-                }
+            ImportOutcome outcome = processRow(model, line, lineNo, headerType);
+            imported += outcome.imported;
+            duplicates += outcome.duplicates;
+            invalid += outcome.invalid;
+            if (outcome.error != null && sampleErrors.size() < MAX_SAMPLE_ERRORS) {
+                sampleErrors.add(outcome.error);
             }
         }
 
-        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
-        return new Result(imported, duplicates, invalid);
+        return new Result(imported, duplicates, invalid, sampleErrors);
+    }
+
+    private static ImportOutcome processRow(Model model, String line, int lineNo, HeaderType headerType) {
+        try {
+            List<String> cols = parseCsvLine(line);
+            PlayerRow row = PlayerRow.parse(cols, headerType);
+            Person candidate = createPerson(row);
+            return addPersonToModel(model, candidate);
+        } catch (IllegalArgumentException iae) {
+            return ImportOutcome.invalid("line " + lineNo + ": " + iae.getMessage());
+        }
+    }
+
+    private static Person createPerson(PlayerRow row) {
+        return new Person(
+                UUID.randomUUID().toString(),
+                new Name(row.name),
+                new Role(row.role),
+                new Rank(row.rank),
+                new Champion(row.champion),
+                Collections.<Tag>emptySet(),
+                new Stats(),
+                row.wins,
+                row.losses
+        );
+    }
+
+    private static ImportOutcome addPersonToModel(Model model, Person candidate) {
+        if (model.hasPerson(candidate)) {
+            return ImportOutcome.duplicate();
+        }
+        model.addPerson(candidate);
+        return ImportOutcome.imported();
+    }
+
+    /**
+     * Tracks the outcome of attempting to import a single row.
+     */
+    private static final class ImportOutcome {
+        final int imported;
+        final int duplicates;
+        final int invalid;
+        final String error;
+
+        private ImportOutcome(int imported, int duplicates, int invalid, String error) {
+            this.imported = imported;
+            this.duplicates = duplicates;
+            this.invalid = invalid;
+            this.error = error;
+        }
+
+        static ImportOutcome imported() {
+            return new ImportOutcome(1, 0, 0, null);
+        }
+
+        static ImportOutcome duplicate() {
+            return new ImportOutcome(0, 1, 0, null);
+        }
+
+        static ImportOutcome invalid(String error) {
+            return new ImportOutcome(0, 0, 1, error);
+        }
     }
 
     /**
      * Supported CSV header formats.
      */
     private enum HeaderType {
-        BASIC,
-        EXTENDED_WL, // 6 columns
-        EXTENDED_WL_AVG, // 7 columns (ignores AvgGrade)
-        EXTENDED_WL_WR_AVG, // 8 columns (ignores WinRate% and AvgGrade)
+        H4, // Name,Role,Rank,Champion
+        H6, // Name,Role,Rank,Champion,Wins,Losses
         UNKNOWN;
 
         static HeaderType from(String header) {
-            String h = header == null ? "" : header.trim().toLowerCase();
-            // Handle optional BOM (Byte Order Mark)
-            if (!h.isEmpty() && h.charAt(0) == '\uFEFF') {
-                h = h.substring(1);
+            if (header == null || header.isBlank()) {
+                return HeaderType.UNKNOWN;
             }
-            if (h.equals("name,role,rank,champion")) {
-                return BASIC;
+
+            if (header.charAt(0) == '\uFEFF') {
+                header = header.substring(1);
             }
-            if (h.equals("name,role,rank,champion,wins,losses")) {
-                return EXTENDED_WL;
+
+            List<String> h = Arrays.stream(header.split(",", -1))
+                    .map(s -> s.trim().toLowerCase())
+                    .toList();
+
+            if (h.equals(List.of("name", "role", "rank", "champion"))) {
+                return HeaderType.H4;
             }
-            if (h.equals("name,role,rank,champion,wins,losses,avggrade")) {
-                return EXTENDED_WL_AVG;
+            if (h.equals(List.of("name", "role", "rank", "champion", "wins", "losses"))) {
+                return HeaderType.H6;
             }
-            if (h.equals("name,role,rank,champion,wins,losses,winrate%,avggrade")) {
-                return EXTENDED_WL_WR_AVG;
-            }
-            return UNKNOWN;
+            return HeaderType.UNKNOWN;
         }
     }
 
@@ -177,8 +263,8 @@ public final class CsvImporter {
 
         static PlayerRow parse(List<String> cols, HeaderType type) {
             switch (type) {
-            case BASIC:
-                if (cols.size() < 4) {
+            case H4:
+                if (cols.size() != 4) {
                     throw new IllegalArgumentException("bad cols");
                 }
                 return new PlayerRow(
@@ -189,16 +275,12 @@ public final class CsvImporter {
                         0,
                         0
                 );
-
-            case EXTENDED_WL:
-            case EXTENDED_WL_AVG:
-            case EXTENDED_WL_WR_AVG:
-                if (cols.size() < 6) {
+            case H6:
+                if (cols.size() != 6) {
                     throw new IllegalArgumentException("bad cols");
                 }
-                int wins = tryParseInt(cols.get(4).trim(), 0);
-                int losses = tryParseInt(cols.get(5).trim(), 0);
-                // If more columns exist (WinRate%, AvgGrade), they are intentionally ignored.
+                int wins = parseNonNegativeInt(cols.get(4).trim(), "Wins");
+                int losses = parseNonNegativeInt(cols.get(5).trim(), "Losses");
                 return new PlayerRow(
                         cols.get(0).trim(),
                         cols.get(1).trim(),
@@ -213,11 +295,15 @@ public final class CsvImporter {
             }
         }
 
-        private static int tryParseInt(String s, int def) {
+        private static int parseNonNegativeInt(String raw, String colName) {
             try {
-                return Integer.parseInt(s);
-            } catch (Exception e) {
-                return def;
+                int v = Integer.parseInt(raw);
+                if (v < 0) {
+                    throw new IllegalArgumentException(colName + " must be a non-negative integer");
+                }
+                return v;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(colName + " must be an integer");
             }
         }
     }

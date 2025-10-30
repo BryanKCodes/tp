@@ -26,8 +26,8 @@ public class CommandResult {
     /** The person whose details should be shown. */
     private final Person personToShow;
 
-    /** Team stats window should be shown to the user. */
-    private final boolean showTeamStats;
+    /** Team detail window should be shown to the user. */
+    private final boolean showTeamDetail;
 
     /** The team whose stats should be shown. */
     private final Team teamToShow;
@@ -40,18 +40,18 @@ public class CommandResult {
      * @param exit Whether the application should exit.
      * @param showPersonDetail Whether to show the person detail window.
      * @param personToShow The person whose details should be shown, or null.
-     * @param showTeamStats Whether to show the team stats window.
+     * @param showTeamDetail Whether to show the team detail window.
      * @param teamToShow The team whose stats should be shown, or null.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit,
                          boolean showPersonDetail, Person personToShow,
-                         boolean showTeamStats, Team teamToShow) {
+                         boolean showTeamDetail, Team teamToShow) {
         this.feedbackToUser = Objects.requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
         this.showPersonDetail = showPersonDetail;
         this.personToShow = personToShow;
-        this.showTeamStats = showTeamStats;
+        this.showTeamDetail = showTeamDetail;
         this.teamToShow = teamToShow;
     }
 
@@ -78,13 +78,24 @@ public class CommandResult {
     }
 
     /**
-     * Factory method to create a result that opens the Team stats window.
+     * Factory method to create a result that opens the Person detail window.
+     *
+     * @param message feedback line for the result display
+     * @param person person to show
+     * @return a {@code CommandResult} configured to show the Person detail window
+     */
+    public static CommandResult showPersonDetail(String message, Person person) {
+        return new CommandResult(message, false, false, true, person, false, null);
+    }
+
+    /**
+     * Factory method to create a result that opens the Team detail window.
      *
      * @param message feedback line for the result display
      * @param team team to show
-     * @return a {@code CommandResult} configured to show the Team stats window
+     * @return a {@code CommandResult} configured to show the Team detail window
      */
-    public static CommandResult showTeamStats(String message, Team team) {
+    public static CommandResult showTeamDetail(String message, Team team) {
         return new CommandResult(message, false, false, false, null, true, team);
     }
 
@@ -108,8 +119,8 @@ public class CommandResult {
         return Optional.ofNullable(personToShow);
     }
 
-    public boolean isShowTeamStats() {
-        return showTeamStats;
+    public boolean isShowTeamDetail() {
+        return showTeamDetail;
     }
 
     public Optional<Team> getTeamToShow() {
@@ -132,15 +143,15 @@ public class CommandResult {
                 && showHelp == otherCommandResult.showHelp
                 && exit == otherCommandResult.exit
                 && showPersonDetail == otherCommandResult.showPersonDetail
+                && showTeamDetail == otherCommandResult.showTeamDetail
                 && Objects.equals(personToShow, otherCommandResult.personToShow)
-                && showTeamStats == otherCommandResult.showTeamStats
                 && Objects.equals(teamToShow, otherCommandResult.teamToShow);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(feedbackToUser, showHelp, exit, showPersonDetail, personToShow,
-                showTeamStats, teamToShow);
+                showTeamDetail, teamToShow);
     }
 
     @Override
@@ -151,7 +162,7 @@ public class CommandResult {
                 .add("exit", exit)
                 .add("showPersonDetail", showPersonDetail)
                 .add("personToShow", personToShow)
-                .add("showTeamStats", showTeamStats)
+                .add("showTeamDetail", showTeamDetail)
                 .add("teamToShow", teamToShow)
                 .toString();
     }

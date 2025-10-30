@@ -82,6 +82,7 @@ public class WinCommand extends Command {
                 personToEdit.getRank(),
                 personToEdit.getChampion(),
                 personToEdit.getTags(),
+                personToEdit.getStats(),
                 personToEdit.getWins() + 1,
                 personToEdit.getLosses());
     }

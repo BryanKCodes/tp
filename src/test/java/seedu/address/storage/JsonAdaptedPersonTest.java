@@ -47,7 +47,7 @@ public class JsonAdaptedPersonTest {
     public void toModelType_invalidName_throwsIllegalValueException() {
         JsonAdaptedPerson person =
                 new JsonAdaptedPerson(DUMMY_ID, INVALID_NAME, VALID_ROLE, VALID_RANK, VALID_CHAMPION, VALID_TAGS,
-                        DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                        VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         String expectedMessage = Name.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
@@ -55,7 +55,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullName_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, null, VALID_ROLE, VALID_RANK, VALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
@@ -63,7 +63,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullRole_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, null, VALID_RANK, VALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         String expectedMessage = String.format(JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORMAT,
                 Role.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
@@ -72,14 +72,14 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidRole_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, INVALID_ROLE, VALID_RANK, VALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         assertThrows(IllegalValueException.class, Role.MESSAGE_CONSTRAINTS, person::toModelType);
     }
 
     @Test
     public void toModelType_nullRank_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, VALID_ROLE, null, VALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         String expectedMessage = String.format(JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORMAT,
                 Rank.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
@@ -88,14 +88,14 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidRank_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, VALID_ROLE, INVALID_RANK, VALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         assertThrows(IllegalValueException.class, Rank.MESSAGE_CONSTRAINTS, person::toModelType);
     }
 
     @Test
     public void toModelType_nullChampion_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, VALID_ROLE, VALID_RANK, null,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         String expectedMessage = String.format(JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORMAT,
                 Champion.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
@@ -104,7 +104,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidChampion_throwsIllegalValueException() {
         JsonAdaptedPerson person = new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, VALID_ROLE, VALID_RANK, INVALID_CHAMPION,
-                VALID_TAGS, DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                VALID_TAGS, VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         assertThrows(IllegalValueException.class, Champion.MESSAGE_CONSTRAINTS, person::toModelType);
     }
 
@@ -114,7 +114,7 @@ public class JsonAdaptedPersonTest {
         invalidTags.add(new JsonAdaptedTag(INVALID_TAG));
         JsonAdaptedPerson person =
                 new JsonAdaptedPerson(DUMMY_ID, VALID_NAME, VALID_ROLE, VALID_RANK, VALID_CHAMPION, invalidTags,
-                        DUMMY_WINS, DUMMY_LOSSES, VALID_STATS);
+                        VALID_STATS, DUMMY_WINS, DUMMY_LOSSES);
         assertThrows(IllegalValueException.class, person::toModelType);
     }
 

@@ -49,8 +49,8 @@ public class AddStatsCommand extends Command {
     public static final String COMMAND_WORD = "addStats";
 
     /** Usage string describing parameters and an example. */
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add new performance stats of the person identified "
-            + "by the index number used in the displayed person list.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add new performance stats of the player identified "
+            + "by the index number used in the displayed player list.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_CPM + "CPM "
             + PREFIX_GD15 + "GD15 "

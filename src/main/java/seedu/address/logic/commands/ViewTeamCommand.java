@@ -17,13 +17,13 @@ import seedu.address.model.team.Team;
  * such as "Team 1", which is shown instead of the internal team ID.</p>
  */
 public class ViewTeamCommand extends Command {
-    public static final String COMMAND_WORD = "viewteam";
+    public static final String COMMAND_WORD = "viewTeam";
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Shows team details in a popup window.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_SUCCESS = "Showing %1$s";
+    public static final String MESSAGE_SUCCESS = "Viewing Team: %1$s";
 
     private final Index index;
 

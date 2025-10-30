@@ -28,6 +28,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Rank;
 import seedu.address.model.person.Role;
+import seedu.address.model.person.Stats;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.team.Team;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
@@ -40,8 +41,8 @@ public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-            + "by the index number used in the displayed person list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the player identified "
+            + "by the index number used in the displayed player list."
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
@@ -53,9 +54,9 @@ public class EditCommand extends Command {
             + PREFIX_RANK + "Diamond "
             + PREFIX_CHAMPION + "Yasuo";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Player: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This player already exists in the address book.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -130,11 +131,12 @@ public class EditCommand extends Command {
         Role updatedRole = editPersonDescriptor.getRole().orElse(personToEdit.getRole());
         Champion updatedChampion = editPersonDescriptor.getChampion().orElse(personToEdit.getChampion());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        Stats stats = personToEdit.getStats();
         int wins = personToEdit.getWins();
         int losses = personToEdit.getLosses();
 
         // Preserve id from the original person
-        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, wins, losses);
+        return new Person(id, updatedName, updatedRole, updatedRank, updatedChampion, updatedTags, stats, wins, losses);
     }
 
     private static Team createEditedTeam(Team teamToEdit, Person personToEdit, Person editedPerson) {

@@ -20,7 +20,7 @@ public class AddCommand extends Command {
     public static final String COMMAND_WORD = "add";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Adds a player to the address book.\n"
+            + ": Adds a player to SummonersBook.\n"
             + "Parameters: "
             + PREFIX_NAME + "NAME "
             + PREFIX_RANK + "RANK "
@@ -33,7 +33,7 @@ public class AddCommand extends Command {
             + PREFIX_CHAMPION + "Ahri";
 
     public static final String MESSAGE_SUCCESS = "New player added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This player already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This player already exists in SummonersBook";
 
     private final Person toAdd;
 
