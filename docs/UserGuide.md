@@ -691,11 +691,11 @@ Data is saved automatically to disk after any command that changes data. No manu
 
 ### Editing the data file
 
-SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/addressbook.json`.  
+SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/addressbook.json`.
 Advanced users can edit this file directly if needed.
 
-**Caution:**  
-Editing the data file incorrectly can **corrupt your data**, causing SummonersBook to start with an empty file.  
+**Caution:**
+Editing the data file incorrectly can **corrupt your data**, causing SummonersBook to start with an empty file.
 Always **back up the file** before making changes, and only edit it if you are confident about the updates.
 
 [Back to Top](#summonersbook-user-guide)
