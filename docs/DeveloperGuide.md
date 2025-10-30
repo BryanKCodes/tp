@@ -165,6 +165,8 @@ The `Model` component,
   this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a
   `ReadOnlyUserPref` objects.
+* stores all `Team` objects (which are contained in a `UniqueTeamList` object).
+* provides a list of unassigned persons required for team formation commands like group.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they
   should make sense on their own without depending on other components)
 
