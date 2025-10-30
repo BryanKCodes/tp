@@ -73,13 +73,17 @@ public final class CsvExporter {
         lines.add(TEAMS_HEADER);
 
         for (Team t : model.getAddressBook().getTeamList()) {
+            // Case-insensitive role mapping
             Map<String, String> roleToName = t.getPersons().stream()
-                    .collect(Collectors.toMap(p -> p.getRole().toString(), p -> p.getName().toString()));
+                    .collect(Collectors.toMap(
+                            p -> normaliseRole(p.getRole().toString()),
+                            p -> p.getName().toString()
+                    ));
 
             int wins = t.getWins();
             int losses = t.getLosses();
             int matches = wins + losses;
-            String wr = matches == 0 ? "0.0" : String.format(java.util.Locale.US, "%.1f", (wins * 100.0) / matches);
+            String winRate = formatWinRate(wins, matches);
 
             lines.add(joinCsv(
                     t.getId(),
@@ -90,10 +94,35 @@ public final class CsvExporter {
                     roleToName.getOrDefault("Support", ""),
                     Integer.toString(wins),
                     Integer.toString(losses),
-                    wr
+                    winRate
             ));
         }
         write(out, lines);
+    }
+
+    /**
+     * Normalizes role names to standard capitalization for consistent CSV export.
+     */
+    private static String normaliseRole(String role) {
+        String lower = role.toLowerCase();
+        return switch (lower) {
+        case "top" -> "Top";
+        case "jungle" -> "Jungle";
+        case "mid" -> "Mid";
+        case "adc", "ad carry" -> "Adc";
+        case "support" -> "Support";
+        default -> role;
+        };
+    }
+
+    /**
+     * Formats win rate as a percentage with one decimal place.
+     */
+    private static String formatWinRate(int wins, int matches) {
+        if (matches == 0) {
+            return "0.0";
+        }
+        return String.format(java.util.Locale.US, "%.1f", (wins * 100.0) / matches);
     }
 
     /**
