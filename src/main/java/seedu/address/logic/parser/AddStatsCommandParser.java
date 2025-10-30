@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddStatsCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Stats;
 
 /**
  * Parses input arguments and creates a new AddCommand object
@@ -50,6 +51,10 @@ public class AddStatsCommandParser implements Parser<AddStatsCommand> {
         if (cpm.isEmpty() || gd15.isEmpty() || kda.isEmpty()) {
             throw new ParseException(String.format(
                     MESSAGE_INVALID_COMMAND_FORMAT, AddStatsCommand.MESSAGE_EMPTY_FIELDS));
+        }
+
+        if (!Stats.isValidStats(cpm, gd15, kda)) {
+            throw new ParseException(Stats.MESSAGE_CONSTRAINTS);
         }
 
         return new AddStatsCommand(index, cpm, gd15, kda);
