@@ -452,12 +452,6 @@ The algorithm follows these steps:
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
 
-<box type="tip" seamless>
-
-**Pro Tip:** Run `listteam` after grouping to see your new teams instantly. Most coaches keep the team list visible during scrims.
-
-</box>
-
 <box type="warning" seamless>
 
 **Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
@@ -525,10 +519,10 @@ Opens a detailed window showing comprehensive information about a team, includin
 Records a win for a team, updating both the team's record and all team members' individual records.
 
 **Format:**
-`win INDEX`
+`win TEAM_INDEX`
 
 #### Notes
-* `INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 * Both the team and all its members will have their win count incremented.
 
 #### Examples
@@ -542,10 +536,10 @@ Records a win for a team, updating both the team's record and all team members' 
 Records a loss for a team, updating both the team's record and all team members' individual records.
 
 **Format:**
-`lose INDEX`
+`lose TEAM_INDEX`
 
 #### Notes
-* `INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 * Both the team and all its members will have their loss count incremented.
 
 #### Examples
@@ -759,5 +753,52 @@ view 2               # OK - refers to 2nd player in filtered list
 2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut
    `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to
    manually restore the minimized Help Window.
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+## Command Summary
+
+### Player Management
+Action | Format | Example
+-------|--------|--------
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION` | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**List all players** | `list` | `list`
+**Find by name** | `find KEYWORD [MORE_KEYWORDS...]` | `find john`
+**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...]` | `filter rl/Mid rk/Diamond`
+**View player details** | `view INDEX` | `view 1`
+**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]` | `edit 1 rl/Top rk/Diamond`
+**Delete player** | `delete INDEX` | `delete 3`
+
+### Performance Tracking
+Action | Format | Example
+-------|--------|--------
+**Add stats** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA` | `addStats 1 cpm/8.8 gd15/450 kda/4.5`
+**Delete stats** | `deleteStats INDEX` | `deleteStats 1`
+
+### Team Management
+Action | Format | Example
+-------|--------|--------
+**Auto-group teams** | `group` | `group`
+**Manually create team** | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` | `makeGroup 1 2 3 4 5`
+**View team details** | `viewTeam INDEX` | `viewTeam 1`
+**Record win** | `win TEAM_INDEX` | `win 2`
+**Record loss** | `lose TEAM_INDEX` | `lose 2`
+**Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
+
+### Data Import/Export
+Action | Format                     | Example
+-------|----------------------------|--------
+**Export players** | `export players [to PATH]` | `export players`
+**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
+**Import players** | `import players from/PATH` | `import players from data/players.csv`
+
+### Utility Commands
+Action | Format | Example
+-------|--------|--------
+**Help** | `help` | `help`
+**Clear all** | `clear` | `clear`
+**Exit** | `exit` | `exit`
 
 [Back to Top](#summonersbook-user-guide)
