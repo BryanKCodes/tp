@@ -57,6 +57,8 @@ public class Person {
      * @param champion Champion of the person.
      * @param tags     Set of tags associated with the person.
      * @param stats    Performance stats of the person.
+     * @param wins     Number of wins the person has.
+     * @param losses   Number of losses the person has.
      */
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags,
                   Stats stats, int wins, int losses) {
