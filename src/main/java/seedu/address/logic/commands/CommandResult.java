@@ -89,13 +89,13 @@ public class CommandResult {
     }
 
     /**
-     * Factory method to create a result that opens the Team stats window.
+     * Factory method to create a result that opens the Team detail window.
      *
      * @param message feedback line for the result display
      * @param team team to show
-     * @return a {@code CommandResult} configured to show the Team stats window
+     * @return a {@code CommandResult} configured to show the Team detail window
      */
-    public static CommandResult showTeamStats(String message, Team team) {
+    public static CommandResult showTeamDetail(String message, Team team) {
         return new CommandResult(message, false, false, false, null, true, team);
     }
 

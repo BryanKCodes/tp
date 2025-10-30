@@ -24,13 +24,13 @@ public class GroupCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Automatically creates balanced teams from all unassigned persons.\n"
-            + "The algorithm groups persons by role, sorts by rank, and ensures no duplicate champions per team.\n"
+            + "The algorithm groups players by role, sorts by rank, and ensures no duplicate champions per team.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_SUCCESS = "Successfully created %1$d team(s):\n%2$s\n\n"
-            + "%3$d person(s) remain unassigned.";
+            + "%3$d player(s) remain unassigned.";
     public static final String MESSAGE_NO_TEAMS_FORMED = "No teams could be formed. "
-            + "Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).";
+            + "Ensure there is at least one unassigned player for each role (Top, Jungle, Mid, ADC, Support).";
 
     private final TeamMatcher teamMatcher;
 

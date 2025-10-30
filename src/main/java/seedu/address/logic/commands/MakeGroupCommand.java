@@ -23,8 +23,8 @@ public class MakeGroupCommand extends Command {
 
     public static final String COMMAND_WORD = "makeGroup";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Creates a team of 5 persons identified by the index "
-            + "numbers used in the displayed person list.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Creates a team of 5 players identified by the index "
+            + "numbers used in the displayed player list.\n"
             + "Parameters: INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5\n"
             + "Example: " + COMMAND_WORD + " 1 2 3 4 5";
 
@@ -32,7 +32,7 @@ public class MakeGroupCommand extends Command {
 
     public static final String MESSAGE_INVALID_TEAM_SIZE = "Exactly %1$d index numbers must be provided.";
     public static final String MESSAGE_DUPLICATE_INDEX = "Duplicate index numbers found in the input.";
-    public static final String MESSAGE_REUSED_PERSON = "Person is already in another team.\n%1$s";
+    public static final String MESSAGE_REUSED_PERSON = "Player is already in another team.\n%1$s";
 
     private final List<Index> indexList;
 

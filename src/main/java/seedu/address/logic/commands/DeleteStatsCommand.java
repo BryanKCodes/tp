@@ -44,8 +44,8 @@ public class DeleteStatsCommand extends Command {
      * </pre>
      */
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Delete the latest performance stats of"
-            + " the person identified by the index number used in the displayed person list.\n"
-            + "Parameters: INDEX (must be a positive integer) "
+            + " the player identified by the index number used in the displayed player list.\n"
+            + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1 ";
 
     /** Success message format used in the {@link CommandResult}. */
