@@ -1,5 +1,6 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -33,8 +34,14 @@ public class ImportCommandTest {
         ImportCommand cmd = new ImportCommand(csv);
         CommandResult result = cmd.execute(model);
 
-        assertTrue(result.getFeedbackToUser().contains("Imported 1 players"));
-        assertTrue(model.getAddressBook().getPersonList().size() >= 1);
+        String feedback = result.getFeedbackToUser();
+        assertTrue(feedback.contains("Imported 1"),
+                "Expected 'Imported 1' but got: " + feedback);
+        assertTrue(feedback.contains("0 duplicate"),
+                "Expected '0 duplicate' but got: " + feedback);
+        assertTrue(feedback.contains("0 invalid"),
+                "Expected '0 invalid' but got: " + feedback);
+        assertEquals(1, model.getAddressBook().getPersonList().size());
     }
 
     @Test
