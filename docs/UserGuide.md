@@ -20,7 +20,30 @@ Manage your player roster and form balanced 5v5 teams **in seconds** instead of 
 If you're comfortable with typing commands (like using Slack or Discord), SummonersBook will be 3x faster than spreadsheets or traditional apps.
 
 ---
+## Table of Contents
 
+1. [Quick Start](#quick-start)
+    - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
+    - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
+    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team-2-minute-tutorial)
+    - [Step 4: Learn the Essentials](#step-3-learn-the-essentials)
+2. [Common Workflows](#common-workflows)
+    - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
+    - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
+    - [Post-Match Performance Tracking](#workflow-3-post-match-performance-tracking)
+3. [Feature Summary](#feature-summary)
+4. [Features](#features)
+    - [Player Management](#player-management)
+    - [Performance Tracking](#performance-tracking)
+    - [Team Management](#team-management)
+    - [Data Import/Export](#data-importexport)
+    - [Utility Commands](#utility-commands)
+5. [Troubleshooting](#troubleshooting)
+6. [FAQ](#faq)
+7. [Known Issues](#known-issues)
+8. [Command Summary](#command-summary)
+
+---
 ## Quick Start
 
 ### Step 1: Install (One-Time Setup)
@@ -143,13 +166,19 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 
 **Steps:**
 
-1. **Add performance stats for a player:**
+1. **Record a win or loss for a team:**
+   ```
+   win 1
+   ```
+   → Adds a win for the team and its players (use `lose 1` to add a loss).
+
+2. **Add performance stats for a player:**
    ```
    addStats 5 cpm/8.2 gd15/450 kda/4.5
    ```
    → Records CS per minute (8.2), gold difference at 15 min (+450), and KDA (4.5).
 
-2. **View performance trends:**
+3. **View performance trends:**
    ```
    view 5
    ```
@@ -179,10 +208,12 @@ Command | Purpose | Format
 
 ### Performance Tracking
 
-Command | Purpose | Format
---------|---------|-------
-[`addStats`](#adding-performance-stats-addstats) | Record match performance | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
-[`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry | `deleteStats INDEX`
+Command | Purpose                                 | Format
+--------|-----------------------------------------|-------
+[`addStats`](#adding-performance-stats-addstats) | Record match performance                | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+[`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry               | `deleteStats INDEX`
+[`win`](#recording-a-team-win-win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
+[`lose`](#recording-a-team-loss-lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
 
 ### Team Management
 
@@ -191,8 +222,6 @@ Command | Purpose | Format
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
 [`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
-[`win`](#recording-a-team-win-win) | Record a win for a team | `win TEAM_INDEX`
-[`lose`](#recording-a-team-loss-lose) | Record a loss for a team | `lose TEAM_INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
 
 ### Data Import/Export
@@ -250,24 +279,31 @@ Command | Purpose | Format
 Adds a new player with mandatory details to your roster.
 
 **Format:**
-`add n/NAME rk/RANK rl/ROLE c/CHAMPION`
+```
+add n/NAME rk/RANK rl/ROLE c/CHAMPION
+```
 
 **Examples:**
 
-* `add n/Faker rk/Grandmaster rl/ADC c/Sivir`
-* `add n/Imissher rk/Gold rl/Support c/Thresh`
+* Adds the player "Faker" with the rank Grandmaster, role ADC, and champion Sivir.
+```
+add n/Faker rk/Grandmaster rl/ADC c/Sivir
+```
+* Adds the player "Imissher" with the rank Gold, role Support, and champion Thresh.
+```
+add n/Imissher rk/Gold rl/Support c/Thresh
+```
 
 ### Listing all players: `list`
 
 Shows a list of all players in your SummonersBook roster.
 
-**Format:** `list`
-
-<box type="tip" seamless>
-
-**Pro Tip:** Use this command to reset any filters and see your full roster again.
-
-</box>
+**Format:** 
+```
+list
+```
+> [!TIP]
+> Use this command to reset any filters and see your full roster again.
 
 ### Finding players by name: `find`
 
@@ -275,7 +311,9 @@ Searches for players by **keyword(s)** in their **name**.
 If multiple keywords are given, players with at least 1 keyword in their name will be shown.
 
 **Format:**
-`find KEYWORD [MORE_KEYWORDS...]`
+```
+find KEYWORD [MORE_KEYWORDS]...
+```
 
 **How it works:**
 - Matching is **case-insensitive**
@@ -283,14 +321,23 @@ If multiple keywords are given, players with at least 1 keyword in their name wi
 - OR logic: returns players matching ANY keyword
 
 **Examples:**
-- `find joanne lim` — finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
-- `find john` — finds **John Doe** and **John Smith**.
-- `find jo` — finds **Jo Lin**, but **not** "John Doe" or "John Smith" (whole word match).
+
+* Finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
+```
+find joanne lim
+```
+* Finds **John Doe** and **John Smith**.
+```
+find john
+```
+* Finds **Jo Lin**, but **not** "John Doe" or "John Smith" (whole word match).
+```
+find jo
+```
 
 ### Filtering players: `filter`
 
-Narrows the player list using one or more filters.
-Matching is **case-insensitive**.
+Narrows the player list by using one or more filters.
 
 You can filter by:
 - `rl/` — role (exact match), can be used multiple times
@@ -299,27 +346,40 @@ You can filter by:
 - `s/` — score (shows players with score rating greater or equal to the given value), supply it **only once**!
 
 **Format (any order, at least one filter):**
-`filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`
+```
+filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]
+```
 
-**How filtering works:**
+**How it works:**
 - Filters of **different types** (e.g. `rl/` and `rk/`) are combined with **AND**.
 - Filters **within the same type** (e.g. multiple `rl/` values) are combined with **OR**.
 - Matching is **case-insensitive** and **exact**
 
 **Examples:**
-- `filter rl/Mid Jungle` — players who are **Mid OR Jungle**.
-- `filter rl/Mid rk/Gold` — players who are **Mid AND Gold**.
-- `filter rl/Mid rl/Jungle rk/Gold rk/Silver` — players who are **(Mid OR Jungle) AND (Gold OR Silver)**.
+* Filters players who have roles **Mid** OR **Jungle**.
+```
+filter rl/Mid rl/Jungle
+```
+* Filters players who have role **Mid** AND rank **Gold**.
+```
+filter rl/Mid rk/Gold
+```
+• Filters players who have roles (**Mid** OR **Jungle**) AND ranks (**Gold** OR **Silver**).
+```
+filter rl/Mid rl/Jungle rk/Gold rk/Silver
+```
 
 ### Viewing detailed player information: `view`
 
 Opens a detailed window showing comprehensive information about a player, including their performance statistics visualized in graphs.
 
 **Format:**
-`view INDEX`
+```
+view INDEX
+```
 
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+**How it works:**
+* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * The window displays:
     - Basic information (name, role, rank, champion, tags)
     - Win/loss record
@@ -330,68 +390,71 @@ Opens a detailed window showing comprehensive information about a player, includ
 * Up to the latest 10 matches are shown in the performance graphs.
 
 **Examples:**
-* `view 1`
-  Opens a detailed window for the 1st player in the list.
-
-* `view 5`
-  Opens a detailed window for the 5th player in the list.
+* Open a detailed window for the 1st player in the list
+```
+view 1
+```
+* Opens a detailed window for the 5th player in the list.
+```
+view 5
+```
 
 ### Editing a player: `edit`
 
 Updates an existing player's details in your roster.
 
 **Format:**
-`edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+```
+edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]
+```
 
-<box type="warning" seamless>
-
-**Important:** Players that have already been added to a team cannot be edited. Remove them from the team first using `ungroup`.
-
-</box>
-
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-* At least one field to edit must be provided.
+**How it works:**
+* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * Existing values are **overwritten** by the new input.
 * Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
 
+> [!NOTE]
+> At least one field to edit must be provided.
+
+> [!IMPORTANT]
+> Editing a player that is in a team may not be allowed due to duplicate roles or champions.
+> Remove them from the team first using `ungroup`
+
 **Examples:**
-* `edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri`
-  Updates the 1st player's name, role, rank, and champion.
-
-* `edit 2 t/`
-  Clears all tags of the 2nd player.
-
-* `edit 3 rl/Top rk/Gold`
-  Updates the 3rd player's role and rank.
+* Updates name, role, rank, and champion of the 1st player in the list.
+```
+edit 1 n/John Doe rl/Mid rk/Diamond c/Ahri
+```
+* Clear all tags of the 2nd player in the list.
+```
+edit 2 t/
+```
+* Updates only the role and rank of the 3rd player in the list.
+```
+edit 3 rl/Top rk/Gold
+```
 
 ### Deleting a player: `delete`
 
 Removes a player permanently from your roster.
 
 **Format:**
-`delete INDEX`
+```
+delete INDEX
+```
 
-<box type="warning" seamless>
-
-**Important:** You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
-
-</box>
-
-**Notes:**
+**How it works:**
+* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * Deletes the player at the specified `INDEX`.
-* The index refers to the index number shown in the displayed player list.
-* The index **must be a positive integer** 1, 2, 3, …
+
+> [!IMPORTANT]
+> You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
 
 **Example:**
-`delete 3`
-
-**Success output:**
-`Deleted Player: <NAME>.`
-
-**Failure outputs:**
-- `The player index provided is invalid.`
-- `Cannot delete player. <NAME> is currently on team '<TEAM NAME>'.`
+* Delete the 3rd player in the list.
+```
+delete 3
+```
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -407,27 +470,27 @@ Records a new set of performance values for a player after a match:
 - Kill/Death/Assist score (KDA)
 
 **Format:**
-`addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
+```
+addStats INDEX cpm/CPM gd15/GD15 kda/KDA
+```
 
 **Notes:**
 * `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
 * All fields must be provided.
-* CPM and KDA can be decimals or integers e.g., `cpm/9.8`, `kda/2`
+* CPM must be a decimal between 0.0 and 40.0
+* GD15 must be an integer between -10,000 and 10,000
+* KDA must be a decimal between 0.0 and 200.0
 * Decimal point is a dot `.`
-* GD15 must be an integer e.g., `gd15/560`
 * These values will be recorded and the player's average performance score will be updated automatically.
 
-**Example with context:**
-After Faker's latest match, you recorded:
-- 8.8 CS per minute (excellent farming!)
-- +2000 gold lead at 15 min (dominant lane phase)
-- 6.0 KDA (great performance)
+**Example:**
 
+* Records 8.8 CS per minute, +2000 gold lead at 15 min, and 6.0 KDA for the 1st player in list.
 ```
-addStats 1 cpm/8.8 gd15/2000 kda/6.0
+addStats 1 cpm/8.8 gd15/2000 kda/6
 ```
 
-→ Faker's overall performance score updates automatically.
+→ Player 1's overall performance score updates automatically.
 → View trends with `view 1`
 
 ### Removing performance stats: `deleteStats`
@@ -443,10 +506,55 @@ Deletes the most recent performance record for a player (useful for correcting m
 * The player's average score will be recalculated automatically.
 
 **Example:**
+* Removes the latest performance entry for the 1st player in the list.
 ```
 deleteStats 1
 ```
-Removes the latest performance entry for the 1st player in the list.
+---
+
+### Recording a team win : `win`
+
+Records a win for a team, updating both the team's record and all team members' individual records.
+
+**Format:**
+```
+win TEAM_INDEX
+```
+
+#### How it works:
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* Both the team and all its members will have their win count incremented.
+
+> [!IMPORTANT]
+> If a team is removed, all its recorded wins and losses are deleted.
+> Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
+
+#### Example:
+* Records a win for the 1st team in the list.
+```
+win 1
+```
+---
+
+### Recording a team loss : `lose`
+
+Records a loss for a team, updating both the team's record and all team members' individual records.
+
+**Format:**
+```
+lose TEAM_INDEX
+```
+
+#### How it works:
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* Both the team and all its members will have their loss count incremented.
+
+#### Example:
+* Records a loss for the 2nd team in the list.
+```
+lose 2
+```
+  
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -525,38 +633,6 @@ Opens a detailed window showing comprehensive information about a team, includin
   Opens a detailed window for the 1st team in the list.
 
 ---
-
-### 🏆 Recording a team win : `win`
-
-Records a win for a team, updating both the team's record and all team members' individual records.
-
-**Format:**
-`win TEAM_INDEX`
-
-#### Notes
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
-* Both the team and all its members will have their win count incremented.
-
-#### Examples
-* `win 1`
-  Records a win for the 1st team in the list.
-
----
-
-### 💔 Recording a team loss : `lose`
-
-Records a loss for a team, updating both the team's record and all team members' individual records.
-
-**Format:**
-`lose TEAM_INDEX`
-
-#### Notes
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
-* Both the team and all its members will have their loss count incremented.
-
-#### Examples
-* `lose 2`
-  Records a loss for the 2nd team in the list.
 
 ### Disbanding teams: `ungroup`
 

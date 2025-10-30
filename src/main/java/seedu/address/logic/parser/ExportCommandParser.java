@@ -2,10 +2,8 @@ package seedu.address.logic.parser;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import seedu.address.logic.commands.ExportCommand;
-import seedu.address.logic.commands.ExportCommand.Target;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -22,6 +20,10 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class ExportCommandParser implements Parser<ExportCommand> {
 
+    private static final String PLAYERS_KEYWORD = "players";
+    private static final String TEAMS_KEYWORD = "teams";
+    private static final String TO_PREFIX = "to/";
+
     /**
      * Parses the given user input and constructs an {@link ExportCommand}.
      *
@@ -31,33 +33,38 @@ public class ExportCommandParser implements Parser<ExportCommand> {
      */
     @Override
     public ExportCommand parse(String args) throws ParseException {
-        String trimmed = args.trim();
-        if (trimmed.isEmpty()) {
-            throw new ParseException(ExportCommand.MESSAGE_USAGE);
-        }
+        String trimmed = args.trim().toLowerCase();
 
-        // Example inputs: "players to/data/players.csv" or "teams"
-        String[] parts = trimmed.split("\\s+");
-        String first = parts[0].toLowerCase();
+        ExportCommand.Target target;
+        String remainder;
 
-        Target target;
-        if (first.equals("players")) {
-            target = Target.PLAYERS;
-        } else if (first.equals("teams")) {
-            target = Target.TEAMS;
+        if (trimmed.startsWith(PLAYERS_KEYWORD)) {
+            target = ExportCommand.Target.PLAYERS;
+            remainder = trimmed.substring(PLAYERS_KEYWORD.length()).trim();
+        } else if (trimmed.startsWith(TEAMS_KEYWORD)) {
+            target = ExportCommand.Target.TEAMS;
+            remainder = trimmed.substring(TEAMS_KEYWORD.length()).trim();
         } else {
             throw new ParseException(ExportCommand.MESSAGE_USAGE);
         }
 
-        Optional<Path> out = Optional.empty();
-        for (int i = 1; i < parts.length; i++) {
-            if (parts[i].startsWith("to/")) {
-                out = Optional.of(Paths.get(parts[i].substring(3)));
-            } else {
-                throw new ParseException(ExportCommand.MESSAGE_USAGE);
+        Path customPath = null;
+        if (!remainder.isEmpty()) {
+            if (!remainder.startsWith(TO_PREFIX)) {
+                throw new ParseException("Expected 'to/' prefix before file path.\n"
+                        + ExportCommand.MESSAGE_USAGE);
             }
+            String pathString = remainder.substring(TO_PREFIX.length()).trim();
+            if (pathString.isEmpty()) {
+                throw new ParseException("File path cannot be empty after 'to/'.");
+            }
+            if (!pathString.endsWith(".csv")) {
+                throw new ParseException("File path must end with .csv");
+            }
+            customPath = Paths.get(pathString);
         }
-        return new ExportCommand(target, out.orElse(null));
+
+        return new ExportCommand(target, customPath);
     }
 }
 
