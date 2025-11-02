@@ -32,17 +32,16 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
     - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
     - [Post-Match Performance Tracking](#workflow-3-post-match-performance-tracking)
 3. [Feature Summary](#feature-summary)
-4. [Features](#features)
     - [Player Management](#player-management)
     - [Performance Tracking](#performance-tracking)
     - [Team Management](#team-management)
     - [Data Import/Export](#data-importexport)
     - [Utility Commands](#utility-commands)
-5. [Troubleshooting](#troubleshooting)
-6. [FAQ](#faq)
-7. [Known Issues](#known-issues)
-8. [Glossary](#glossary)
-9. [Command Summary](#command-summary)
+4. [Troubleshooting](#troubleshooting)
+5. [FAQ](#faq)
+6. [Known Issues](#known-issues)
+7. [Glossary](#glossary)
+8. [Command Summary](#command-summary)
 
 ---
 ## Quick Start
