@@ -2,7 +2,7 @@
   "persons": [
     {
       "id": "person-1",
-      "name": "Alice Pauline",
+      "name": "Alice",
       "role": "top",
       "rank": "gold",
       "champion": "Ahri",

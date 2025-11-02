@@ -10,13 +10,13 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain alphanumeric characters and spaces, and it should not be blank";
+            "Names must be 3-16 characters long and contain only alphanumeric characters (no spaces).";
 
     /*
-     * The first character of the address must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
+     * The validation follows a looser version of League of Legends'
+     * which restricts usernames to lengths of 3-16
      */
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
+    public static final String VALIDATION_REGEX = "^[\\p{Alnum}]{3,16}$";
 
     public final String fullName;
 

@@ -18,7 +18,7 @@ import seedu.address.model.util.SampleDataUtil;
  */
 public class PersonBuilder {
 
-    public static final String DEFAULT_NAME = "Amy Bee";
+    public static final String DEFAULT_NAME = "Amy";
     public static final String DEFAULT_ROLE = "mid";
     public static final String DEFAULT_RANK = "gold";
     public static final String DEFAULT_CHAMPION = "Ahri";

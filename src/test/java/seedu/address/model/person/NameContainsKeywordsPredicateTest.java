@@ -43,19 +43,15 @@ public class NameContainsKeywordsPredicateTest {
     public void test_nameContainsKeywords_returnsTrue() {
         // One keyword
         NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Collections.singletonList("Alice"));
-        assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        assertTrue(predicate.test(new PersonBuilder().withName("Alice").build()));
 
         // Multiple keywords
         predicate = new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob"));
-        assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        assertTrue(predicate.test(new PersonBuilder().withName("Bob").build()));
 
-        // Only one matching keyword
-        predicate = new NameContainsKeywordsPredicate(Arrays.asList("Bob", "Carol"));
-        assertTrue(predicate.test(new PersonBuilder().withName("Alice Carol").build()));
-
-        // Mixed-case keywords
-        predicate = new NameContainsKeywordsPredicate(Arrays.asList("aLIce", "bOB"));
-        assertTrue(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        // Mixed-case keyword
+        predicate = new NameContainsKeywordsPredicate(Arrays.asList("aLIce"));
+        assertTrue(predicate.test(new PersonBuilder().withName("Alice").build()));
     }
 
     @Test
@@ -66,12 +62,12 @@ public class NameContainsKeywordsPredicateTest {
 
         // Non-matching keyword
         predicate = new NameContainsKeywordsPredicate(Arrays.asList("Carol"));
-        assertFalse(predicate.test(new PersonBuilder().withName("Alice Bob").build()));
+        assertFalse(predicate.test(new PersonBuilder().withName("Alice").build()));
 
-        // Keywords match phone, email and address, but does not match name
-        predicate = new NameContainsKeywordsPredicate(Arrays.asList("12345", "alice@email.com", "Main", "Street"));
-        assertFalse(predicate.test(new PersonBuilder().withName("Alice").withRole("mid")
-                .withRank("gold").withChampion("Ahri").build()));
+        // Keywords match rank, role and champion, but does not match name
+        predicate = new NameContainsKeywordsPredicate(Arrays.asList("Gold", "Mid", "Ahri"));
+        assertFalse(predicate.test(new PersonBuilder().withName("Alice").withRank("Gold")
+                .withRole("Mid").withChampion("Ahri").build()));
     }
 
     @Test

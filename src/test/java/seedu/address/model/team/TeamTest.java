@@ -5,6 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TypicalPersons.ADC_PERSON;
+import static seedu.address.testutil.TypicalPersons.EXTRA_PERSON;
+import static seedu.address.testutil.TypicalPersons.JUNGLE_PERSON;
+import static seedu.address.testutil.TypicalPersons.MID_PERSON;
+import static seedu.address.testutil.TypicalPersons.SUPPORT_PERSON;
+import static seedu.address.testutil.TypicalPersons.TOP_PERSON;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +21,6 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
 import seedu.address.model.team.exceptions.DuplicateRoleException;
 import seedu.address.model.team.exceptions.InvalidTeamSizeException;
-import seedu.address.testutil.PersonBuilder;
 
 public class TeamTest {
     private static final String DUMMY_ID = "";
@@ -23,19 +28,6 @@ public class TeamTest {
     private static final int DUMMY_LOSSES = 0;
 
     // Valid team with 5 persons: unique roles and unique champions
-    private static final Person TOP_PERSON = new PersonBuilder().withName("Top Person")
-            .withRole("top").withChampion("Garen").withRank("gold").build();
-    private static final Person JUNGLE_PERSON = new PersonBuilder().withName("Jungle Person")
-            .withRole("jungle").withChampion("Lee Sin").withRank("platinum").build();
-    private static final Person MID_PERSON = new PersonBuilder().withName("Mid Person")
-            .withRole("mid").withChampion("Ahri").withRank("diamond").build();
-    private static final Person ADC_PERSON = new PersonBuilder().withName("ADC Person")
-            .withRole("adc").withChampion("Jinx").withRank("gold").build();
-    private static final Person SUPPORT_PERSON = new PersonBuilder().withName("Support Person")
-            .withRole("support").withChampion("Thresh").withRank("platinum").build();
-    private static final Person EXTRA_PERSON = new PersonBuilder().withName("Extra Person")
-            .withRole("top").withChampion("Ahri").withRank("master").build();
-
     private static final List<Person> VALID_PERSONS = Arrays.asList(
             TOP_PERSON, JUNGLE_PERSON, MID_PERSON, ADC_PERSON, SUPPORT_PERSON);
 
@@ -133,9 +125,7 @@ public class TeamTest {
     @Test
     public void hasPerson_nonExistingPerson_returnsFalse() {
         Team team = new Team(VALID_PERSONS);
-        Person nonExistingPerson = new PersonBuilder().withName("Non Existing")
-                .withRole("top").withChampion("Darius").withRank("bronze").build();
-        assertFalse(team.hasPerson(nonExistingPerson));
+        assertFalse(team.hasPerson(EXTRA_PERSON));
     }
 
     @Test
@@ -144,13 +134,11 @@ public class TeamTest {
         List<Person> returnedList = team.getPersons();
 
         // Modify the returned list
-        Person newPerson = new PersonBuilder().withName("New Person")
-                .withRole("top").withChampion("Darius").build();
-        returnedList.add(newPerson);
+        returnedList.add(EXTRA_PERSON);
 
         // Original team should be unchanged
         assertEquals(5, team.getPersons().size());
-        assertFalse(team.hasPerson(newPerson));
+        assertFalse(team.hasPerson(EXTRA_PERSON));
     }
 
     @Test
