@@ -913,29 +913,64 @@ view 2               # OK - refers to 2nd player in filtered list
 
 ### Glossary
 
-**Java:** The programming language required to run SummonersBook (version 17 or higher).  
-**Command Line / Terminal:** A text-based interface where you type commands.  
-**JAR file:** A packaged Java application you can run with `java -jar`.  
-**Index:** The number beside a player or team in the displayed list (starts from 1).  
-**Parameter:** A value supplied after a command to specify details.  
-**CSV file:** A spreadsheet-style file for importing or exporting data.  
-**Path:** The location of a file on your computer (e.g. `data/players.csv`).  
-**JSON file:** The internal data file where SummonersBook automatically saves your information.  
-**GUI / Window:** The graphical interface that opens when you run SummonersBook.
-**Champion:**  
-A playable character in *League of Legends*.  
-SummonersBook validates champion names against an internal list stored in `champions.txt`, located within the application’s resources.  
-Only names from this list are accepted (case-insensitive).  
-If a newly released champion (e.g., *Aurora*, *Ambessa*, *Mel*) is not yet recognized, SummonersBook will reject the input until the list is updated in a future release.
+#### General Terminology
 
-To view the full list of supported champions:
-1. Open the `champions` folder inside the application’s resources.
-2. Open the `champions.txt` file — it contains all valid champion names, one per line.
-**Rank-Ordered Team:**
-  A team automatically created by SummonersBook's grouping algorithm based on player skill levels.
-  Each team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank.
-  The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on.
-  The algorithm also ensures that no two players in the same team share the same champion.
+**Java**
+: The programming language required to run SummonersBook (version 17 or higher).
+
+**Command Line / Terminal**
+: A text-based interface where you type commands to interact with the application.
+
+**JAR file**
+: A packaged Java application. You can run SummonersBook from its JAR file using the command `java -jar SummonersBook.jar`.
+
+**Index**
+: The number displayed next to a player or team in a list (starting from 1). Commands like `view`, `delete`, and `edit` use this index to identify a target.
+
+**Parameter**
+: A value supplied after a command to provide specific details (e.g., in `view 1`, the parameter is `1`).
+
+**CSV file**
+: A Comma-Separated Values file, similar to a spreadsheet, used for importing or exporting player and team data.
+
+**Path**
+: The location of a file on your computer (e.g., `data/players.csv`).
+
+**JSON file**
+: The internal data file format where SummonersBook automatically saves all your information.
+
+**GUI / Window**
+: The Graphical User Interface that opens when you run SummonersBook, displaying all the information visually.
+
+---
+
+#### Domain-Specific Terminology
+
+**Champion**
+: A playable character in *League of Legends*. SummonersBook validates champion names against an internal list stored in `champions.txt`. Only names from this list are accepted (case-insensitive). If a newly released champion (e.g., *Aurora*) is not yet recognized, the input will be rejected until the list is updated in a future release.
+
+  > To view the full list of supported champions:
+  > 1.  Navigate to the application's resource files.
+  > 2.  Open the `champions.txt` file, which contains all valid champion names.
+
+**Role**
+: A player's designated position on the team. A valid team requires one player for each of the five standard roles: **Top, Jungle, Mid, ADC (Attack Damage Carry), and Support**.
+
+**Rank**
+: A tier representing a player's skill level, similar to a chess rating (e.g., Gold, Diamond). It is the primary attribute used by SummonersBook to create balanced teams.
+
+**Performance Statistics (Stats)**
+: Metrics that quantify a player's performance in a match.
+*   **CPM (CS per Minute)**: A measure of a player's efficiency at earning in-game gold.
+*   **GD@15 (Gold Difference at 15 minutes)**: A player's gold lead or deficit against their direct opponent at the 15-minute mark.
+*   **KDA (Kills/Deaths/Assists Ratio)**: A ratio `(Kills + Assists) / Deaths` indicating combat effectiveness.
+
+**Scrim**
+: An organized practice match between two teams, used to test strategies and evaluate players.
+
+**Rank-Ordered Team**
+: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This creates balanced, tiered teams (Team 1 > Team 2, etc.).
+
 
 [Back to Top](#summonersbook-user-guide)
 

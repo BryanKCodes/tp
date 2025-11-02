@@ -1183,12 +1183,23 @@ otherwise)
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Rank-Ordered Team:**
-  A team automatically created by SummonersBook's grouping algorithm based on player skill levels.
-  Each team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank.
-  The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on.
-  The algorithm also ensures that no two players in the same team share the same champion.
+*   **Mainstream OS**: Windows, Linux, Unix, MacOS
+*   **Champion**: A unique playable character with a distinct set of abilities, like a hero in a fantasy story. A player's primary Champion represents their specialization. Game rules prohibit duplicate Champions on a team, making this a key constraint in SummonersBook.
+
+*   **Role**: A player's designated position and responsibility on the team. A valid team requires one player for each of the five standard roles: **Top, Jungle, Mid, ADC (Attack Damage Carry), and Support**.
+
+*   **Rank**: A tier representing a player's skill level, similar to a chess rating (e.g., Gold, Diamond). It is the primary attribute used by SummonersBook to create balanced teams.
+
+*   **Unassigned Person**: A player in the system who is not on a team and is available for team creation; effectively a "free agent."
+
+*   **Performance Statistics (Stats)**: Metrics that quantify a player's performance in a match.
+    *   **CPM (CS per Minute)**: A measure of a player's efficiency at earning in-game gold.
+    *   **GD@15 (Gold Difference at 15 minutes)**: A player's gold lead or deficit against their direct opponent at the 15-minute mark.
+    *   **KDA (Kills/Deaths/Assists Ratio)**: A ratio `(Kills + Assists) / Deaths` indicating combat effectiveness.
+
+*   **Scrim**: An organized practice match between two teams, used to test strategies and evaluate players.
+
+*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This process creates balanced, tiered teams (Team 1 > Team 2, etc.).
 
 --------------------------------------------------------------------------------------------------------------------
 
