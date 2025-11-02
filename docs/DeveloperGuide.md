@@ -172,9 +172,7 @@ The `Model` component,
 
 <box type="info" seamless>
 
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which
-`Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person`
-needing their own `Tag` objects.<br>
+**Note:** An alternative, and arguably more object-oriented, model is presented below. This design utilizes the **Flyweight design pattern** to efficiently handle shared data. In this model, the `AddressBook` contains unique lists of `Tag`s, `Champion`s, `Role`s, and `Rank`s. Each `Person` object then simply **references** these shared attributes as needed. This approach is far more efficient as it ensures that only one object is created for each unique attribute. For example, instead of every `Person` with the "Support" role maintaining their own duplicate `Role` object, they all point to a single, shared instance managed by the `AddressBook`. This design promotes better data management, ensures consistency, and significantly reduces redundancy and memory usage within the application.
 
 <puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
 
@@ -258,8 +256,7 @@ Now, the displayed list includes only persons whose rank is Gold **and** whose r
 <box type="info" seamless>
 
 **Note:**
-If no valid parameters are provided, all persons are shown.
-The `list` command can also be used to reset the view and display everyone.
+The `list` command can be used to reset the view and display everyone.
 
 </box>
 
@@ -294,7 +291,7 @@ The following sequence diagram illustrates how a filter command flows through th
 #### Implementation
 
 The auto-grouping feature is implemented through the `GroupCommand`, `GroupCommandParser`, and `TeamMatcher` classes.
-It automatically creates balanced teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
+It automatically creates rank-ordered teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
 
 When the user executes:
 
@@ -306,7 +303,7 @@ This functionality is supported by the following key components:
 
 - **`GroupCommand`** — represents the command that performs auto-grouping. Validates input and orchestrates team formation.
 - **`GroupCommandParser`** — parses user input for the group command. Ensures no arguments are provided.
-- **`TeamMatcher`** — contains the core algorithm for forming balanced teams from unassigned persons.
+- **`TeamMatcher`** — contains the core algorithm for forming rank-ordered teams from unassigned persons.
 - **`Model#getUnassignedPersonList()`** — retrieves the list of persons not currently assigned to any team.
 - **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
 
@@ -337,15 +334,21 @@ The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamM
 
 #### Sequence Diagrams
 
-The following sequence diagrams illustrate the execution of the `group` command.
+The execution of the `group` command involves complex logic for team formation, including several success and failure paths. To ensure clarity and avoid an overly complex diagram, the logic is presented in two distinct scenarios: one that covers successful team formation and another that details the initial failure conditions.
 
-The first diagram shows the overall execution flow with Model interactions:
+##### Scenario 1: Successful Team Formation
 
-<puml src="diagrams/GroupCommandSequenceDiagram-Model.puml" alt="GroupCommandSequenceDiagram-Model" />
+This diagram illustrates the "happy path" where at least one team is successfully formed. It assumes the initial validation for minimum required roles passes. The flow shows how the `TeamMatcher` algorithm iteratively builds teams and also correctly models how the process stops gracefully if it can no longer form a complete team (e.g., due to a champion conflict on a subsequent attempt).
 
-The second diagram shows the detailed TeamMatcher algorithm for forming teams:
+<puml src="diagrams/GroupCommandSuccessSequenceDiagram.puml" alt="GroupCommandSuccessSequenceDiagram" />
 
-<puml src="diagrams/GroupCommandSequenceDiagram-TeamMatcher.puml" alt="GroupCommandSequenceDiagram-TeamMatcher" />
+##### Scenario 2: Failure to Form Any Teams
+
+This diagram focuses exclusively on the critical failure paths that prevent any teams from being formed. Using an `alt` fragment, it shows the two mutually exclusive failure modes:
+1.  **`[missing persons for one or more roles]`**: The process fails during the initial validation and throws a `MissingRolesException`.
+2.  **`[sufficient persons for all roles]`**: The validation passes, but an unresolvable `DuplicateChampionException` occurs during the formation of the very first team.
+
+<puml src="diagrams/GroupCommandFailureSequenceDiagram.puml" alt="GroupCommandFailureSequenceDiagram" />
 
 <box type="info" seamless>
 
@@ -368,10 +371,11 @@ The user executes the `group` command.
 - `GroupCommand#execute()` fetches all unassigned persons via `Model#getUnassignedPersonList()`.
 
 **Step 3.**
-`TeamMatcher#matchTeams()` is called to form balanced teams:
+`TeamMatcher#matchTeams()` is called to form rank-ordered teams:
 - Persons are grouped by role.
-- Each role group is sorted by rank.
-- Teams are formed iteratively while avoiding champion conflicts.
+- Each role group is sorted by rank (highest to lowest).
+- Teams are formed iteratively by selecting the highest-ranked available person from each role while avoiding champion conflicts.
+- This creates rank-ordered teams where Team 1 contains the highest-ranked persons, Team 2 contains the next-highest-ranked persons, and so on.
 
 **Step 4.**
 Teams are successfully formed according to role, rank, and champion constraints.
@@ -400,7 +404,7 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 - **Alternative 1 (current implementation):**
   Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
     - *Pros:* Simple, predictable, and efficient (O(n log n) for sorting + O(n) for team formation).
-    - *Pros:* Ensures teams are balanced by rank since highest-ranked players are selected first.
+    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked players, Team 2 gets the next-highest-ranked players, etc. This is useful for organizing scrimmages by skill level.
     - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
 
 - **Alternative 2:**
@@ -455,6 +459,29 @@ This design is pragmatic and maintainable: static structure is in FXML (easy to 
 - `displayCharts()` — populates all four performance charts.
 - `createChartSeries()` — transforms raw statistics into chart data (package-private for testing).
 - `configureAxes()` — configures X-axis bounds to show match numbers correctly.
+
+---
+
+#### CommandResult Enhancement
+
+To enable modal window support, the `CommandResult` class was enhanced with additional fields and factory methods:
+
+**Key Fields:**
+- `showPersonDetail` (boolean) — indicates whether the person detail window should be shown.
+- `personToShow` (Person) — the person whose details should be displayed (null if not applicable).
+
+**Factory Method:**
+- `CommandResult.showPersonDetail(String message, Person person)` — creates a result configured to open the person detail window. Used by `ViewCommand` to trigger the display.
+
+**Integration with UI:**
+
+The `MainWindow` class handles `CommandResult` objects returned by command execution:
+
+1. **Check result flag**: After executing a command, `MainWindow` checks `isShowPersonDetail()`.
+2. **Extract context data**: If the flag is set, it extracts the person using `getPersonToShow()`, which returns `Optional<Person>`.
+3. **Create and show window**: It creates a `PersonDetailWindow` instance, passes the person data via `setPerson()`, and shows the window.
+
+This design maintains **separation of concerns**: commands decide *what* to show, UI decides *how* to show it. Commands remain decoupled from JavaFX implementation details.
 
 ---
 
@@ -536,6 +563,26 @@ The user executes `view 1` to view the first person.
   Allow users to configure the range (e.g., last 5, 10, 20 matches).
     - *Pros:* Flexible to user needs.
     - *Cons:* Adds UI complexity. Requires additional state management.
+
+**Aspect: How to signal UI actions from commands**
+
+- **Alternative 1 (current implementation):**
+  Extend `CommandResult` with flags and optional data fields.
+    - *Pros:* Centralized result handling. All commands return the same type.
+    - *Pros:* UI layer handles all window management. Commands remain decoupled from JavaFX.
+    - *Cons:* `CommandResult` class grows as more UI actions are added.
+
+- **Alternative 2:**
+  Use an event bus or observer pattern where commands emit events.
+    - *Pros:* More extensible. New events can be added without modifying `CommandResult`.
+    - *Cons:* Adds complexity. Requires event bus infrastructure.
+    - *Cons:* Harder to trace control flow during debugging.
+
+- **Alternative 3:**
+  Commands directly call UI methods (e.g., `ui.showPersonDetail(person)`).
+    - *Pros:* Simple and direct.
+    - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
+    - *Cons:* Makes testing commands difficult (need to mock UI).
 
 ### Ungrouping Teams Feature
 
@@ -664,70 +711,6 @@ The user executes `ungroup all`.
     - *Pros:* Avoids concurrent modification.
     - *Cons:* Requires additional ID lookup logic. More complex.
 
-### CommandResult Enhancement for Modal Windows
-
-#### Implementation
-
-The `CommandResult` class has been enhanced to support triggering modal windows for displaying person details and team statistics.
-This allows commands to not only return feedback text but also signal the UI to show specific windows with context data.
-
-#### Key Fields Added
-
-1. **`showPersonDetail`** (boolean) — indicates whether the person detail window should be shown.
-2. **`personToShow`** (Person) — the person whose details should be displayed (null if not applicable).
-3. **`showTeamStats`** (boolean) — indicates whether the team stats window should be shown.
-4. **`teamToShow`** (Team) — the team whose stats should be displayed (null if not applicable).
-
-These fields extend the original `CommandResult` design which only supported `showHelp` and `exit` flags.
-
-#### Factory Methods
-
-To maintain clean command code and adhere to the **Dependency Inversion Principle**, `CommandResult` provides static factory methods:
-
-- **`CommandResult.showPersonDetail(String message, Person person)`**
-  - Creates a result configured to open the person detail window.
-  - Used by `ViewCommand` to trigger the display.
-
-- **`CommandResult.showTeamStats(String message, Team team)`**
-  - Creates a result configured to open the team stats window.
-  - Reserved for future team statistics features (e.g., `viewteam` command).
-
-These factory methods make the intent explicit and prevent construction errors.
-
-#### Integration with UI
-
-The `MainWindow` class handles `CommandResult` objects returned by command execution:
-
-1. **Check result flags**: After executing a command, `MainWindow` checks `isShowPersonDetail()` or `isShowTeamStats()`.
-
-2. **Extract context data**: If a flag is set, it extracts the relevant object using `getPersonToShow()` or `getTeamToShow()`, which return `Optional<Person>` or `Optional<Team>`.
-
-3. **Create and show window**: It creates the appropriate window instance (`PersonDetailWindow` or similar), passes the context data, and shows the window.
-
-This design maintains **separation of concerns**: commands decide *what* to show, UI decides *how* to show it.
-
-#### Design Considerations
-
-**Aspect: How to signal UI actions from commands**
-
-- **Alternative 1 (current implementation):**
-  Extend `CommandResult` with flags and optional data fields.
-    - *Pros:* Centralized result handling. All commands return the same type.
-    - *Pros:* UI layer handles all window management. Commands remain decoupled from JavaFX.
-    - *Cons:* `CommandResult` class grows as more UI actions are added.
-
-- **Alternative 2:**
-  Use an event bus or observer pattern where commands emit events.
-    - *Pros:* More extensible. New events can be added without modifying `CommandResult`.
-    - *Cons:* Adds complexity. Requires event bus infrastructure.
-    - *Cons:* Harder to trace control flow during debugging.
-
-- **Alternative 3:**
-  Commands directly call UI methods (e.g., `ui.showPersonDetail(person)`).
-    - *Pros:* Simple and direct.
-    - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
-    - *Cons:* Makes testing commands difficult (need to mock UI).
-
 ### Data Import / Export Feature
 The **Import/Export** feature enables users to back up, share, and restore player and team data in CSV format.  
 It enhances data portability, supports external analysis and allows synchronisation across different SummonersBook instances.
@@ -833,13 +816,13 @@ Both commands delegate CSV parsing and file I/O handling to utility classes with
 SummonersBook is designed specifically for **League of Legends (LoL) esports coaches and team managers** who:
 
 - Manage multiple players and teams in **competitive or training settings**
-- Need to **form balanced 5v5 teams** quickly based on rank, role, and champion pool
+- Need to **form 5v5 teams** quickly based on rank, role, and champion pool
 - **Track player performance** across scrims and tournaments over time
 - Prefer a **lightweight desktop application** over complex web dashboards
 - Are **comfortable typing commands** (similar to Slack bots or Discord commands) for faster workflow
 - Have **basic technical familiarity** (e.g. can install Java or use a terminal) but do not need programming experience
 
-**Value proposition:** manage people and create balanced teams faster and more efficiently than a typical spreadsheet or mouse/GUI-driven app.
+**Value proposition:** manage people and create rank-ordered teams faster and more efficiently than a typical spreadsheet or mouse/GUI-driven app.
 
 ### User stories
 
@@ -937,14 +920,18 @@ otherwise)
 
 **MSS**
 
-1. User requests to group people into balanced teams.
-2. SummonersBook creates the teams automatically.
-3. SummonersBook shows the newly formed teams.
+1. User requests to group all unassigned people into teams.
+2. SummonersBook validates that teams can be formed and creates them based on player rank and role, avoiding champion conflicts within each team.
+3. SummonersBook shows the newly formed teams to the user.
 
 **Extensions**
 
-- 2a. Insufficient number of people to form teams.
-    - 2a1. SummonersBook shows an error message.
+- 2a. At least one required role is not filled.
+    - 2a1. SummonersBook shows an error message listing the specific role(s) that are missing (e.g., "Cannot form teams. No players available for role(s): Top.").
+    - Use case ends.
+
+- 2b. Teams cannot be formed due to an unavoidable champion conflict.
+    - 2b1. SummonersBook shows an error message indicating the conflict, naming the two players and their shared champion (e.g., "Operation would result in duplicate champions in the team. Alice and Bob both play: Garen").
     - Use case ends.
 
 ---
@@ -1196,11 +1183,23 @@ otherwise)
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Balanced Team:**  
-  A team automatically created by SummonersBook’s grouping algorithm to ensure fair matchups across all teams.  
-  Each balanced team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank and assigned so that overall skill levels between teams remain comparable.  
-  The algorithm also ensures that no two players in the same team share the same champion.
+*   **Mainstream OS**: Windows, Linux, Unix, MacOS
+*   **Champion**: A unique playable character with a distinct set of abilities, like a hero in a fantasy story. A player's primary Champion represents their specialization. Game rules prohibit duplicate Champions on a team, making this a key constraint in SummonersBook.
+
+*   **Role**: A player's designated position and responsibility on the team. A valid team requires one player for each of the five standard roles: **Top, Jungle, Mid, ADC (Attack Damage Carry), and Support**.
+
+*   **Rank**: A tier representing a player's skill level, similar to a chess rating (e.g., Gold, Diamond). It is the primary attribute used by SummonersBook to create balanced teams.
+
+*   **Unassigned Person**: A player in the system who is not on a team and is available for team creation; effectively a "free agent."
+
+*   **Performance Statistics (Stats)**: Metrics that quantify a player's performance in a match.
+    *   **CPM (CS per Minute)**: A measure of a player's efficiency at earning in-game gold.
+    *   **GD@15 (Gold Difference at 15 minutes)**: A player's gold lead or deficit against their direct opponent at the 15-minute mark.
+    *   **KDA (Kills/Deaths/Assists Ratio)**: A ratio `(Kills + Assists) / Deaths` indicating combat effectiveness.
+
+*   **Scrim**: An organized practice match between two teams, used to test strategies and evaluate players.
+
+*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This process creates balanced, tiered teams (Team 1 > Team 2, etc.).
 
 --------------------------------------------------------------------------------------------------------------------
 

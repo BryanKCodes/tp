@@ -7,11 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Role;
 import seedu.address.model.team.Team;
+import seedu.address.model.team.exceptions.DuplicateChampionException;
+import seedu.address.model.team.exceptions.MissingRolesException;
 import seedu.address.testutil.PersonBuilder;
 
 public class TeamMatcherTest {
@@ -132,7 +136,7 @@ public class TeamMatcherTest {
     }
 
     @Test
-    public void matchTeams_missingRole_throwsInsufficientPersonsException() {
+    public void matchTeams_missingRole_throwsMissingRolesException() {
         // Create persons but missing support role
         Person top = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
@@ -145,22 +149,22 @@ public class TeamMatcherTest {
 
         List<Person> persons = Arrays.asList(top, jungle, mid, adc);
 
-        InsufficientPersonsException exception = assertThrows(
-                InsufficientPersonsException.class, () -> teamMatcher.matchTeams(persons));
+        MissingRolesException exception = assertThrows(
+                MissingRolesException.class, () -> teamMatcher.matchTeams(persons));
 
         assertTrue(exception.getMessage().contains("Support"));
     }
 
     @Test
-    public void matchTeams_emptyList_throwsInsufficientPersonsException() {
+    public void matchTeams_emptyList_throwsMissingRolesException() {
         List<Person> persons = Arrays.asList();
 
         assertThrows(
-                InsufficientPersonsException.class, () -> teamMatcher.matchTeams(persons));
+                MissingRolesException.class, () -> teamMatcher.matchTeams(persons));
     }
 
     @Test
-    public void matchTeams_allPersonsSameRole_throwsInsufficientPersonsException() {
+    public void matchTeams_allPersonsSameRole_throwsMissingRolesException() {
         // All 5 persons are top laners - impossible to form a team
         Person top1 = new PersonBuilder().withName("Top1").withRole("top")
                 .withRank("Gold").withChampion("Garen").build();
@@ -175,8 +179,8 @@ public class TeamMatcherTest {
 
         List<Person> persons = Arrays.asList(top1, top2, top3, top4, top5);
 
-        InsufficientPersonsException exception = assertThrows(
-                InsufficientPersonsException.class, () -> teamMatcher.matchTeams(persons));
+        MissingRolesException exception = assertThrows(
+                MissingRolesException.class, () -> teamMatcher.matchTeams(persons));
 
         // Should complain about missing Jungle (or any other missing role)
         assertTrue(exception.getMessage().contains("No persons available for role"));
@@ -313,7 +317,7 @@ public class TeamMatcherTest {
     }
 
     @Test
-    public void matchTeams_roleKeyMissingInMap_throwsInsufficientPersonsException() {
+    public void matchTeams_roleKeyMissingInMap_throwsMissingRolesException() {
         // Create persons with only 4 out of 5 required roles (no Top role at all)
         Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
                 .withRank("Gold").withChampion("Lee Sin").build();
@@ -326,10 +330,201 @@ public class TeamMatcherTest {
 
         List<Person> persons = Arrays.asList(jungle, mid, adc, support);
 
-        InsufficientPersonsException exception = assertThrows(
-                InsufficientPersonsException.class, () -> teamMatcher.matchTeams(persons));
+        MissingRolesException exception = assertThrows(
+                MissingRolesException.class, () -> teamMatcher.matchTeams(persons));
 
         // Should complain about missing Top role
         assertTrue(exception.getMessage().contains("Top"));
     }
+
+    @Test
+    public void matchTeams_unavoidableInitialConflict_throwsDuplicateChampionException() {
+        // Arrange: Create a set of 5 players where the highest-ranked (and only)
+        // top and jungle players have the same champion.
+        Person top = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Garen").build(); // Unavoidable conflict
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        List<Person> persons = Arrays.asList(top, jungle, mid, adc, support);
+
+        // Act & Assert
+        DuplicateChampionException exception = assertThrows(
+                DuplicateChampionException.class, () -> teamMatcher.matchTeams(persons));
+
+        // Optionally, assert that the exception message contains the conflicting champion
+        assertTrue(exception.getMessage().contains("Garen"));
+    }
+
+    @Test
+    public void matchTeams_skipsHigherRankedPlayerToAvoidConflict() throws Exception {
+        // Arrange:
+        // Team 1 should pick top1 (Garen).
+        // For the jungle role, it should skip the higher-ranked jungle1 (Garen)
+        // and pick the lower-ranked jungle2 (Lee Sin) to avoid a conflict.
+        Person top1 = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungle1 = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Garen").build(); // Higher-ranked, but conflicts
+        Person jungle2 = new PersonBuilder().withName("Jungle2").withRole("jungle")
+                .withRank("Silver").withChampion("Lee Sin").build(); // Lower-ranked, no conflict
+        Person mid1 = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc1 = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support1 = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        // Add enough players for a second team so jungle1 can be placed later
+        Person top2 = new PersonBuilder().withName("Top2").withRole("top")
+                .withRank("Bronze").withChampion("Darius").build();
+        Person mid2 = new PersonBuilder().withName("Mid2").withRole("mid")
+                .withRank("Bronze").withChampion("Zed").build();
+        Person adc2 = new PersonBuilder().withName("Adc2").withRole("adc")
+                .withRank("Bronze").withChampion("Ashe").build();
+        Person support2 = new PersonBuilder().withName("Support2").withRole("support")
+                .withRank("Bronze").withChampion("Lulu").build();
+
+
+        List<Person> persons = Arrays.asList(
+                top1, top2, jungle1, jungle2, mid1, mid2, adc1, adc2, support1, support2
+        );
+
+        List<Team> teams = teamMatcher.matchTeams(persons);
+
+        assertEquals(2, teams.size());
+
+        // The first team should have skipped jungle1 for jungle2
+        Team firstTeam = teams.get(0);
+        assertTrue(firstTeam.getPersons().contains(jungle2),
+                "First team should contain the non-conflicting Silver jungler");
+        assertTrue(!firstTeam.getPersons().contains(jungle1),
+                "First team should not contain the conflicting Gold jungler");
+
+        // The second team should contain the remaining players, including jungle1
+        Team secondTeam = teams.get(1);
+        assertTrue(secondTeam.getPersons().contains(jungle1),
+                "Second team should contain the leftover Gold jungler");
+    }
+
+
+    @Test
+    public void findConflictingPersons_directConflictInSecondRole_returnsCorrectPair() {
+        // Arrange
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
+                .withRank("Gold").withChampion("Darius").build();
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
+                .withRank("Gold").withChampion("Darius").build();
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
+                .withRank("Gold").withChampion("Lulu").build();
+
+        List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
+        Map<Role, List<Person>> sortedPersonsByRole = teamMatcher
+                .createSortedCopy(teamMatcher.groupByRole(persons));
+
+        // Act
+        Person[] conflict = teamMatcher.findConflictingPersons(sortedPersonsByRole);
+
+        // Assert: The conflict should be between the jungler and the top laner.
+        List<Person> conflictingPair = Arrays.asList(conflict);
+        assertEquals(2, conflictingPair.size());
+        assertTrue(conflictingPair.contains(jungler));
+        assertTrue(conflictingPair.contains(topLaner));
+    }
+
+    @Test
+    public void findConflictingPersons_conflictInLaterRole_returnsCorrectPair() {
+        // Arrange
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
+                .withRank("Gold").withChampion("Vi").build();
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
+                .withRank("Gold").withChampion("Garen").build(); // Conflicts with Top
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
+                .withRank("Gold").withChampion("Lulu").build();
+
+        List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
+        Map<Role, List<Person>> sortedPersonsByRole = teamMatcher
+                .createSortedCopy(teamMatcher.groupByRole(persons));
+
+        // Act
+        Person[] conflict = teamMatcher.findConflictingPersons(sortedPersonsByRole);
+
+        // Assert: The conflict should be between the ADC and the top laner.
+        List<Person> conflictingPair = Arrays.asList(conflict);
+        assertEquals(2, conflictingPair.size());
+        assertTrue(conflictingPair.contains(adc));
+        assertTrue(conflictingPair.contains(topLaner));
+    }
+
+    @Test
+    public void findConflictingPersons_forcedConflictWhenNoAlternative_returnsCorrectPair() {
+        // Arrange: This tests the core simulation logic.
+        // 1. Top (Malphite) is selected.
+        // 2. Jungle has two options: Malphite (Gold) and Vi (Silver). The algorithm must skip the Gold player
+        //    and select Vi to avoid conflict.
+        // 3. Mid has only one option, Malphite, which now conflicts with the selected Top laner.
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
+                .withRank("Gold").withChampion("Malphite").build();
+        Person jungler1 = new PersonBuilder().withName("Player2").withRole("Jungle")
+                .withRank("Gold").withChampion("Malphite").build();
+        Person jungler2 = new PersonBuilder().withName("Player3").withRole("Jungle")
+                .withRank("Silver").withChampion("Vi").build();
+        Person midLaner = new PersonBuilder().withName("Player4").withRole("Mid")
+                .withRank("Gold").withChampion("Malphite").build();
+        Person adc = new PersonBuilder().withName("Player5").withRole("Adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Player6").withRole("Support")
+                .withRank("Gold").withChampion("Lulu").build();
+
+        List<Person> persons = List.of(topLaner, jungler1, jungler2, midLaner, adc, support);
+        Map<Role, List<Person>> sortedPersonsByRole = teamMatcher
+                .createSortedCopy(teamMatcher.groupByRole(persons));
+
+        Person[] conflict = teamMatcher.findConflictingPersons(sortedPersonsByRole);
+
+        // Assert: The conflict should be between the mid laner (who couldn't be placed) and the top laner.
+        List<Person> conflictingPair = Arrays.asList(conflict);
+        assertEquals(2, conflictingPair.size());
+        assertTrue(conflictingPair.contains(midLaner));
+        assertTrue(conflictingPair.contains(topLaner));
+    }
+
+    @Test
+    public void findConflictingPersons_whenTeamIsFormable_throwsIllegalStateException() {
+        // Arrange: A perfectly valid team with no conflicts. The method should not be called in this case.
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
+                .withRank("Gold").withChampion("Vi").build();
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
+                .withRank("Gold").withChampion("Lulu").build();
+
+        List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
+        Map<Role, List<Person>> sortedPersonsByRole = teamMatcher
+                .createSortedCopy(teamMatcher.groupByRole(persons));
+
+        // The method should throw an exception because its precondition (a conflict exists) is violated.
+        assertThrows(IllegalStateException.class, () -> {
+            teamMatcher.findConflictingPersons(sortedPersonsByRole);
+        });
+    }
+
 }
