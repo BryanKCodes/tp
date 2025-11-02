@@ -39,9 +39,8 @@ public class Rank implements Comparable<Rank> {
         }
     }
 
-    public static final String MESSAGE_CONSTRAINTS =
-            "Rank must be one of the following: iron, bronze, silver, gold, platinum, "
-                    + "emerald, diamond, master, grandmaster, challenger.";
+    public static final String MESSAGE_CONSTRAINTS = "Rank must be one of the following: Iron, Bronze, Silver, Gold, "
+            + "Platinum, Emerald, Diamond, Master, Grandmaster, Challenger.";
 
     public final String value;
 
