@@ -1,0 +1,41 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Scenario: Fails to Form Any Teams
+
+box Logic LOGIC_COLOR_T1
+participant "g:GroupCommand" as GroupCommand LOGIC_COLOR
+participant ":TeamMatcher" as TeamMatcher LOGIC_COLOR
+end box
+
+activate GroupCommand
+
+GroupCommand -> TeamMatcher : matchTeams(unassignedPersons)
+activate TeamMatcher
+
+alt missing persons for one or more roles
+    TeamMatcher -> TeamMatcher : groupPersonsByRole()
+    TeamMatcher -> TeamMatcher : createSortedCopy()
+    TeamMatcher -> TeamMatcher : validateMinimumPersons()
+
+    [<-- TeamMatcher : throws MissingRolesException
+    destroy TeamMatcher
+
+else sufficient persons for all roles
+    TeamMatcher -> TeamMatcher : groupPersonsByRole()
+    TeamMatcher -> TeamMatcher : createSortedCopy()
+    TeamMatcher -> TeamMatcher : validateMinimumPersons()
+
+    loop first team formation attempt
+        loop for each required role
+            TeamMatcher -> TeamMatcher : selectPersonWithoutChampionConflict(...)
+            break no person available
+                [<-- TeamMatcher : throws DuplicateChampionException
+                destroy TeamMatcher
+            end
+        end
+    end
+end
+
+@enduml

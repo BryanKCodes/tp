@@ -172,11 +172,7 @@ The `Model` component,
 
 <box type="info" seamless>
 
-**Note:** An alternative, and arguably more object-oriented, model is presented below. This design utilizes the **Flyweight design pattern** to efficiently handle shared data.
-
-In this model, the `AddressBook` contains unique lists of `Tag`s, `Champion`s, `Role`s, and `Rank`s. Each `Person` object then simply **references** these shared attributes as needed.
-
-This approach is far more efficient as it ensures that only one object is created for each unique attribute. For example, instead of every `Person` with the "Support" role maintaining their own duplicate `Role` object, they all point to a single, shared instance managed by the `AddressBook`. This design promotes better data management, ensures consistency, and significantly reduces redundancy and memory usage within the application.
+**Note:** An alternative, and arguably more object-oriented, model is presented below. This design utilizes the **Flyweight design pattern** to efficiently handle shared data. In this model, the `AddressBook` contains unique lists of `Tag`s, `Champion`s, `Role`s, and `Rank`s. Each `Person` object then simply **references** these shared attributes as needed. This approach is far more efficient as it ensures that only one object is created for each unique attribute. For example, instead of every `Person` with the "Support" role maintaining their own duplicate `Role` object, they all point to a single, shared instance managed by the `AddressBook`. This design promotes better data management, ensures consistency, and significantly reduces redundancy and memory usage within the application.
 
 <puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
 
@@ -338,15 +334,21 @@ The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamM
 
 #### Sequence Diagrams
 
-The following sequence diagrams illustrate the execution of the `group` command.
+The execution of the `group` command involves complex logic for team formation, including several success and failure paths. To ensure clarity and avoid an overly complex diagram, the logic is presented in two distinct scenarios: one that covers successful team formation and another that details the initial failure conditions.
 
-The first diagram shows the overall execution flow with Model interactions:
+##### Scenario 1: Successful Team Formation
 
-<puml src="diagrams/GroupCommandSequenceDiagram-Model.puml" alt="GroupCommandSequenceDiagram-Model" />
+This diagram illustrates the "happy path" where at least one team is successfully formed. It assumes the initial validation for minimum required roles passes. The flow shows how the `TeamMatcher` algorithm iteratively builds teams and also correctly models how the process stops gracefully if it can no longer form a complete team (e.g., due to a champion conflict on a subsequent attempt).
 
-The second diagram shows the detailed TeamMatcher algorithm for forming teams:
+<puml src="diagrams/GroupCommandSuccessSequenceDiagram.puml" alt="GroupCommandSuccessSequenceDiagram" />
 
-<puml src="diagrams/GroupCommandSequenceDiagram-TeamMatcher.puml" alt="GroupCommandSequenceDiagram-TeamMatcher" />
+##### Scenario 2: Failure to Form Any Teams
+
+This diagram focuses exclusively on the critical failure paths that prevent any teams from being formed. Using an `alt` fragment, it shows the two mutually exclusive failure modes:
+1.  **`[missing persons for one or more roles]`**: The process fails during the initial validation and throws a `MissingRolesException`.
+2.  **`[sufficient persons for all roles]`**: The validation passes, but an unresolvable `DuplicateChampionException` occurs during the formation of the very first team.
+
+<puml src="diagrams/GroupCommandFailureSequenceDiagram.puml" alt="GroupCommandFailureSequenceDiagram" />
 
 <box type="info" seamless>
 
