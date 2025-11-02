@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_CHAMPION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RANK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROLE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -25,12 +26,14 @@ public class AddCommand extends Command {
             + PREFIX_NAME + "NAME "
             + PREFIX_RANK + "RANK "
             + PREFIX_ROLE + "ROLE "
-            + PREFIX_CHAMPION + "CHAMPION\n"
+            + PREFIX_CHAMPION + "CHAMPION "
+            + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "Valerie "
-            + PREFIX_RANK + "Gold "
+            + PREFIX_NAME + "Nemesis "
+            + PREFIX_RANK + "Challenger "
             + PREFIX_ROLE + "Mid "
-            + PREFIX_CHAMPION + "Ahri";
+            + PREFIX_CHAMPION + "Orianna "
+            + PREFIX_TAG + "needsImprovement";
 
     public static final String MESSAGE_SUCCESS = "New player added: %1$s";
     public static final String MESSAGE_DUPLICATE_PERSON = "This player already exists in SummonersBook";

@@ -23,30 +23,30 @@ import seedu.address.model.person.Person;
  */
 public class TypicalPersons {
 
-    public static final Person ALICE = new PersonBuilder().withName("Alice Pauline")
+    public static final Person ALICE = new PersonBuilder().withName("Alice")
             .withRole("mid").withRank("gold").withChampion("Ahri")
             .withTags("friends").build();
-    public static final Person BENSON = new PersonBuilder().withName("Benson Meier")
+    public static final Person BENSON = new PersonBuilder().withName("Benson")
             .withRole("top").withRank("silver").withChampion("Garen")
             .withTags("owesMoney", "friends").build();
-    public static final Person CARL = new PersonBuilder().withName("Carl Kurz")
+    public static final Person CARL = new PersonBuilder().withName("Carl")
             .withRole("jungle").withRank("platinum").withChampion("Lee Sin").build();
-    public static final Person DANIEL = new PersonBuilder().withName("Daniel Meier")
+    public static final Person DANIEL = new PersonBuilder().withName("Daniel")
             .withRole("adc").withRank("gold").withChampion("Caitlyn")
             .withTags("friends").build();
-    public static final Person ELLE = new PersonBuilder().withName("Elle Meyer")
+    public static final Person ELLE = new PersonBuilder().withName("Elle")
             .withRole("support").withRank("diamond").withChampion("Lulu").build();
-    public static final Person FIONA = new PersonBuilder().withName("Fiona Kunz")
+    public static final Person FIONA = new PersonBuilder().withName("Fiona")
             .withRole("mid").withRank("master").withChampion("Zed").build();
-    public static final Person GEORGE = new PersonBuilder().withName("George Best")
+    public static final Person GEORGE = new PersonBuilder().withName("George")
             .withRole("top").withRank("iron").withChampion("Darius").build();
-    public static final Person HOON = new PersonBuilder().withName("Hoon Meier")
+    public static final Person HOON = new PersonBuilder().withName("Hoon")
             .withRole("support").withRank("silver").withChampion("Leona").build();
 
     // Manually added
-    public static final Person IDA = new PersonBuilder().withName("Ida Mueller")
+    public static final Person IDA = new PersonBuilder().withName("Ida")
             .withRole("jungle").withRank("gold").withChampion("Warwick").build();
-    public static final Person JAMES = new PersonBuilder().withName("James Franco")
+    public static final Person JAMES = new PersonBuilder().withName("James")
             .withRole("adc").withRank("platinum").withChampion("Jhin").build();
 
     // Manually added - Person's details found in {@code CommandTestUtil}
@@ -58,7 +58,19 @@ public class TypicalPersons {
             .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
             .build();
 
-    public static final String KEYWORD_MATCHING_MEIER = "Meier"; // A keyword that matches MEIER
+    // Role based names
+    public static final Person TOP_PERSON = new PersonBuilder().withName("TopPerson")
+            .withRank("Gold").withRole("Top").withChampion("Garen").build();
+    public static final Person JUNGLE_PERSON = new PersonBuilder().withName("JunglePerson")
+            .withRank("Platinum").withRole("Jungle").withChampion("Lee Sin").build();
+    public static final Person MID_PERSON = new PersonBuilder().withName("MidPerson")
+            .withRank("Diamond").withRole("Mid").withChampion("Ahri").build();
+    public static final Person ADC_PERSON = new PersonBuilder().withName("AdcPerson")
+            .withRank("Gold").withRole("Adc").withChampion("Jinx").build();
+    public static final Person SUPPORT_PERSON = new PersonBuilder().withName("SupportPerson")
+            .withRank("Platinum").withRole("Support").withChampion("Thresh").build();
+    public static final Person EXTRA_PERSON = new PersonBuilder().withName("ExtraPerson")
+            .withRank("Master").withRole("Top").withChampion("Ahri").build();
 
     private TypicalPersons() {} // prevents instantiation
 

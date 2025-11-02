@@ -12,6 +12,11 @@ public class ListCommand extends Command {
 
     public static final String COMMAND_WORD = "list";
 
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Lists all players and teams in SummonersBook.\n"
+            + "Parameters: None\n"
+            + "Example: " + COMMAND_WORD;
+
     public static final String MESSAGE_SUCCESS = "Listed all players";
 
 
@@ -20,5 +25,10 @@ public class ListCommand extends Command {
         requireNonNull(model);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof ListCommand;
     }
 }

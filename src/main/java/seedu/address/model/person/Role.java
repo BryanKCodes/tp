@@ -28,7 +28,7 @@ public class Role {
     }
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Role must be one of the following: TOP, JUNGLE, MID, ADC, SUPPORT.";
+            "Role must be one of the following: Top, Jungle, Mid, Adc, Support.";
 
     public final String value;
 

@@ -3,7 +3,7 @@
   "persons": [
     {
       "id": "6ec2d5ad-b84c-48f1-adc1-cac753f4d961",
-      "name": "Alice Pauline",
+      "name": "Alice",
       "role": "mid",
       "rank": "gold",
       "champion": "Ahri",
@@ -17,7 +17,7 @@
     },
     {
       "id": "5fd80efe-a7b4-4ed4-bbd1-f48e30bcac58",
-      "name": "Benson Meier",
+      "name": "Benson",
       "role": "top",
       "rank": "silver",
       "champion": "Garen",
@@ -31,7 +31,7 @@
     },
     {
       "id": "ff55a1bb-7c29-49fa-9931-06483207fe23",
-      "name": "Carl Kurz",
+      "name": "Carl",
       "role": "jungle",
       "rank": "platinum",
       "champion": "Lee Sin",
@@ -45,7 +45,7 @@
     },
     {
       "id": "04ea32c7-9bce-460d-b42b-3fbaa6e0578c",
-      "name": "Daniel Meier",
+      "name": "Daniel",
       "role": "adc",
       "rank": "gold",
       "champion": "Caitlyn",
@@ -59,7 +59,7 @@
     },
     {
       "id": "a2485a46-04ae-4cc0-b4a4-45444ed5ed94",
-      "name": "Elle Meyer",
+      "name": "Elle",
       "role": "support",
       "rank": "diamond",
       "champion": "Lulu",
@@ -73,7 +73,7 @@
     },
     {
       "id": "e861f4b6-9102-4665-9bc6-5d1d52c708e8",
-      "name": "Fiona Kunz",
+      "name": "Fiona",
       "role": "mid",
       "rank": "master",
       "champion": "Zed",
@@ -87,7 +87,7 @@
     },
     {
       "id": "59d18342-58f7-4708-a333-7860c4ab16d9",
-      "name": "George Best",
+      "name": "George",
       "role": "top",
       "rank": "iron",
       "champion": "Darius",
@@ -101,7 +101,7 @@
     },
     {
       "id": "ad25fd23-bd20-4dac-8365-db573c9b5ff4",
-      "name": "Hoon Meier",
+      "name": "Hoon",
       "role": "support",
       "rank": "silver",
       "champion": "Leona",

@@ -49,7 +49,7 @@ public class FilterCommand extends Command {
             + "[" + PREFIX_SCORE + "SCORE]... (at least one field must be provided)\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_RANK + "Diamond "
-            + PREFIX_CHAMPION + "Yasuo"
+            + PREFIX_CHAMPION + "Yasuo "
             + PREFIX_SCORE + "2.4";
 
     private final RankContainsKeywordsPredicate rankPredicate;
