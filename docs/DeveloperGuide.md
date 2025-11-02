@@ -941,14 +941,18 @@ otherwise)
 
 **MSS**
 
-1. User requests to group people into teams based on rank and role.
-2. SummonersBook creates the teams automatically.
-3. SummonersBook shows the newly formed teams.
+1. User requests to group all unassigned people into teams.
+2. SummonersBook validates that teams can be formed and creates them based on player rank and role, avoiding champion conflicts within each team.
+3. SummonersBook shows the newly formed teams to the user.
 
 **Extensions**
 
-- 2a. Insufficient number of people to form teams.
-    - 2a1. SummonersBook shows an error message.
+- 2a. At least one required role is not filled.
+    - 2a1. SummonersBook shows an error message listing the specific role(s) that are missing (e.g., "Cannot form teams. No players available for role(s): Top.").
+    - Use case ends.
+
+- 2b. Teams cannot be formed due to an unavoidable champion conflict.
+    - 2b1. SummonersBook shows an error message indicating the conflict, naming the two players and their shared champion (e.g., "Operation would result in duplicate champions in the team. Alice and Bob both play: Garen").
     - Use case ends.
 
 ---
