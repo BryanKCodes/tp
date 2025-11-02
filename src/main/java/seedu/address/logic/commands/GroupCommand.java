@@ -8,11 +8,12 @@ import java.util.stream.IntStream;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.teammatcher.InsufficientPersonsException;
 import seedu.address.logic.teammatcher.TeamMatcher;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
+import seedu.address.model.team.exceptions.DuplicateChampionException;
+import seedu.address.model.team.exceptions.MissingRolesException;
 
 /**
  * Automatically creates balanced teams from unassigned persons.
@@ -67,7 +68,7 @@ public class GroupCommand extends Command {
         List<Team> teams;
         try {
             teams = teamMatcher.matchTeams(unassignedPersons);
-        } catch (InsufficientPersonsException e) {
+        } catch (MissingRolesException | DuplicateChampionException e) {
             throw new CommandException(e.getMessage());
         }
 

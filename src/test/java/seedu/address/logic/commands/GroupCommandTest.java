@@ -84,6 +84,55 @@ public class GroupCommandTest {
     }
 
     @Test
+    public void execute_multipleMissingRoles_showsAllMissingRoles() {
+        // Only 3 roles present (Top, Mid, ADC) - missing Jungle and Support
+        Person top = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Garen").build();
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+
+        List<Person> unassignedPersons = Arrays.asList(top, mid, adc);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
+
+        GroupCommand command = new GroupCommand();
+
+        CommandException exception = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        String message = exception.getMessage();
+        assertTrue(message.contains("role(s)"));
+        assertTrue(message.contains("Jungle"));
+        assertTrue(message.contains("Support"));
+    }
+
+    @Test
+    public void execute_duplicateChampions_throwsCommandExceptionWithDuplicateMessage() {
+        // All 5 roles present but two players have the same champion (Urgot)
+        Person top = new PersonBuilder().withName("Top1").withRole("top")
+                .withRank("Gold").withChampion("Urgot").build();
+        Person jungle = new PersonBuilder().withName("Jungle1").withRole("jungle")
+                .withRank("Gold").withChampion("Urgot").build();
+        Person mid = new PersonBuilder().withName("Mid1").withRole("mid")
+                .withRank("Gold").withChampion("Ahri").build();
+        Person adc = new PersonBuilder().withName("Adc1").withRole("adc")
+                .withRank("Gold").withChampion("Jinx").build();
+        Person support = new PersonBuilder().withName("Support1").withRole("support")
+                .withRank("Gold").withChampion("Leona").build();
+
+        List<Person> unassignedPersons = Arrays.asList(top, jungle, mid, adc, support);
+        ModelStubWithUnassignedPersons modelStub = new ModelStubWithUnassignedPersons(unassignedPersons);
+
+        GroupCommand command = new GroupCommand();
+
+        CommandException exception = assertThrows(CommandException.class, () -> command.execute(modelStub));
+        String message = exception.getMessage();
+        assertTrue(message.contains("duplicate champions"));
+        assertTrue(message.contains("Top1"));
+        assertTrue(message.contains("Jungle1"));
+        assertTrue(message.contains("Urgot"));
+    }
+
+    @Test
     public void execute_multipleTeams_success() throws Exception {
         // Create 10 unassigned persons (2 per role)
         Person top1 = new PersonBuilder().withName("Top1").withRole("top")

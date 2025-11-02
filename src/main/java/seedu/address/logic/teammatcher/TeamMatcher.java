@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Role;
 import seedu.address.model.team.Team;
+import seedu.address.model.team.exceptions.DuplicateChampionException;
+import seedu.address.model.team.exceptions.MissingRolesException;
 
 /**
  * A class responsible for matching unassigned persons into balanced teams.
@@ -21,13 +23,13 @@ import seedu.address.model.team.Team;
 public class TeamMatcher {
 
     private static final int TEAM_SIZE = 5;
-    private static final Role[] REQUIRED_ROLES = {
+    private static final List<Role> REQUIRED_ROLES = List.of(
         new Role("Top"),
         new Role("Jungle"),
         new Role("Mid"),
         new Role("Adc"),
         new Role("Support")
-    };
+    );
 
     /**
      * Attempts to create balanced teams from a list of unassigned persons.
@@ -40,9 +42,11 @@ public class TeamMatcher {
      *
      * @param unassignedPersons List of persons not currently in any team.
      * @return List of teams that can be formed.
-     * @throws InsufficientPersonsException if there are not enough persons to form at least one complete team.
+     * @throws MissingRolesException if there are not enough persons to form at least one complete team.
+     * @throws DuplicateChampionException if teams cannot be formed due to duplicate champion conflicts.
      */
-    public List<Team> matchTeams(List<Person> unassignedPersons) throws InsufficientPersonsException {
+    public List<Team> matchTeams(List<Person> unassignedPersons)
+            throws MissingRolesException, DuplicateChampionException {
         // Group by role
         Map<Role, List<Person>> personsByRole = groupByRole(unassignedPersons);
 
@@ -51,6 +55,9 @@ public class TeamMatcher {
 
         // Create defensive copies and sort each role group by rank
         Map<Role, List<Person>> sortedPersonsByRole = createSortedCopy(personsByRole);
+
+        // Validate at least one team can be formed
+        validateNoInitialConflict(sortedPersonsByRole);
 
         // Form teams
         return formTeams(sortedPersonsByRole);
@@ -67,15 +74,28 @@ public class TeamMatcher {
     /**
      * Validates that there is at least one person for each required role.
      *
-     * @throws InsufficientPersonsException if any role is missing.
+     * @throws MissingRolesException if any role is missing.
      */
     private void validateMinimumPersons(Map<Role, List<Person>> personsByRole)
-            throws InsufficientPersonsException {
-        for (Role role : REQUIRED_ROLES) {
-            if (!personsByRole.containsKey(role) || personsByRole.get(role).isEmpty()) {
-                throw new InsufficientPersonsException(
-                        "Cannot form a team: No persons available for role " + role + ".");
-            }
+            throws MissingRolesException {
+        List<Role> missingRoles = REQUIRED_ROLES.stream()
+                .filter(role -> !personsByRole.containsKey(role) || personsByRole.get(role).isEmpty())
+                .collect(Collectors.toList());
+
+        if (!missingRoles.isEmpty()) {
+            throw new MissingRolesException(missingRoles);
+        }
+    }
+
+    /**
+     * Validates that at least one conflict-free team can be formed.
+     *
+     * @throws DuplicateChampionException if it's impossible to form even a single team.
+     */
+    private void validateNoInitialConflict(Map<Role, List<Person>> personsByRole) throws DuplicateChampionException {
+        if (trySelectTeamMembers(personsByRole).isEmpty()) {
+            Person[] conflict = findConflictingPersons(personsByRole);
+            throw new DuplicateChampionException(conflict[0], conflict[1]);
         }
     }
 
@@ -111,32 +131,72 @@ public class TeamMatcher {
     private List<Team> formTeams(Map<Role, List<Person>> personsByRole) {
         List<Team> teams = new ArrayList<>();
 
-        // Keep forming teams until we can't form any more complete teams
         while (canFormTeam(personsByRole)) {
-            List<Person> teamMembers = new ArrayList<>();
+            Optional<List<Person>> teamMembers = trySelectTeamMembers(personsByRole);
 
-            // Try to select one person from each role
-            for (Role role : REQUIRED_ROLES) {
-                List<Person> availablePersons = personsByRole.get(role);
-                Optional<Person> selectedPerson = selectPersonWithoutChampionConflict(availablePersons, teamMembers);
-
-                if (selectedPerson.isEmpty()) {
-                    // Can't form a complete team without champion conflicts
-                    // Put back the persons we've selected and stop
-                    return teams;
-                }
-
-                teamMembers.add(selectedPerson.get());
-                availablePersons.remove(selectedPerson.get());
+            if (teamMembers.isEmpty()) {
+                break;
             }
 
-            // Successfully formed a team
-            assert teamMembers.size() == TEAM_SIZE
-                : "Team should have exactly " + TEAM_SIZE + " members before creation";
-            teams.add(new Team(teamMembers));
+            List<Person> members = teamMembers.get();
+            teams.add(new Team(members));
+
+            // Remove selected persons from their role pools
+            for (Person member : members) {
+                personsByRole.get(member.getRole()).remove(member);
+            }
         }
 
         return teams;
+    }
+
+    /**
+     * Attempts to select a full team of 5 without champion conflicts.
+     */
+    private Optional<List<Person>> trySelectTeamMembers(Map<Role, List<Person>> personsByRole) {
+        List<Person> teamMembers = new ArrayList<>();
+        for (Role role : REQUIRED_ROLES) {
+            Optional<Person> selectedPerson = selectPersonWithoutChampionConflict(
+                    personsByRole.get(role), teamMembers);
+
+            if (selectedPerson.isEmpty()) {
+                return Optional.empty();
+            }
+            teamMembers.add(selectedPerson.get());
+        }
+        assert teamMembers.size() == TEAM_SIZE : "Team should have exactly " + TEAM_SIZE + " members";
+        return Optional.of(teamMembers);
+    }
+
+    /**
+     * Finds the two persons causing the first unavoidable champion conflict.
+     * Simulates the team selection process to pinpoint why team formation failed.
+     * This should only be called after {@code trySelectTeamMembers} returns empty.
+     *
+     * @param personsByRole Map of available persons, sorted by rank for each role.
+     * @return An array containing the two persons with the conflicting champion.
+     */
+     Person[] findConflictingPersons(Map<Role, List<Person>> personsByRole) {
+        List<Person> selectedSoFar = new ArrayList<>();
+
+        for (Role role : REQUIRED_ROLES) {
+            List<Person> candidatesForRole = personsByRole.get(role);
+            Optional<Person> selectedPerson = selectPersonWithoutChampionConflict(candidatesForRole, selectedSoFar);
+
+            if (selectedPerson.isPresent()) {
+                selectedSoFar.add(selectedPerson.get());
+            } else {
+                // Failure point: No candidate for this role can be selected.
+                Person highestRankedCandidate = candidatesForRole.get(0);
+                for (Person alreadySelected : selectedSoFar) {
+                    if (highestRankedCandidate.getChampion().equals(alreadySelected.getChampion())) {
+                        return new Person[]{highestRankedCandidate, alreadySelected};
+                    }
+                }
+                throw new IllegalStateException("Conflict detected but players could not be identified.");
+            }
+        }
+        throw new IllegalStateException("A conflict was expected but not found.");
     }
 
     /**
