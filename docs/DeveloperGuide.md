@@ -258,8 +258,7 @@ Now, the displayed list includes only persons whose rank is Gold **and** whose r
 <box type="info" seamless>
 
 **Note:**
-If no valid parameters are provided, all persons are shown.
-The `list` command can also be used to reset the view and display everyone.
+The `list` command can be used to reset the view and display everyone.
 
 </box>
 
@@ -294,7 +293,7 @@ The following sequence diagram illustrates how a filter command flows through th
 #### Implementation
 
 The auto-grouping feature is implemented through the `GroupCommand`, `GroupCommandParser`, and `TeamMatcher` classes.
-It automatically creates balanced teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
+It automatically creates rank-ordered teams from all unassigned persons, taking into account **person roles, ranks, and champions**.
 
 When the user executes:
 
@@ -306,7 +305,7 @@ This functionality is supported by the following key components:
 
 - **`GroupCommand`** — represents the command that performs auto-grouping. Validates input and orchestrates team formation.
 - **`GroupCommandParser`** — parses user input for the group command. Ensures no arguments are provided.
-- **`TeamMatcher`** — contains the core algorithm for forming balanced teams from unassigned persons.
+- **`TeamMatcher`** — contains the core algorithm for forming rank-ordered teams from unassigned persons.
 - **`Model#getUnassignedPersonList()`** — retrieves the list of persons not currently assigned to any team.
 - **`Model#addTeam(Team)`** — adds newly formed teams to the model and updates the UI.
 
@@ -368,10 +367,11 @@ The user executes the `group` command.
 - `GroupCommand#execute()` fetches all unassigned persons via `Model#getUnassignedPersonList()`.
 
 **Step 3.**
-`TeamMatcher#matchTeams()` is called to form balanced teams:
+`TeamMatcher#matchTeams()` is called to form rank-ordered teams:
 - Persons are grouped by role.
-- Each role group is sorted by rank.
-- Teams are formed iteratively while avoiding champion conflicts.
+- Each role group is sorted by rank (highest to lowest).
+- Teams are formed iteratively by selecting the highest-ranked available person from each role while avoiding champion conflicts.
+- This creates rank-ordered teams where Team 1 contains the highest-ranked persons, Team 2 contains the next-highest-ranked persons, and so on.
 
 **Step 4.**
 Teams are successfully formed according to role, rank, and champion constraints.
@@ -400,7 +400,7 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 - **Alternative 1 (current implementation):**
   Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
     - *Pros:* Simple, predictable, and efficient (O(n log n) for sorting + O(n) for team formation).
-    - *Pros:* Ensures teams are balanced by rank since highest-ranked players are selected first.
+    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked players, Team 2 gets the next-highest-ranked players, etc. This is useful for organizing scrimmages by skill level.
     - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
 
 - **Alternative 2:**
@@ -833,13 +833,13 @@ Both commands delegate CSV parsing and file I/O handling to utility classes with
 SummonersBook is designed specifically for **League of Legends (LoL) esports coaches and team managers** who:
 
 - Manage multiple players and teams in **competitive or training settings**
-- Need to **form balanced 5v5 teams** quickly based on rank, role, and champion pool
+- Need to **form 5v5 teams** quickly based on rank, role, and champion pool
 - **Track player performance** across scrims and tournaments over time
 - Prefer a **lightweight desktop application** over complex web dashboards
 - Are **comfortable typing commands** (similar to Slack bots or Discord commands) for faster workflow
 - Have **basic technical familiarity** (e.g. can install Java or use a terminal) but do not need programming experience
 
-**Value proposition:** manage people and create balanced teams faster and more efficiently than a typical spreadsheet or mouse/GUI-driven app.
+**Value proposition:** manage people and create rank-ordered teams faster and more efficiently than a typical spreadsheet or mouse/GUI-driven app.
 
 ### User stories
 
@@ -937,7 +937,7 @@ otherwise)
 
 **MSS**
 
-1. User requests to group people into balanced teams.
+1. User requests to group people into teams based on rank and role.
 2. SummonersBook creates the teams automatically.
 3. SummonersBook shows the newly formed teams.
 
@@ -1197,9 +1197,10 @@ otherwise)
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Balanced Team:**  
-  A team automatically created by SummonersBook’s grouping algorithm to ensure fair matchups across all teams.  
-  Each balanced team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank and assigned so that overall skill levels between teams remain comparable.  
+* **Rank-Ordered Team:**
+  A team automatically created by SummonersBook's grouping algorithm based on player skill levels.
+  Each team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank.
+  The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on.
   The algorithm also ensures that no two players in the same team share the same champion.
 
 --------------------------------------------------------------------------------------------------------------------

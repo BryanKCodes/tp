@@ -12,8 +12,8 @@ SummonersBook is built specifically for you.
 
 ## What SummonersBook Does
 
-Manage your player roster and form balanced 5v5 teams **in seconds** instead of hours:
-- **Auto-group balanced teams** based on rank, role, and champion pool
+Manage your player roster and form 5v5 teams **in seconds** instead of hours:
+- **Auto-group teams** by rank, role, and champion pool
 - **Track player performance** with built-in stats and visualizations
 - **Fast keyboard commands** optimized for coaches who type quickly
 
@@ -133,7 +133,7 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
    ```
    group
    ```
-   → SummonersBook instantly creates up to 3 teams, balanced by rank and ensuring unique roles and champions.
+   → SummonersBook instantly creates up to 3 rank-ordered teams, ensuring unique roles and champions per team.
    → Teams appear automatically in the team panel on the right side of the window.
 
 **Time saved:** ~45 minutes compared to manual balancing in spreadsheets.
@@ -217,7 +217,7 @@ Command | Purpose                                 | Format
 
 Command | Purpose | Format
 --------|---------|-------
-[`group`](#auto-grouping-players-into-teams-group) | Auto-create balanced teams | `group`
+[`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
 [`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
@@ -588,7 +588,7 @@ lose 2
 
 ### Auto-grouping players into teams: `group`
 
-Automatically forms as many balanced teams of five as possible from **unassigned** players using an intelligent matching algorithm.
+Automatically forms as many teams of five as possible from **unassigned** players using a rank-based matching algorithm.
 
 **Format:**
 ```
@@ -599,10 +599,12 @@ group
 
 The algorithm follows these steps:
 1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
-2. Sorts each role group by rank (highest to lowest) to prioritize balanced skill distribution.
-3. Iteratively forms teams by selecting one player from each role.
+2. Sorts each role group by rank (highest to lowest).
+3. Iteratively forms teams by selecting the highest-ranked available player from each role.
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
+
+**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked players, Team 2 contains the next-highest-ranked players, and so on.
 
 **Notes:**
 * At least one unassigned player for each of the five roles is required to form a team.
@@ -929,9 +931,10 @@ If a newly released champion (e.g., *Aurora*, *Ambessa*, *Mel*) is not yet recog
 To view the full list of supported champions:
 1. Open the `champions` folder inside the application’s resources.
 2. Open the `champions.txt` file — it contains all valid champion names, one per line.
-**Balanced Team:**  
-  A team automatically created by SummonersBook’s grouping algorithm to ensure fair matchups across all teams.  
-  Each balanced team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank and assigned so that overall skill levels between teams remain comparable.  
+**Rank-Ordered Team:**
+  A team automatically created by SummonersBook's grouping algorithm based on player skill levels.
+  Each team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank.
+  The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on.
   The algorithm also ensures that no two players in the same team share the same champion.
 
 [Back to Top](#summonersbook-user-guide)
