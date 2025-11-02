@@ -83,15 +83,13 @@ The SummonersBook window should look like the image below:
 
 Let's form your first balanced team to see SummonersBook in action!
 
-**a) Add 5 players** (copy-paste these into the command box):
+**a) Add 5 players** (copy-paste these one-by-one into the command box):
 
-```
-add n/Faker rk/Grandmaster rl/Mid c/Azir
-add n/Zeus rk/Diamond rl/Top c/Gnar
-add n/Oner rk/Master rl/Jungle c/Lee Sin
-add n/Gumayusi rk/Challenger rl/ADC c/Aphelios
-add n/Keria rk/Master rl/Support c/Thresh
-```
+1. `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+2. `add n/Zeus rk/Diamond rl/Top c/Gnar`
+3. `add n/Oner rk/Master rl/Jungle c/Lee Sin`
+4. `add n/Gumayusi rk/Challenger rl/ADC c/Aphelios`
+5. `add n/Keria rk/Master rl/Support c/Thresh`
 
 **b) Auto-create a balanced team:**
 
