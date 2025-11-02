@@ -41,7 +41,8 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 5. [Troubleshooting](#troubleshooting)
 6. [FAQ](#faq)
 7. [Known Issues](#known-issues)
-8. [Command Summary](#command-summary)
+8. [Glossary](#glossary)
+9. [Command Summary](#command-summary)
 
 ---
 ## Quick Start
@@ -841,6 +842,22 @@ view 2               # OK - refers to 2nd player in filtered list
 2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut
    `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to
    manually restore the minimized Help Window.
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+### Glossary
+
+**Java:** The programming language required to run SummonersBook (version 17 or higher).  
+**Command Line / Terminal:** A text-based interface where you type commands.  
+**JAR file:** A packaged Java application you can run with `java -jar`.  
+**Index:** The number beside a player or team in the displayed list (starts from 1).  
+**Parameter:** A value supplied after a command to specify details.  
+**CSV file:** A spreadsheet-style file for importing or exporting data.  
+**Path:** The location of a file on your computer (e.g. `data/players.csv`).  
+**JSON file:** The internal data file where SummonersBook automatically saves your information.  
+**GUI / Window:** The graphical interface that opens when you run SummonersBook.
 
 [Back to Top](#summonersbook-user-guide)
 
