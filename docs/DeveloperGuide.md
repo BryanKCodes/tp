@@ -922,14 +922,14 @@ otherwise)
 
 **MSS**
 
-1. User requests to find people by specifying search criteria (role, rank, etc.).
-2. SummonersBook displays all people matching the criteria.
+1. User requests to find players by specifying one or more keywords in their names. (Note: The search is case-insensitive.)
+2. SummonersBook searches the player list and displays all players whose names contain at least one of the given keywords.
 
 **Extensions**
 
-- 2a. No people match the criteria.
-    - 2a1. SummonersBook shows “no people found.”
-    - Use case ends.
+- 2a. No players match any of the given keywords.
+  - 2a1. SummonersBook shows “No players found.
+- Use case ends.
 
 ---
 
