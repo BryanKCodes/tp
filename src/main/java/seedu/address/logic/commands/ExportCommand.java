@@ -33,8 +33,8 @@ import seedu.address.model.Model;
 public class ExportCommand extends Command {
     public static final String COMMAND_WORD = "export";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Exports players or teams to CSV.\n"
-            + "Parameters: export [players|teams] [to/FILEPATH]\n"
-            + "Examples: export players | export teams to/data/my_teams.csv";
+            + "Parameters: export [players|teams] [to CUSTOM_PATH]\n"
+            + "Examples: export players | export teams to data/my_teams.csv";
 
     private static final Path DEFAULT_PLAYERS_PATH = Paths.get("data/players.csv");
     private static final Path DEFAULT_TEAMS_PATH = Paths.get("data/teams.csv");
