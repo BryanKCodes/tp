@@ -11,8 +11,13 @@ import seedu.address.model.Model;
 public class ClearCommand extends Command {
 
     public static final String COMMAND_WORD = "clear";
-    public static final String MESSAGE_SUCCESS = "SummonersBook has been cleared!";
 
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Clears all players and teams from SummonersBook. This action is irreversible.\n"
+            + "Parameters: None\n"
+            + "Example: " + COMMAND_WORD;
+
+    public static final String MESSAGE_SUCCESS = "SummonersBook has been cleared!";
 
     @Override
     public CommandResult execute(Model model) {
