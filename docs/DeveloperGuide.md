@@ -830,16 +830,16 @@ Both commands delegate CSV parsing and file I/O handling to utility classes with
 ### Product scope
 
 **Target user profile**:
+SummonersBook is designed specifically for **League of Legends (LoL) esports coaches and team managers** who:
 
-* gaming coaches or team managers who need to manage a significant number of people
-* prefer lightweight desktop apps over complex web platforms
-* can type fast and are comfortable with CLI-style interactions
-* want quick ways to form balanced teams for training or mock matches
-* are reasonably comfortable using simple technical tools
-* have many people of varying skill levels and roles to balance
+- Manage multiple players and teams in **competitive or training settings**
+- Need to **form balanced 5v5 teams** quickly based on rank, role, and champion pool
+- **Track player performance** across scrims and tournaments over time
+- Prefer a **lightweight desktop application** over complex web dashboards
+- Are **comfortable typing commands** (similar to Slack bots or Discord commands) for faster workflow
+- Have **basic technical familiarity** (e.g. can install Java or use a terminal) but do not need programming experience
 
-**Value proposition**: manage people and create balanced teams faster and more efficiently than a typical spreadsheet
-or mouse/GUI-driven app.
+**Value proposition:** manage people and create balanced teams faster and more efficiently than a typical spreadsheet or mouse/GUI-driven app.
 
 ### User stories
 
