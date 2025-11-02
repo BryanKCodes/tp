@@ -615,7 +615,7 @@ Creates a new team with the specified players by their index numbers.
 - `makeGroup 1 2 3 4 5`
   Creates a new team with the 1st, 2nd, 3rd, 4th and 5th players in the **currently displayed list**.
 
-### 👁️ Viewing team details : `viewTeam`
+### Viewing team details : `viewTeam`
 
 Opens a detailed window showing comprehensive information about a team, including all members and team statistics.
 
