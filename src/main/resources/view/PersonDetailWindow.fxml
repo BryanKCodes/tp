@@ -71,7 +71,7 @@
                     <Label fx:id="tagsLabel" styleClass="detail-value-label" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
                     <!-- Row 6: Performance Score -->
-                    <Label styleClass="detail-key-label" text="Performance:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <Label styleClass="detail-key-label" text="Score:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                     <Label fx:id="performanceLabel" styleClass="detail-value-label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
                 </GridPane>
