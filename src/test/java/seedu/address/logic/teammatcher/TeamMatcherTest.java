@@ -417,15 +417,15 @@ public class TeamMatcherTest {
     @Test
     public void findConflictingPersons_directConflictInSecondRole_returnsCorrectPair() {
         // Arrange
-        Person topLaner = new PersonBuilder().withName("P1").withRole("Top")
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
                 .withRank("Gold").withChampion("Darius").build();
-        Person jungler = new PersonBuilder().withName("P2").withRole("Jungle")
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
                 .withRank("Gold").withChampion("Darius").build();
-        Person midLaner = new PersonBuilder().withName("P3").withRole("Mid")
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
                 .withRank("Gold").withChampion("Ahri").build();
-        Person adc = new PersonBuilder().withName("P4").withRole("Adc")
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
                 .withRank("Gold").withChampion("Jinx").build();
-        Person support = new PersonBuilder().withName("P5").withRole("Support")
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
                 .withRank("Gold").withChampion("Lulu").build();
 
         List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
@@ -445,15 +445,15 @@ public class TeamMatcherTest {
     @Test
     public void findConflictingPersons_conflictInLaterRole_returnsCorrectPair() {
         // Arrange
-        Person topLaner = new PersonBuilder().withName("P1").withRole("Top")
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
                 .withRank("Gold").withChampion("Garen").build();
-        Person jungler = new PersonBuilder().withName("P2").withRole("Jungle")
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
                 .withRank("Gold").withChampion("Vi").build();
-        Person midLaner = new PersonBuilder().withName("P3").withRole("Mid")
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
                 .withRank("Gold").withChampion("Ahri").build();
-        Person adc = new PersonBuilder().withName("P4").withRole("Adc")
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
                 .withRank("Gold").withChampion("Garen").build(); // Conflicts with Top
-        Person support = new PersonBuilder().withName("P5").withRole("Support")
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
                 .withRank("Gold").withChampion("Lulu").build();
 
         List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
@@ -477,17 +477,17 @@ public class TeamMatcherTest {
         // 2. Jungle has two options: Malphite (Gold) and Vi (Silver). The algorithm must skip the Gold player
         //    and select Vi to avoid conflict.
         // 3. Mid has only one option, Malphite, which now conflicts with the selected Top laner.
-        Person topLaner = new PersonBuilder().withName("P1").withRole("Top")
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
                 .withRank("Gold").withChampion("Malphite").build();
-        Person jungler1 = new PersonBuilder().withName("P2").withRole("Jungle")
+        Person jungler1 = new PersonBuilder().withName("Player2").withRole("Jungle")
                 .withRank("Gold").withChampion("Malphite").build();
-        Person jungler2 = new PersonBuilder().withName("P3").withRole("Jungle")
+        Person jungler2 = new PersonBuilder().withName("Player3").withRole("Jungle")
                 .withRank("Silver").withChampion("Vi").build();
-        Person midLaner = new PersonBuilder().withName("P4").withRole("Mid")
+        Person midLaner = new PersonBuilder().withName("Player4").withRole("Mid")
                 .withRank("Gold").withChampion("Malphite").build();
-        Person adc = new PersonBuilder().withName("P5").withRole("Adc")
+        Person adc = new PersonBuilder().withName("Player5").withRole("Adc")
                 .withRank("Gold").withChampion("Jinx").build();
-        Person support = new PersonBuilder().withName("P6").withRole("Support")
+        Person support = new PersonBuilder().withName("Player6").withRole("Support")
                 .withRank("Gold").withChampion("Lulu").build();
 
         List<Person> persons = List.of(topLaner, jungler1, jungler2, midLaner, adc, support);
@@ -506,15 +506,15 @@ public class TeamMatcherTest {
     @Test
     public void findConflictingPersons_whenTeamIsFormable_throwsIllegalStateException() {
         // Arrange: A perfectly valid team with no conflicts. The method should not be called in this case.
-        Person topLaner = new PersonBuilder().withName("P1").withRole("Top")
+        Person topLaner = new PersonBuilder().withName("Player1").withRole("Top")
                 .withRank("Gold").withChampion("Garen").build();
-        Person jungler = new PersonBuilder().withName("P2").withRole("Jungle")
+        Person jungler = new PersonBuilder().withName("Player2").withRole("Jungle")
                 .withRank("Gold").withChampion("Vi").build();
-        Person midLaner = new PersonBuilder().withName("P3").withRole("Mid")
+        Person midLaner = new PersonBuilder().withName("Player3").withRole("Mid")
                 .withRank("Gold").withChampion("Ahri").build();
-        Person adc = new PersonBuilder().withName("P4").withRole("Adc")
+        Person adc = new PersonBuilder().withName("Player4").withRole("Adc")
                 .withRank("Gold").withChampion("Jinx").build();
-        Person support = new PersonBuilder().withName("P5").withRole("Support")
+        Person support = new PersonBuilder().withName("Player5").withRole("Support")
                 .withRank("Gold").withChampion("Lulu").build();
 
         List<Person> persons = List.of(topLaner, jungler, midLaner, adc, support);
