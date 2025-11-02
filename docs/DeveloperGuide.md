@@ -172,9 +172,11 @@ The `Model` component,
 
 <box type="info" seamless>
 
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which
-`Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person`
-needing their own `Tag` objects.<br>
+**Note:** An alternative, and arguably more object-oriented, model is presented below. This design utilizes the **Flyweight design pattern** to efficiently handle shared data.
+
+In this model, the `AddressBook` contains unique lists of `Tag`s, `Champion`s, `Role`s, and `Rank`s. Each `Person` object then simply **references** these shared attributes as needed.
+
+This approach is far more efficient as it ensures that only one object is created for each unique attribute. For example, instead of every `Person` with the "Support" role maintaining their own duplicate `Role` object, they all point to a single, shared instance managed by the `AddressBook`. This design promotes better data management, ensures consistency, and significantly reduces redundancy and memory usage within the application.
 
 <puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
 
