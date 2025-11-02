@@ -300,8 +300,11 @@ Shows a list of all players in your SummonersBook roster.
 ```
 list
 ```
-> [!TIP]
-> Use this command to reset any filters and see your full roster again.
+<box type="tip" seamless>
+
+**Tip:** Use this command to reset any filters and see your full roster again.
+
+</box>
 
 ### Finding players by name: `find`
 
@@ -377,7 +380,6 @@ view INDEX
 ```
 
 **How it works:**
-* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * The window displays:
     - Basic information (name, role, rank, champion, tags)
     - Win/loss record
@@ -386,6 +388,9 @@ view INDEX
     - KDA trends
     - Gold difference at 15 minutes trends
 * Up to the latest 10 matches are shown in the performance graphs.
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 
 **Examples:**
 * Open a detailed window for the 1st player in the list
@@ -407,16 +412,17 @@ edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]
 ```
 
 **How it works:**
-* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * Existing values are **overwritten** by the new input.
 * Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
 
-> [!NOTE]
-> At least one field to edit must be provided.
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
+* At least one field to edit must be provided.
 
-> [!IMPORTANT]
-> Editing a player that is in a team may not be allowed due to duplicate roles or champions.
-> Remove them from the team first using `ungroup`
+<box type="important" seamless>
+**Important:** Editing a player that is in a team may not be allowed due to duplicate roles or champions. Remove them from the team first using `ungroup`
+
+</box>
 
 **Examples:**
 * Updates name, role, rank, and champion of the 1st player in the list.
@@ -442,11 +448,16 @@ delete INDEX
 ```
 
 **How it works:**
-* `INDEX` refers to the number shown in the current displayed player list. (Must be a positive integer)
 * Deletes the player at the specified `INDEX`.
 
-> [!IMPORTANT]
-> You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
+
+<box type="important" seamless>
+
+**Important:** You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
+
+</box>
 
 **Example:**
 * Delete the 3rd player in the list.
@@ -471,6 +482,9 @@ Records a new set of performance values for a player after a match:
 ```
 addStats INDEX cpm/CPM gd15/GD15 kda/KDA
 ```
+**How it works:**
+* A new set of performance values (cpm, gd15, kda) will be added.
+* These values will be recorded and the player's average performance score will be updated automatically.
 
 **Notes:**
 * `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
@@ -479,7 +493,6 @@ addStats INDEX cpm/CPM gd15/GD15 kda/KDA
 * GD15 must be an integer between -10,000 and 10,000
 * KDA must be a decimal between 0.0 and 200.0
 * Decimal point is a dot `.`
-* These values will be recorded and the player's average performance score will be updated automatically.
 
 **Example:**
 
@@ -498,10 +511,12 @@ Deletes the most recent performance record for a player (useful for correcting m
 **Format:**
 `deleteStats INDEX`
 
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
+**How it works:**
 * The most recent set of performance values (cpm, gd15, kda) will be deleted.
 * The player's average score will be recalculated automatically.
+
+**Notes:**
+* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Removes the latest performance entry for the 1st player in the list.
@@ -519,15 +534,24 @@ Records a win for a team, updating both the team's record and all team members' 
 win TEAM_INDEX
 ```
 
-#### How it works:
+**How it works:**
+* The selected team will have its win count incremented.
+* The team's members will also have their win counts incremented.
+
+**Notes:**
 * `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
-* Both the team and all its members will have their win count incremented.
 
 > [!IMPORTANT]
 > If a team is removed, all its recorded wins and losses are deleted.
 > Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
 
-#### Example:
+<box type="important" seamless>
+
+**Important:** If a team is removed, all its recorded wins and losses are deleted. Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
+
+</box>
+
+**Example:**
 * Records a win for the 1st team in the list.
 ```
 win 1
@@ -543,16 +567,18 @@ Records a loss for a team, updating both the team's record and all team members'
 lose TEAM_INDEX
 ```
 
-#### How it works:
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
-* Both the team and all its members will have their loss count incremented.
+**How it works:**
+* The selected team will have its loss count incremented.
+* The team's members will also have their loss counts incremented.
 
-#### Example:
+**Notes:**
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+
+**Example:**
 * Records a loss for the 2nd team in the list.
 ```
 lose 2
 ```
-  
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -565,9 +591,12 @@ lose 2
 Automatically forms as many balanced teams of five as possible from **unassigned** players using an intelligent matching algorithm.
 
 **Format:**
-`group`
+```
+group
+```
 
 **How it works:**
+
 The algorithm follows these steps:
 1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
 2. Sorts each role group by rank (highest to lowest) to prioritize balanced skill distribution.
@@ -575,60 +604,67 @@ The algorithm follows these steps:
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
 
-<box type="warning" seamless>
-
-**Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
-
-</box>
-
 **Notes:**
 * At least one unassigned player for each of the five roles is required to form a team.
 * Only players **not already in a team** are considered.
 * If champion conflicts prevent forming a team, the algorithm stops and reports how many teams were created.
 * Any remaining unassigned players stay in the pool and can be grouped later.
 
-**Examples:**
-* `group`
-  Forms balanced teams from all unassigned players.
+<box type="warning" seamless>
+
+**Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
+
+</box>
 
 ### Manually creating a team: `makeGroup`
 
 Creates a new team with the specified players by their index numbers.
 
 **Format:**
-`makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
+```
+makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
+```
 
-<box type="info" seamless>
+**How it works:**
+* The selected players will be verified if they form a valid team.
+* Once verified, the team is created and added to your team list.
 
-**Rules & Notes:**
-- Each index must refer to a player in the **currently displayed** player list.
-- Players **cannot already belong** to another team.
-- All five players must have **unique roles** (no duplicates).
-- All five players must have **unique champions** (no duplicates).
-- Exactly 5 index numbers must be provided.
-- Index numbers must not be duplicated.
-- If any index is invalid or player is unavailable, the command will fail with a clear error message.
+**How it works:**
+* The selected players will be verified if they form a valid team.
+* Once verified, the team is created and added to your team list.
 
-</box>
+**Notes:**
+* `INDEX` (1 to 5) refers to the number shown in the displayed player list. Must be a positive integer (1, 2, 3…).
+* **Exactly 5** index numbers must be provided.
+* Players **cannot already belong** to another team.
+* All players must have **unique roles**
+* All players must have **unique champions**
 
-**Examples:**
-- `makeGroup 1 2 3 4 5`
-  Creates a new team with the 1st, 2nd, 3rd, 4th and 5th players in the **currently displayed list**.
-
+**Example:**
+* Creates a new team with the 1st, 2nd, 3rd, 4th and 5th players in the **currently displayed list**.
+```
+makeGroup 1 2 3 4 5
+```
 ### Viewing team details : `viewTeam`
 
 Opens a detailed window showing comprehensive information about a team, including all members and team statistics.
 
 **Format:**
-`viewTeam INDEX`
+```
+viewTeam TEAM_INDEX
+```
 
-#### Notes
-* `INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
-* The window displays team member details and win/loss record.
+**How it works:**
+* A new window displays team member details and win/loss record.
 
-#### Examples
-* `viewTeam 1`
-  Opens a detailed window for the 1st team in the list.
+**Notes:**
+* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+
+**Example:**
+* Opens a detailed window for the 1st team in the list.
+```
+viewTeam 1
+```
 
 ---
 
@@ -637,20 +673,31 @@ Opens a detailed window showing comprehensive information about a team, includin
 Removes one or more teams from the system, returning their members to the unassigned pool.
 
 **Format:**
-`ungroup INDEX` or `ungroup all`
+```
+ungroup INDEX
+```
+or
+```
+ungroup all
+```
 
-**Notes:**
-* `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+**How it works:**
 * Use `all` (case-insensitive) to disband all teams at once.
 * After ungrouping, all team members become available for forming new teams.
 * If there are no teams, the command will show an error.
 
-**Examples:**
-* `ungroup 1`
-  Disbands the 1st team in the displayed team list.
+**Notes:**
+* `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
-* `ungroup all`
-  Disbands all teams, making all players unassigned.
+**Example:**
+* Disbands the 1st team in the displayed team list.
+```
+ungroup 1
+```
+* Disbands all teams, making all players unassigned.
+```
+ungroup all
+```
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -665,10 +712,13 @@ Exports player or team data from SummonersBook into a CSV file. You can export e
 **Format:**
 ```
 export players [to CUSTOM_PATH]
+```
+or
+```
 export teams [to CUSTOM_PATH]
 ```
 
-**Notes:**
+**How it works:**
 * If no path is provided, exports are saved to:
     - `data/players.csv` for player data
     - `data/teams.csv` for team data
@@ -692,12 +742,14 @@ Exported players to data/players.csv
 Imports player information from a CSV file into SummonersBook. This is useful for restoring saved data or onboarding new players quickly.
 
 **Format:**
-`import players from FILE_PATH`
+```
+import players from/FILE_PATH
+```
 
 **Notes:**
 * The CSV file must be properly formatted. Supported headers include:
     - `Name,Role,Rank,Champion`
-    - or `Name,Role,Rank,Champion,Wins,Losses`
+    - `Name,Role,Rank,Champion,Wins,Losses`
 * Duplicate player entries (by name and role) will be ignored automatically.
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
@@ -723,13 +775,19 @@ Imported 10 players, skipped 0 duplicates, 0 invalid row(s).
 
 Opens a help window displaying the full User Guide.
 
-**Format:** `help`
+**Format:**
+```
+help
+```
 
 ### Clearing all data: `clear`
 
 Deletes all players and teams from SummonersBook.
 
-**Format:** `clear`
+**Format:**
+```
+clear
+```
 
 <box type="warning" seamless>
 
@@ -741,7 +799,10 @@ Deletes all players and teams from SummonersBook.
 
 Closes the application.
 
-**Format:** `exit`
+**Format:**
+```
+exit
+```
 
 ### Saving the data
 
@@ -752,9 +813,13 @@ Data is saved automatically to disk after any command that changes data. No manu
 SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/addressbook.json`.
 Advanced users can edit this file directly if needed.
 
+<box type="warning" seamless>
+
 **Caution:**
 Editing the data file incorrectly can **corrupt your data**, causing SummonersBook to start with an empty file.
 Always **back up the file** before making changes, and only edit it if you are confident about the updates.
+
+</box>
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -893,14 +958,14 @@ Action | Format | Example
 **Delete stats** | `deleteStats INDEX` | `deleteStats 1`
 
 ### Team Management
-Action | Format | Example
--------|--------|--------
-**Auto-group teams** | `group` | `group`
+Action | Format                                              | Example
+-------|-----------------------------------------------------|--------
+**Auto-group teams** | `group`                                             | `group`
 **Manually create team** | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` | `makeGroup 1 2 3 4 5`
-**View team details** | `viewTeam INDEX` | `viewTeam 1`
-**Record win** | `win TEAM_INDEX` | `win 2`
-**Record loss** | `lose TEAM_INDEX` | `lose 2`
-**Disband team(s)** | `ungroup INDEX` or `ungroup all` | `ungroup 1` or `ungroup all`
+**View team details** | `viewTeam TEAM_INDEX`                               | `viewTeam 1`
+**Record win** | `win TEAM_INDEX`                                    | `win 2`
+**Record loss** | `lose TEAM_INDEX`                                   | `lose 2`
+**Disband team(s)** | `ungroup TEAM_INDEX` or `ungroup all`               | `ungroup 1` or `ungroup all`
 
 ### Data Import/Export
 Action | Format                     | Example
