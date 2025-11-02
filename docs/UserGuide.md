@@ -858,6 +858,19 @@ view 2               # OK - refers to 2nd player in filtered list
 **Path:** The location of a file on your computer (e.g. `data/players.csv`).  
 **JSON file:** The internal data file where SummonersBook automatically saves your information.  
 **GUI / Window:** The graphical interface that opens when you run SummonersBook.
+**Champion:**  
+A playable character in *League of Legends*.  
+SummonersBook validates champion names against an internal list stored in `champions.txt`, located within the application’s resources.  
+Only names from this list are accepted (case-insensitive).  
+If a newly released champion (e.g., *Aurora*, *Ambessa*, *Mel*) is not yet recognized, SummonersBook will reject the input until the list is updated in a future release.
+
+To view the full list of supported champions:
+1. Open the `champions` folder inside the application’s resources.
+2. Open the `champions.txt` file — it contains all valid champion names, one per line.
+**Balanced Team:**  
+  A team automatically created by SummonersBook’s grouping algorithm to ensure fair matchups across all teams.  
+  Each balanced team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank and assigned so that overall skill levels between teams remain comparable.  
+  The algorithm also ensures that no two players in the same team share the same champion.
 
 [Back to Top](#summonersbook-user-guide)
 
