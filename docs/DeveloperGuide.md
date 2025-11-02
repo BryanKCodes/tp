@@ -1197,6 +1197,10 @@ otherwise)
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Balanced Team:**  
+  A team automatically created by SummonersBook’s grouping algorithm to ensure fair matchups across all teams.  
+  Each balanced team includes one player per unique role — **Top, Jungle, Mid, ADC, and Support** — with players sorted by rank and assigned so that overall skill levels between teams remain comparable.  
+  The algorithm also ensures that no two players in the same team share the same champion.
 
 --------------------------------------------------------------------------------------------------------------------
 
