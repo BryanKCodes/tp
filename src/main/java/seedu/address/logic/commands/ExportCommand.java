@@ -21,13 +21,13 @@ import seedu.address.model.Model;
  *     <li><b>Players</b> — exported to {@code data/players.csv} by default</li>
  *     <li><b>Teams</b> — exported to {@code data/teams.csv} by default</li>
  * </ul>
- * Users can optionally specify a custom file path using the {@code to/} prefix.
+ * Users can optionally specify a custom file path using the {@code to} keyword.
  * </p>
  *
  * <p><b>Example usages:</b></p>
  * <pre>
  *     export players
- *     export teams to/data/my_teams.csv
+ *     export teams to data/my_teams.csv
  * </pre>
  */
 public class ExportCommand extends Command {

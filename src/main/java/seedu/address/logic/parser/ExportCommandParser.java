@@ -16,7 +16,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
  *   <li>{@code export players to data/players.csv}</li>
  *   <li>{@code export teams to data/teams.csv}</li>
  * </ul>
- * If no {@code to/FILEPATH} is provided, a default path is used.
+ * If no {@code CUSTOM_PATH} is provided, a default path is used.
  */
 public class ExportCommandParser implements Parser<ExportCommand> {
 
