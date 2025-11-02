@@ -462,6 +462,29 @@ This design is pragmatic and maintainable: static structure is in FXML (easy to 
 
 ---
 
+#### CommandResult Enhancement
+
+To enable modal window support, the `CommandResult` class was enhanced with additional fields and factory methods:
+
+**Key Fields:**
+- `showPersonDetail` (boolean) — indicates whether the person detail window should be shown.
+- `personToShow` (Person) — the person whose details should be displayed (null if not applicable).
+
+**Factory Method:**
+- `CommandResult.showPersonDetail(String message, Person person)` — creates a result configured to open the person detail window. Used by `ViewCommand` to trigger the display.
+
+**Integration with UI:**
+
+The `MainWindow` class handles `CommandResult` objects returned by command execution:
+
+1. **Check result flag**: After executing a command, `MainWindow` checks `isShowPersonDetail()`.
+2. **Extract context data**: If the flag is set, it extracts the person using `getPersonToShow()`, which returns `Optional<Person>`.
+3. **Create and show window**: It creates a `PersonDetailWindow` instance, passes the person data via `setPerson()`, and shows the window.
+
+This design maintains **separation of concerns**: commands decide *what* to show, UI decides *how* to show it. Commands remain decoupled from JavaFX implementation details.
+
+---
+
 #### Sequence Diagram
 
 The following sequence diagram illustrates how the `view` command interacts with the UI to display the person detail window:
@@ -540,6 +563,26 @@ The user executes `view 1` to view the first person.
   Allow users to configure the range (e.g., last 5, 10, 20 matches).
     - *Pros:* Flexible to user needs.
     - *Cons:* Adds UI complexity. Requires additional state management.
+
+**Aspect: How to signal UI actions from commands**
+
+- **Alternative 1 (current implementation):**
+  Extend `CommandResult` with flags and optional data fields.
+    - *Pros:* Centralized result handling. All commands return the same type.
+    - *Pros:* UI layer handles all window management. Commands remain decoupled from JavaFX.
+    - *Cons:* `CommandResult` class grows as more UI actions are added.
+
+- **Alternative 2:**
+  Use an event bus or observer pattern where commands emit events.
+    - *Pros:* More extensible. New events can be added without modifying `CommandResult`.
+    - *Cons:* Adds complexity. Requires event bus infrastructure.
+    - *Cons:* Harder to trace control flow during debugging.
+
+- **Alternative 3:**
+  Commands directly call UI methods (e.g., `ui.showPersonDetail(person)`).
+    - *Pros:* Simple and direct.
+    - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
+    - *Cons:* Makes testing commands difficult (need to mock UI).
 
 ### Ungrouping Teams Feature
 
@@ -667,70 +710,6 @@ The user executes `ungroup all`.
   Collect team IDs first, then remove by ID.
     - *Pros:* Avoids concurrent modification.
     - *Cons:* Requires additional ID lookup logic. More complex.
-
-### CommandResult Enhancement for Modal Windows
-
-#### Implementation
-
-The `CommandResult` class has been enhanced to support triggering modal windows for displaying person details and team statistics.
-This allows commands to not only return feedback text but also signal the UI to show specific windows with context data.
-
-#### Key Fields Added
-
-1. **`showPersonDetail`** (boolean) — indicates whether the person detail window should be shown.
-2. **`personToShow`** (Person) — the person whose details should be displayed (null if not applicable).
-3. **`showTeamStats`** (boolean) — indicates whether the team stats window should be shown.
-4. **`teamToShow`** (Team) — the team whose stats should be displayed (null if not applicable).
-
-These fields extend the original `CommandResult` design which only supported `showHelp` and `exit` flags.
-
-#### Factory Methods
-
-To maintain clean command code and adhere to the **Dependency Inversion Principle**, `CommandResult` provides static factory methods:
-
-- **`CommandResult.showPersonDetail(String message, Person person)`**
-  - Creates a result configured to open the person detail window.
-  - Used by `ViewCommand` to trigger the display.
-
-- **`CommandResult.showTeamStats(String message, Team team)`**
-  - Creates a result configured to open the team stats window.
-  - Reserved for future team statistics features (e.g., `viewteam` command).
-
-These factory methods make the intent explicit and prevent construction errors.
-
-#### Integration with UI
-
-The `MainWindow` class handles `CommandResult` objects returned by command execution:
-
-1. **Check result flags**: After executing a command, `MainWindow` checks `isShowPersonDetail()` or `isShowTeamStats()`.
-
-2. **Extract context data**: If a flag is set, it extracts the relevant object using `getPersonToShow()` or `getTeamToShow()`, which return `Optional<Person>` or `Optional<Team>`.
-
-3. **Create and show window**: It creates the appropriate window instance (`PersonDetailWindow` or similar), passes the context data, and shows the window.
-
-This design maintains **separation of concerns**: commands decide *what* to show, UI decides *how* to show it.
-
-#### Design Considerations
-
-**Aspect: How to signal UI actions from commands**
-
-- **Alternative 1 (current implementation):**
-  Extend `CommandResult` with flags and optional data fields.
-    - *Pros:* Centralized result handling. All commands return the same type.
-    - *Pros:* UI layer handles all window management. Commands remain decoupled from JavaFX.
-    - *Cons:* `CommandResult` class grows as more UI actions are added.
-
-- **Alternative 2:**
-  Use an event bus or observer pattern where commands emit events.
-    - *Pros:* More extensible. New events can be added without modifying `CommandResult`.
-    - *Cons:* Adds complexity. Requires event bus infrastructure.
-    - *Cons:* Harder to trace control flow during debugging.
-
-- **Alternative 3:**
-  Commands directly call UI methods (e.g., `ui.showPersonDetail(person)`).
-    - *Pros:* Simple and direct.
-    - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
-    - *Cons:* Makes testing commands difficult (need to mock UI).
 
 ### Data Import / Export Feature
 The **Import/Export** feature enables users to back up, share, and restore player and team data in CSV format.  
