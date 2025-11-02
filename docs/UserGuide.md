@@ -26,7 +26,7 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
     - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
     - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team-2-minute-tutorial)
-    - [Step 4: Learn the Essentials](#step-3-learn-the-essentials)
+    - [Step 4: Learn the Essentials](#step-4-learn-the-essentials)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
     - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
@@ -100,7 +100,7 @@ group
 
 🎉 **Done!** You just formed a balanced team in under 30 seconds. The team will appear in the team panel on the right.
 
-### Step 3: Learn the Essentials
+### Step 4: Learn the Essentials
 
 Now that you've seen the magic, explore these core commands:
 - `filter rl/Mid rk/Diamond` — Find specific players by role and rank
@@ -666,8 +666,8 @@ Exports player or team data from SummonersBook into a CSV file. You can export e
 
 **Format:**
 ```
-export players [to/CUSTOM_PATH]
-export teams [to/CUSTOM_PATH]
+export players [to CUSTOM_PATH]
+export teams [to CUSTOM_PATH]
 ```
 
 **Notes:**
@@ -681,12 +681,12 @@ export teams [to/CUSTOM_PATH]
 * `export players`
   Exports all player data to `data/players.csv`.
 
-* `export teams to/data/myTeams.csv`
+* `export teams to data/myTeams.csv`
   Exports all team data to a custom location.
 
 **Success message:**
 ```
-Exported players to/data/players.csv
+Exported players to data/players.csv
 ```
 
 ### Importing player data: `import`
@@ -694,7 +694,7 @@ Exported players to/data/players.csv
 Imports player information from a CSV file into SummonersBook. This is useful for restoring saved data or onboarding new players quickly.
 
 **Format:**
-`import players from/FILE_PATH`
+`import players from FILE_PATH`
 
 **Notes:**
 * The CSV file must be properly formatted. Supported headers include:
@@ -704,11 +704,11 @@ Imports player information from a CSV file into SummonersBook. This is useful fo
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
 **Examples:**
-* `import players from/data/players.csv`
-  Imports players from the default export location.
+* `import players from data/players.csv`
+  Imports players from data/players.csv.
 
-* `import players from/data/backup.csv`
-  Imports players from a backup file.
+* `import players from data/backup.csv`
+  Imports players from a backup file under data directory.
 
 **Success message:**
 ```
