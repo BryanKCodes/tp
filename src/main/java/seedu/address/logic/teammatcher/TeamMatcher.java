@@ -66,7 +66,7 @@ public class TeamMatcher {
     /**
      * Groups persons by their role.
      */
-    private Map<Role, List<Person>> groupByRole(List<Person> persons) {
+    Map<Role, List<Person>> groupByRole(List<Person> persons) {
         return persons.stream()
                 .collect(Collectors.groupingBy(Person::getRole));
     }
@@ -107,7 +107,7 @@ public class TeamMatcher {
      * @param personsByRole Original map of persons grouped by role (not modified).
      * @return New map with sorted copies of person lists.
      */
-    private Map<Role, List<Person>> createSortedCopy(Map<Role, List<Person>> personsByRole) {
+    Map<Role, List<Person>> createSortedCopy(Map<Role, List<Person>> personsByRole) {
         Comparator<Person> rankComparator = Comparator.comparing(Person::getRank).reversed();
         Map<Role, List<Person>> sortedCopy = new HashMap<>();
 
@@ -176,7 +176,7 @@ public class TeamMatcher {
      * @param personsByRole Map of available persons, sorted by rank for each role.
      * @return An array containing the two persons with the conflicting champion.
      */
-     Person[] findConflictingPersons(Map<Role, List<Person>> personsByRole) {
+    Person[] findConflictingPersons(Map<Role, List<Person>> personsByRole) {
         List<Person> selectedSoFar = new ArrayList<>();
 
         for (Role role : REQUIRED_ROLES) {
