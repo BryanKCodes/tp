@@ -27,7 +27,7 @@ public class ParserUtilTest {
     private static final String INVALID_CHAMPION = "Aniga";
     private static final String INVALID_TAG = "#friend";
 
-    private static final String VALID_NAME = "Rachel Walker";
+    private static final String VALID_NAME = "Rachel";
     private static final String VALID_ROLE_1 = "Mid";
     private static final String VALID_ROLE_2 = "top";
     private static final String VALID_RANK_1 = "Gold";

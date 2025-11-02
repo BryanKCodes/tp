@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_CHAMPION_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_RANK_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_RANK_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ROLE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ROLE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
@@ -157,8 +161,8 @@ public class EditCommandTest {
 
         Person personToEdit = ALICE;
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withName("Alice Edited")
-                .withRank("Diamond")
+                .withName(VALID_NAME_BOB)
+                .withRank(VALID_RANK_BOB)
                 .build();
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
@@ -219,11 +223,14 @@ public class EditCommandTest {
     @Test
     public void execute_editPersonNotInAnyTeam_onlyUpdatesPerson() {
         Model model = new ModelManager(getTypicalAddressBookWithTeams(), new UserPrefs());
-        Person nonTeamPerson = new PersonBuilder().withName("Teamless Person").withRole("mid").withChampion("Ahri")
+        Person nonTeamPerson = new PersonBuilder().withName("Teamless")
+                .withRank(VALID_RANK_AMY)
+                .withRole(VALID_ROLE_AMY)
+                .withChampion(VALID_CHAMPION_AMY)
                 .build();
         model.addPerson(nonTeamPerson);
 
-        Person editedPerson = new PersonBuilder(nonTeamPerson).withRank("Diamond").build();
+        Person editedPerson = new PersonBuilder(nonTeamPerson).withRank(VALID_RANK_BOB).build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
         EditCommand editCommand = new EditCommand(Index.fromOneBased(model.getFilteredPersonList().size()), descriptor);
 

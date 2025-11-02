@@ -165,15 +165,15 @@ public class ModelManagerTest {
         modelManager.addPerson(BENSON);
 
         // Add person not in any team
-        Person george = new PersonBuilder().withName("George Best").build();
-        modelManager.addPerson(george);
+        Person teamless = new PersonBuilder().withName("Teamless").build();
+        modelManager.addPerson(teamless);
 
         // Add team containing ALICE and BENSON (but not george)
         modelManager.addTeam(TEAM_A);
 
-        // Only george should be unassigned
+        // Only teamless should be unassigned
         assertEquals(1, modelManager.getUnassignedPersonList().size());
-        assertTrue(modelManager.getUnassignedPersonList().contains(george));
+        assertTrue(modelManager.getUnassignedPersonList().contains(teamless));
         assertFalse(modelManager.getUnassignedPersonList().contains(ALICE));
         assertFalse(modelManager.getUnassignedPersonList().contains(BENSON));
     }

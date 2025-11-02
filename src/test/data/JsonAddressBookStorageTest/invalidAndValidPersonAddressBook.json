@@ -1,6 +1,6 @@
 {
   "persons": [ {
-    "name": "Valid Person",
+    "name": "ValidPerson",
     "role": "mid",
     "rank": "gold",
     "champion": "Ahri",
