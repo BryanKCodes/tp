@@ -129,12 +129,12 @@ How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates
    a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which
    is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take
    several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -728,6 +728,91 @@ This design maintains **separation of concerns**: commands decide *what* to show
     - *Cons:* Violates layered architecture. Commands become tightly coupled to UI.
     - *Cons:* Makes testing commands difficult (need to mock UI).
 
+### Data Import / Export Feature
+The **Import/Export** feature enables users to back up, share, and restore player and team data in CSV format.  
+It enhances data portability, supports external analysis and allows synchronisation across different SummonersBook instances.
+
+#### Implementation
+
+This feature is implemented through two primary command classes:
+
+| Command | Description |
+|----------|-------------|
+| `ExportCommand` | Exports player or team data into a structured CSV file. |
+| `ImportCommand` | Imports player data from a CSV file. |
+
+Both commands delegate CSV parsing and file I/O handling to utility classes within the `storage` package.
+
+#### Export Workflow
+
+1. The user executes `export players`/`export players to CUSTOM_PATH`/`export teams`/`export teams to CUSTOM_PATH`.
+2. The command validates:
+- That the target (`players` or `teams`) is specified.
+- That the custom file path (if provided) ends with `.csv`.
+3. Determines the output destination:
+- Default paths:
+  - `data/players.csv`
+  - `data/teams.csv`
+- Custom path
+4. Retrieves relevant data from the `Model`.
+5. Converts objects into CSV format and writes them to the file.
+6. Returns a success message with the destination path.
+
+**Example Output**
+`Exported players to data/players.csv`
+
+##### CSV Schema
+
+| Data Type | Columns |
+|------------|----------|
+| Player | `Name,Role,Rank,Champion,Wins,Losses` |
+| Team | `TeamId,Top,Jungle,Mid,Adc,Support,Wins,Losses,WinRate%` |
+
+
+#### Import Workflow
+
+1. The user executes `import players from FILE_PATH`.
+2. The command validates that:
+- The file exists.
+- The file extension is `.csv`.
+3. Parses the header row to detect supported formats:
+- Basic: `Name,Role,Rank,Champion`
+- Extended: `Name,Role,Rank,Champion,Wins,Losses`
+4. For each row:
+- Validates **Role** and **Rank** (must match defined enums).
+- Skips **duplicate** entries (same Name + Role combination).
+- Skips **invalid** entries (unrecognized enums, missing columns, or malformed data).
+- Logs skipped rows for debugging.
+- Constructs `Player` objects for valid rows and adds them to the `Model`.
+5. Displays a summary message after completion.
+
+**Example Output**
+`Imported 10 players, skipped 1 duplicate, 2 invalid row(s).`
+
+#### Design Considerations
+
+| Aspect | Alternatives | Decision / Rationale |
+|---------|---------------|----------------------|
+| **File Format** | 1. CSV (✓ chosen)  <br> 2. JSON | CSV is lightweight, human-readable, and compatible with spreadsheet tools. |
+| **Error Handling** | 1. Skip invalid rows (✓ chosen) <br> 2. Abort on first error | Skipping invalid rows ensures partial progress and robustness against formatting issues. |
+| **Validation** | Validate enums for `Role` and `Rank`. | Prevents injection of invalid or malformed data into the system model. |
+| **File Location** | 1. Default `/data/` directory (✓ chosen) <br> 2. Custom paths | Offers both consistency and flexibility for users. |
+| **Round-Trip Accuracy** | N/A | Exported player CSVs can be re-imported to yield identical data, ensuring lossless serialization. |
+
+
+#### Example Workflows
+
+**Export players → Import players**
+> export players
+`Exported players to data/players.csv`
+
+> import players from data/players.csv
+`Imported 20 players, skipped 0 duplicates, 0 invalid row(s).
+
+**Export teams to custom path`**
+> export teams to data/myTeams.csv
+`Exported teams to data/myTeams.csv`
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -1128,14 +1213,14 @@ testers are expected to do more *exploratory* testing.
 
     1. Download the jar file and copy into an empty folder
 
-    1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be
+    2. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be
        optimum.
 
-1. Saving window preferences
+2. Saving window preferences
 
     1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-    1. Re-launch the app by double-clicking the jar file.<br>
+    2. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
 ### Deleting a person
@@ -1144,14 +1229,14 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-    1. Test case: `delete 1`<br>
+    2. Test case: `delete 1`<br>
        Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message.
        Timestamp in the status bar is updated.
 
-    1. Test case: `delete 0`<br>
+    3. Test case: `delete 0`<br>
        Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
 
-    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+    4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
        Expected: Similar to previous.
 
 ### Editing a person
@@ -1160,22 +1245,22 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-    1. Test case: `edit 1 rk/Diamond`<br>
+    2. Test case: `edit 1 rk/Diamond`<br>
        Expected: First person's rank is updated to Diamond. Details of the edited person shown in the status message.
 
-    1. Test case: `edit 1 n/NewName rl/Top rk/Gold c/Darius`<br>
+    3. Test case: `edit 1 n/NewName rl/Top rk/Gold c/Darius`<br>
        Expected: First person's name, role, rank, and champion are all updated. Success message shows updated details.
 
-    1. Test case: `edit 1 t/`<br>
+    4. Test case: `edit 1 t/`<br>
        Expected: First person's tags are cleared. Success message confirms tags removed.
 
-    1. Test case: `edit 0 rk/Gold`<br>
+    5. Test case: `edit 0 rk/Gold`<br>
        Expected: No person is edited. Error message "Invalid command format!" shown.
 
-    1. Test case: Edit a person who is in a team<br>
+    6. Test case: Edit a person who is in a team<br>
        Expected: Person cannot be edited. Error message indicates the person must be removed from their team first.
 
-    1. Other incorrect edit commands to try: `edit`, `edit x` (where x is larger than the list size), `edit 1` (no fields provided)<br>
+    7. Other incorrect edit commands to try: `edit`, `edit x` (where x is larger than the list size), `edit 1` (no fields provided)<br>
        Expected: Similar error messages for invalid format or parameters.
 
 ### Filtering persons
@@ -1184,19 +1269,19 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have multiple persons with different roles and ranks.
 
-    1. Test case: `filter rl/Mid`<br>
+    2. Test case: `filter rl/Mid`<br>
        Expected: Only persons with role "Mid" are displayed. Success message shows number of persons listed.
 
-    1. Test case: `filter rk/Diamond rk/Master`<br>
+    3. Test case: `filter rk/Diamond rk/Master`<br>
        Expected: Persons with rank Diamond OR Master are displayed.
 
-    1. Test case: `filter rl/Support rk/Gold`<br>
+    4. Test case: `filter rl/Support rk/Gold`<br>
        Expected: Persons who are Support AND Gold rank are displayed.
 
-    1. Test case: `filter rl/Top rl/Jungle rk/Diamond rk/Platinum`<br>
+    5. Test case: `filter rl/Top rl/Jungle rk/Diamond rk/Platinum`<br>
        Expected: Persons who are (Top OR Jungle) AND (Diamond OR Platinum) are displayed.
 
-    1. Test case: `filter` (no parameters)<br>
+    6. Test case: `filter` (no parameters)<br>
        Expected: Error message "Invalid command format!" shown.
 
 ### Finding persons by name
@@ -1205,13 +1290,13 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have multiple persons with different names.
 
-    1. Test case: `find john`<br>
+    2. Test case: `find john`<br>
        Expected: All persons with "john" in their name are displayed (case-insensitive, whole word match).
 
-    1. Test case: `find alex david`<br>
+    3. Test case: `find alex david`<br>
        Expected: Persons with "alex" OR "david" in their names are displayed.
 
-    1. Test case: `find` (no keywords)<br>
+    4. Test case: `find` (no keywords)<br>
        Expected: Error message "Invalid command format!" shown.
 
 ### Adding and deleting performance statistics
@@ -1220,32 +1305,32 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-    1. Test case: `addStats 1 cpm/8.5 gd15/450 kda/4.2`<br>
+    2. Test case: `addStats 1 cpm/8.5 gd15/450 kda/4.2`<br>
        Expected: Performance statistics are added to the first person. Success message confirms stats were added. Person's performance score is updated.
 
-    1. Test case: `addStats 1 cpm/9.8 gd15/-200 kda/2.5`<br>
+    3. Test case: `addStats 1 cpm/9.8 gd15/-200 kda/2.5`<br>
        Expected: Stats added successfully with negative gold difference (fell behind in lane).
 
-    1. Test case: `addStats 0 cpm/8.0 gd15/100 kda/3.0`<br>
+    4. Test case: `addStats 0 cpm/8.0 gd15/100 kda/3.0`<br>
        Expected: No stats added. Error message "Invalid command format!" shown.
 
-    1. Test case: `addStats 1 cpm/8.0`<br>
+    5. Test case: `addStats 1 cpm/8.0`<br>
        Expected: No stats added. Error message indicates all three fields (cpm, gd15, kda) are required.
 
-    1. Other incorrect addStats commands to try: `addStats 1 cpm/abc gd15/100 kda/3.0`, `addStats 1 cpm/8.0 gd15/100.5 kda/3.0`<br>
+    6. Other incorrect addStats commands to try: `addStats 1 cpm/abc gd15/100 kda/3.0`, `addStats 1 cpm/8.0 gd15/100.5 kda/3.0`<br>
        Expected: Error messages for invalid numeric values or format violations.
 
-1. Deleting the most recent performance statistics
+2. Deleting the most recent performance statistics
 
     1. Prerequisites: Have at least one person with performance statistics recorded.
 
-    1. Test case: `deleteStats 1`<br>
+    2. Test case: `deleteStats 1`<br>
        Expected: The most recent performance entry for the first person is deleted. Success message confirms deletion. Person's performance score is recalculated.
 
-    1. Test case: Delete stats from a person with no statistics<br>
+    3. Test case: Delete stats from a person with no statistics<br>
        Expected: Error message indicating the person has no statistics to delete.
 
-    1. Test case: `deleteStats 0`<br>
+    4. Test case: `deleteStats 0`<br>
        Expected: No stats deleted. Error message "Invalid command format!" shown.
 
 ### Creating teams manually
@@ -1254,28 +1339,28 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have at least 5 unassigned persons with unique roles and unique champions. Use `list` to see indices.
 
-    1. Test case: `makeGroup 1 2 3 4 5` (assuming these indices exist and persons are unassigned with unique roles and champions)<br>
+    2. Test case: `makeGroup 1 2 3 4 5` (assuming these indices exist and persons are unassigned with unique roles and champions)<br>
        Expected: A new team is created with these 5 members. Success message shows team composition with member names and roles.
 
-    1. Test case: `makeGroup 1 2 3 4 100` (where 100 is larger than the list size)<br>
+    3. Test case: `makeGroup 1 2 3 4 100` (where 100 is larger than the list size)<br>
        Expected: Team not created. Error message "The person index provided is invalid" shown.
 
-    1. Test case: `makeGroup 1 1 2 3 4` (duplicate index)<br>
+    4. Test case: `makeGroup 1 1 2 3 4` (duplicate index)<br>
        Expected: Team not created. Error message "Duplicate index numbers found in the input" shown.
 
-    1. Test case: Try to create a team with a person already in another team (e.g., `makeGroup 1 2 3 4 5` where person at index 1 is already in a team)<br>
+    5. Test case: Try to create a team with a person already in another team (e.g., `makeGroup 1 2 3 4 5` where person at index 1 is already in a team)<br>
        Expected: Team not created. Error message "Player is already in another team" with player details shown.
 
-    1. Test case: Try to create a team with persons having duplicate roles<br>
+    6. Test case: Try to create a team with persons having duplicate roles<br>
        Expected: Team not created. Error message indicates duplicate roles are not allowed.
 
-    1. Test case: Try to create a team with fewer than 5 indices (e.g., `makeGroup 1 2 3`)<br>
+    7. Test case: Try to create a team with fewer than 5 indices (e.g., `makeGroup 1 2 3`)<br>
        Expected: Team not created. Error message "Exactly 5 index numbers must be provided" shown.
 
-    1. Test case: Try to create a team with more than 5 indices (e.g., `makeGroup 1 2 3 4 5 6`)<br>
+    8. Test case: Try to create a team with more than 5 indices (e.g., `makeGroup 1 2 3 4 5 6`)<br>
        Expected: Team not created. Error message "Exactly 5 index numbers must be provided" shown.
 
-    1. Test case: Try to create a team with persons having the same champion<br>
+    9. Test case: Try to create a team with persons having the same champion<br>
        Expected: Team not created. Error message indicates duplicate champions are not allowed within a team.
 
 ### Viewing person details
@@ -1284,26 +1369,26 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-    1. Test case: `view 1`<br>
+    2. Test case: `view 1`<br>
        Expected: A new window opens displaying detailed information about the first person, including basic details (name, role, rank, champion, tags), win/loss record, and performance charts. Success message shown in the result display with the person's name.
 
-    1. Test case: `view 0`<br>
+    3. Test case: `view 0`<br>
        Expected: No window opens. Error message "Invalid command format!" shown. The person index provided is invalid.
 
-    1. Test case: `view x` (where x is larger than the list size)<br>
+    4. Test case: `view x` (where x is larger than the list size)<br>
        Expected: No window opens. Error message "The person index provided is invalid" shown.
 
-    1. Other incorrect view commands to try: `view`, `view abc`, `view -1`<br>
+    5. Other incorrect view commands to try: `view`, `view abc`, `view -1`<br>
        Expected: Similar error messages for invalid format or invalid index.
 
-1. Viewing person details with performance data
+2. Viewing person details with performance data
 
     1. Prerequisites: The person has performance statistics recorded (use `addStats` to add data if needed).
 
-    1. Test case: View a person with at least 10 matches of statistics<br>
+    2. Test case: View a person with at least 10 matches of statistics<br>
        Expected: All four charts (Performance Score, CS per Minute, KDA, Gold Diff @15) show up to 10 data points. The X-axis shows match numbers correctly.
 
-    1. Test case: View a person with fewer than 10 matches<br>
+    3. Test case: View a person with fewer than 10 matches<br>
        Expected: Charts show all available data points. The X-axis adjusts to show only the relevant match numbers.
 
 ### Auto-grouping persons into teams
@@ -1312,31 +1397,31 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have at least 5 unassigned persons with unique roles (Top, Jungle, Mid, ADC, Support) and unique champions.
 
-    1. Test case: `group`<br>
+    2. Test case: `group`<br>
        Expected: One or more teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right.
 
-    1. Test case: Have exactly 10 unassigned persons (2 per role) with unique champions, then run `group`<br>
+    3. Test case: Have exactly 10 unassigned persons (2 per role) with unique champions, then run `group`<br>
        Expected: 2 teams are created with 0 persons remaining unassigned.
 
-    1. Test case: Have 12 unassigned persons (mixed roles) then run `group`<br>
+    4. Test case: Have 12 unassigned persons (mixed roles) then run `group`<br>
        Expected: As many complete teams as possible are created. The success message indicates how many persons remain unassigned.
 
-1. Auto-grouping with insufficient persons
+2. Auto-grouping with insufficient persons
 
     1. Test case: Have only 4 unassigned persons with 4 different roles, then run `group`<br>
        Expected: No teams created. Error message indicates insufficient persons for all required roles.
 
-    1. Test case: Have 5 unassigned persons but missing one required role (e.g., no Support), then run `group`<br>
+    2. Test case: Have 5 unassigned persons but missing one required role (e.g., no Support), then run `group`<br>
        Expected: No teams created. Error message indicates at least one person per role is required.
 
-    1. Test case: Run `group` when all persons are already assigned to teams<br>
+    3. Test case: Run `group` when all persons are already assigned to teams<br>
        Expected: Error message "No unassigned persons available to form teams."
 
-1. Auto-grouping with champion conflicts
+3. Auto-grouping with champion conflicts
 
     1. Prerequisites: Have 10 unassigned persons (2 per role) where 2 persons play the same champion and have the same role.
 
-    1. Test case: Run `group`<br>
+    2. Test case: Run `group`<br>
        Expected: One team is created with the higher-ranked person of the duplicate champion. The second person with the duplicate champion remains unassigned (along with 4 others).
 
 ### Ungrouping teams
@@ -1345,29 +1430,29 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have at least one team created. Verify by viewing the team panel.
 
-    1. Test case: `ungroup 1`<br>
+    2. Test case: `ungroup 1`<br>
        Expected: The first team is disbanded. Success message shows which team was removed. All 5 members of the team become unassigned and appear in the person list again.
 
-    1. Test case: `ungroup 0`<br>
+    3. Test case: `ungroup 0`<br>
        Expected: No team is disbanded. Error message "Invalid command format!" shown.
 
-    1. Test case: `ungroup x` (where x is larger than the number of teams)<br>
+    4. Test case: `ungroup x` (where x is larger than the number of teams)<br>
        Expected: No team is disbanded. Error message "The team index provided is invalid" shown.
 
-    1. Other incorrect ungroup commands to try: `ungroup`, `ungroup abc`, `ungroup -1`<br>
+    5. Other incorrect ungroup commands to try: `ungroup`, `ungroup abc`, `ungroup -1`<br>
        Expected: Similar error messages for invalid format or invalid index.
 
-1. Ungrouping all teams
+2. Ungrouping all teams
 
     1. Prerequisites: Have multiple teams created. View them in the team panel.
 
-    1. Test case: `ungroup all`<br>
+    2. Test case: `ungroup all`<br>
        Expected: All teams are disbanded. Success message shows "Successfully removed X team(s). All persons are now unassigned." Verify the team panel is empty. Verify with `list` that all persons are back in the unassigned pool.
 
-    1. Test case: `ungroup ALL` (case-insensitive)<br>
+    3. Test case: `ungroup ALL` (case-insensitive)<br>
        Expected: Same as above. The command is case-insensitive.
 
-    1. Test case: Run `ungroup all` when there are no teams<br>
+    4. Test case: Run `ungroup all` when there are no teams<br>
        Expected: Error message "No teams to remove."
 
 ### Recording team wins and losses
@@ -1376,23 +1461,23 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have at least one team created. View the team panel to see teams.
 
-    1. Test case: `win 1`<br>
+    2. Test case: `win 1`<br>
        Expected: The 1st team's win count is incremented. Success message shows "Team 1 has won a match! Their stats have been updated to W:X-L:Y." All members of the team also have their individual win counts incremented.
 
-    1. Test case: `win 0`<br>
+    3. Test case: `win 0`<br>
        Expected: No team record is updated. Error message "Invalid command format!" shown.
 
-    1. Test case: `win x` (where x is larger than the number of teams)<br>
+    4. Test case: `win x` (where x is larger than the number of teams)<br>
        Expected: No team record is updated. Error message "The team index provided is invalid" shown.
 
-1. Recording a loss for a team
+2. Recording a loss for a team
 
     1. Prerequisites: Have at least one team created. View the team panel to see teams.
 
-    1. Test case: `lose 1`<br>
+    2. Test case: `lose 1`<br>
        Expected: The 1st team's loss count is incremented. Success message shows "Team 1 has lost a match. Their stats have been updated to W:X-L:Y." All members of the team also have their individual loss counts incremented.
 
-    1. Test case: `lose 0`<br>
+    3. Test case: `lose 0`<br>
        Expected: No team record is updated. Error message "Invalid command format!" shown.
 
 ### Viewing team details
@@ -1401,13 +1486,13 @@ testers are expected to do more *exploratory* testing.
 
     1. Prerequisites: Have at least one team created. View the team panel.
 
-    1. Test case: `viewTeam 1`<br>
+    2. Test case: `viewTeam 1`<br>
        Expected: A new window opens displaying detailed information about the first team, including all member details and team win/loss record. Success message shown in the result display.
 
-    1. Test case: `viewTeam 0`<br>
+    3. Test case: `viewTeam 0`<br>
        Expected: No window opens. Error message "Invalid command format!" shown.
 
-    1. Test case: `viewTeam x` (where x is larger than the number of teams)<br>
+    4. Test case: `viewTeam x` (where x is larger than the number of teams)<br>
        Expected: No window opens. Error message "The team index provided is invalid" shown.
 
 ### Importing and exporting data
@@ -1421,26 +1506,26 @@ testers are expected to do more *exploratory* testing.
        TestPlayer2,Top,Silver,Garen
        ```
 
-    1. Test case: `import players from data/test_import.csv`<br>
+    2. Test case: `import players from data/test_import.csv`<br>
        Expected: Players are imported. Success message shows "Imported X players, skipped Y duplicates, Z invalid row(s)."
 
-    1. Test case: `import players from nonexistent.csv`<br>
+    3. Test case: `import players from nonexistent.csv`<br>
        Expected: No players imported. Error message "Failed to import: file not found."
 
-    1. Test case: Import a CSV with invalid data (e.g., invalid rank values)<br>
+    4. Test case: Import a CSV with invalid data (e.g., invalid rank values)<br>
        Expected: Valid rows are imported, invalid rows are reported. Message shows count of invalid rows with sample error messages.
 
-1. Exporting players and teams to CSV
+2. Exporting players and teams to CSV
 
     1. Prerequisites: Have some players and teams in the system.
 
-    1. Test case: `export players`<br>
+    2. Test case: `export players`<br>
        Expected: Player data is exported to `data/players.csv`. Success message shows "Exported player data to data/players.csv."
 
-    1. Test case: `export teams`<br>
+    3. Test case: `export teams`<br>
        Expected: Team data is exported to `data/teams.csv`. Success message shows "Exported team data to data/teams.csv."
 
-    1. Test case: `export players to/custom_path.csv`<br>
+    4. Test case: `export players to/custom_path.csv`<br>
        Expected: Player data is exported to the specified custom path. Success message confirms the export location.
 
 ### Saving data
@@ -1450,16 +1535,16 @@ testers are expected to do more *exploratory* testing.
     1. Test case: Delete the `data/addressbook.json` file, then launch the application<br>
        Expected: Application starts with sample data populated.
 
-    1. Test case: Corrupt the `data/addressbook.json` file by adding invalid JSON syntax, then launch the application<br>
+    2. Test case: Corrupt the `data/addressbook.json` file by adding invalid JSON syntax, then launch the application<br>
        Expected: Application starts with an empty data set (no players or teams).
 
-    1. Test case: Manually edit `data/addressbook.json` to add a person with invalid field values (e.g., invalid rank), then launch the application<br>
+    3. Test case: Manually edit `data/addressbook.json` to add a person with invalid field values (e.g., invalid rank), then launch the application<br>
        Expected: Application starts with an empty data set, discarding the corrupted data.
 
-1. Data persistence
+2. Data persistence
 
     1. Test case: Add a player, then exit and relaunch the application<br>
        Expected: The added player persists and appears in the player list.
 
-    1. Test case: Create teams, then exit and relaunch the application<br>
+    2. Test case: Create teams, then exit and relaunch the application<br>
        Expected: Teams persist and appear in the team panel with all members intact.
