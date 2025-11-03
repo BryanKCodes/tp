@@ -1,5 +1,6 @@
 package seedu.address.model.person;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,11 +18,35 @@ import org.junit.jupiter.api.Test;
 import seedu.address.testutil.PersonBuilder;
 
 public class PersonTest {
+    private static final String DUMMY_ID = "";
 
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
         Person person = new PersonBuilder().build();
         assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(0));
+    }
+
+    @Test
+    public void constructor_validWinsAndLosses_success() {
+        int zeroWins = 0;
+        int zeroLosses = 0;
+        assertDoesNotThrow(() -> new PersonBuilder(ALICE).withWins(zeroWins).withLosses(zeroLosses).build());
+
+        int positiveWins = 100;
+        int positiveLosses = 50;
+        assertDoesNotThrow(() -> new PersonBuilder(ALICE).withWins(positiveWins).withLosses(positiveLosses).build());
+    }
+
+    @Test
+    public void constructor_invalidWins_throwsIllegalArgumentException() {
+        int invalidWins = -1;
+        assertThrows(IllegalArgumentException.class, () -> new PersonBuilder(ALICE).withWins(invalidWins).build());
+    }
+
+    @Test
+    public void constructor_invalidLosses_throwsIllegalArgumentException() {
+        int invalidLosses = -1;
+        assertThrows(IllegalArgumentException.class, () -> new PersonBuilder(ALICE).withLosses(invalidLosses).build());
     }
 
     @Test

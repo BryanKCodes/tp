@@ -90,6 +90,7 @@ public class Person {
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags,
                   int wins, int losses, Stats stats) {
         requireAllNonNull(id, name, role, rank, champion, tags);
+        validateWinLossValues(wins, losses);
         this.id = id;
         this.name = name;
         this.role = role;
