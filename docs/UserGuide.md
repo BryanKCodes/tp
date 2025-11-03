@@ -6,7 +6,7 @@ pageNav: 3
 
 # SummonersBook User Guide
 
-**Are you a League of Legends esports coach or team manager** spending hours juggling rosters, balancing skill levels, and tracking player performance across scrimmages?
+**Are you a League of Legends Esports coach or team manager** spending hours juggling rosters, balancing skill levels, and tracking player performance across scrimmages?
 
 SummonersBook is built specifically to help you manage your player roster and form 5v5 teams **in seconds** instead of hours:
 - **Auto-group teams** by rank, role, and champion pool
@@ -21,8 +21,8 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
 1. [Quick Start](#quick-start)
     - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
-    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team)
-    - [Step 4: Learn the Essentials](#step-4-learn-the-essentials)
+    - [Step 3: Your First Team](#step-3-your-first-team)
+    - [Step 4: Learn the Essentials (2-Minute Tutorial)](#step-4-learn-the-essentials-2-minute-tutorial)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
     - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
@@ -34,7 +34,10 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
     - [Data Import/Export](#data-importexport)
     - [Utility Commands](#utility-commands)
 4. [Features](#features)
-    - [Notes about the command format](#notes-about-the-command-format)
+    - [Notes about the Command Format](#notes-about-the-command-format)
+    - [Notes About the Parameter Rules](#notes-about-the-parameter-rules)
+    - [Key Terminology](#key-terminology)
+    - [General Tips](#general-tips)
     - **Player Management**
         - [Adding a player: `add`](#adding-a-player-add)
         - [Listing all players: `list`](#listing-all-players-list)
@@ -46,12 +49,12 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
     - **Performance Tracking**
         - [Adding performance stats: `addStats`](#adding-performance-stats-addstats)
         - [Removing performance stats: `deleteStats`](#removing-performance-stats-deletestats)
-        - [Recording a team win: `win`](#recording-a-team-win--win)
-        - [Recording a team loss: `lose`](#recording-a-team-loss--lose)
+        - [Recording a team win: `win`](#recording-a-team-win-win)
+        - [Recording a team loss: `lose`](#recording-a-team-loss-lose)
     - **Team Management**
         - [Auto-grouping players into teams: `group`](#auto-grouping-players-into-teams-group)
         - [Manually creating a team: `makeGroup`](#manually-creating-a-team-makegroup)
-        - [Viewing team details: `viewTeam`](#viewing-team-details--viewteam)
+        - [Viewing team details: `viewTeam`](#viewing-team-details-viewteam)
         - [Disbanding teams: `ungroup`](#disbanding-teams-ungroup)
     - **Data Import/Export**
         - [Exporting data: `export`](#exporting-data-export)
@@ -69,10 +72,10 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
     - [General Terminology](#general-terminology)
     - [Domain-Specific Terminology](#domain-specific-terminology)
 9. [Future Enhancements](#future-enhancements)
-    - [Smart Team Formation (AI-Enhanced Grouping)](#1-smart-team-formation-ai-enhanced-grouping--planned)
-    - [Archived Teams & Player History](#2-archived-teams--player-history--planned)
-    - [Undo/Redo & Command History](#3-undoredo--command-history--proposed)
-    - [Enhanced Import/Export System](#4-enhanced-importexport-system--planned)
+    - [Smart Team Formation (AI-Enhanced Grouping)](#1-smart-team-formation-planned)
+    - [Archived Teams & Player History](#2-archived-teams--player-history-planned)
+    - [Undo/Redo & Command History](#3-undoredo--command-history-proposed)
+    - [Enhanced Import/Export System](#4-enhanced-importexport-system-planned)
 10. [Command Summary](#command-summary)
 11. [Appendix](#appendix)
     - [Supported Champions](#supported-champions)
@@ -99,7 +102,7 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
 1. Open a terminal or command prompt:
 
     - Windows: Press `Win + R`, type `cmd`, and hit `Enter`.
-    - Mac/Linux: Open the Terminal app. You can find the Terminal app in `Finder -> Application -> Utilities`
+    - Mac/Linux: Open the Terminal app. You can find the Terminal app in `Finder -> Applications -> Utilities`
 
 2. Navigate to the folder where you placed the `summonersbook.jar` file. For example:
     - `cd /path/to/your/folder`
@@ -124,9 +127,9 @@ group
 
 🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
-### Step 4: Quickstart — Using Commands
+### Step 4: Learn the Essentials (2-Minute Tutorial)
 
-Now that SummonersBook is set up, let’s try your first command!
+Now that SummonersBook is set up, let’s try some useful commands!
 
 #### How Commands Work
 SummonersBook uses simple text commands to manage your player roster.  
@@ -148,15 +151,15 @@ This means:
 - `rk/Challenger` → Rank is **Challenger**
 - `rl/Mid` → Role is **Mid**
 - `c/Ahri` → Main champion is **Ahri**
-- `t/Shotcaller`, `t/Carry` → Optional tags describing their playstyle
+- `t/Shotcaller`, `t/Carry` → Optional tags describing their play style
 
 After running this command, Faker will appear in your roster instantly!
 
 ---
 
 #### 💡 Try Next
-- `filter rl/Mid rk/Diamond` — See only Diamond-tier Mid players
-- `view 1` — Check stats and performance trends of the first player
+- `filter rl/Mid rk/Diamond` — See only **Diamond** ranked players with role **Mid**
+- `view 1` — Check stats and performance trends of the **first** player
 - `help` — See all available commands anytime
 
 Refer to the [Features](#features) section below for complete details on all commands.
@@ -169,7 +172,7 @@ Refer to the [Features](#features) section below for complete details on all com
 
 These workflows show you how to accomplish typical coaching tasks with SummonersBook.
 
-### Workflow 1: Creating Balanced Teams Automatically
+### Workflow 1: Preparing for Scrimmage Night
 
 **Your goal:** You have 10 players (2 for each role) and want to form 2 balanced teams for practice matches in one click.
 
@@ -194,7 +197,7 @@ add n/Smeb rk/Grandmaster rl/Jungle c/Elise
 
 Wow, you now have 2 ready-to-play teams within seconds!
 
-### Workflow 2: Finding a Specific Player Quickly
+### Workflow 2: Finding Substitutes Mid-Tournament
 
 **Your goal:** You need a **Master rank Support player** to fill a gap in your roster.
 
@@ -202,7 +205,7 @@ Wow, you now have 2 ready-to-play teams within seconds!
 
 1. **Filter your roster by role and rank:**
 ```filter rl/Support rk/Master```
-→ SummonersBook will show only Support players at Master rank.
+→ SummonersBook will show only players with **Support** role at **Master** rank.
 
 That's it! Just one command, and you have instantly found the right player!
 
@@ -242,48 +245,48 @@ Click on any command to jump to its detailed explanation.
 
 ### Player Management
 
-Command | Purpose | Format
---------|---------|-------
-[`add`](#adding-a-player-add) | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`
-[`list`](#listing-all-players-list) | Show all players | `list`
-[`find`](#finding-players-by-name-find) | Search players by name | `find KEYWORD [MORE_KEYWORDS...]`
-[`filter`](#filtering-players-filter) | Filter by role/rank | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`
-[`view`](#viewing-detailed-player-information-view) | View detailed player stats | `view INDEX`
-[`edit`](#editing-a-player-edit) | Update player details | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`
-[`delete`](#deleting-a-player-delete) | Remove a player | `delete INDEX`
+| Command                                             | Purpose                    | Format                                                             |
+|-----------------------------------------------------|----------------------------|--------------------------------------------------------------------|
+| [`add`](#adding-a-player-add)                       | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                |
+| [`list`](#listing-all-players-list)                 | Show all players           | `list`                                                             |
+| [`find`](#finding-players-by-name-find)             | Search players by name     | `find KEYWORD [MORE_KEYWORDS...]`                                  |
+| [`filter`](#filtering-players-filter)               | Filter by role/rank        | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`    |
+| [`view`](#viewing-detailed-player-information-view) | View detailed player stats | `view INDEX`                                                       |
+| [`edit`](#editing-a-player-edit)                    | Update player details      | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]` |
+| [`delete`](#deleting-a-player-delete)               | Remove a player            | `delete INDEX`                                                     |
 
 ### Performance Tracking
 
-Command | Purpose                                 | Format
---------|-----------------------------------------|-------
-[`addStats`](#adding-performance-stats-addstats) | Record match performance                | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
-[`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry               | `deleteStats INDEX`
-[`win`](#recording-a-team-win--win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
-[`lose`](#recording-a-team-loss--lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
+| Command                                                  | Purpose                                       | Format                                     |
+|----------------------------------------------------------|-----------------------------------------------|--------------------------------------------|
+| [`addStats`](#adding-performance-stats-addstats)         | Record match performance                      | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA` |
+| [`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry                     | `deleteStats INDEX`                        |
+| [`win`](#recording-a-team-win-win)                       | Record a win for a team<br/> and its players  | `win TEAM_INDEX`                           |
+| [`lose`](#recording-a-team-loss-lose)                    | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`                          |
 
 ### Team Management
 
-Command | Purpose | Format
---------|---------|-------
-[`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
-[`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
-[`viewTeam`](#viewing-team-details--viewteam) | View detailed team stats | `viewTeam TEAM_INDEX`
-[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup TEAM_INDEX` or `ungroup all`
+| Command                                            | Purpose                        | Format                                              |
+|----------------------------------------------------|--------------------------------|-----------------------------------------------------|
+| [`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`                                             |
+| [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team         | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` |
+| [`viewTeam`](#viewing-team-details-viewteam)       | View detailed team stats       | `viewTeam TEAM_INDEX`                               |
+| [`ungroup`](#disbanding-teams-ungroup)             | Disband team(s)                | `ungroup TEAM_INDEX` or `ungroup all`               |
 
 ### Data Import/Export
 
-Command | Purpose | Format
---------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export teams [to CUSTOM_PATH]` or `export players [to CUSTOM_PATH]`
-[`import`](#importing-player-data-import) | Import players from CSV | `import players from FILE_PATH`
+| Command                                   | Purpose                        | Format                                                               |
+|-------------------------------------------|--------------------------------|----------------------------------------------------------------------|
+| [`export`](#exporting-data-export)        | Export players or teams to CSV | `export teams [to CUSTOM_PATH]` or `export players [to CUSTOM_PATH]` |
+| [`import`](#importing-player-data-import) | Import players from CSV        | `import players from FILE_PATH`                                      |
 
 ### Utility
 
-Command | Purpose | Format
---------|---------|-------
-[`help`](#viewing-help-help) | Open help window | `help`
-[`clear`](#clearing-all-data-clear) | Delete all data | `clear`
-[`exit`](#exiting-the-program-exit) | Close application | `exit`
+| Command                             | Purpose           | Format  |
+|-------------------------------------|-------------------|---------|
+| [`help`](#viewing-help-help)        | Open help window  | `help`  |
+| [`clear`](#clearing-all-data-clear) | Delete all data   | `clear` |
+| [`exit`](#exiting-the-program-exit) | Close application | `exit`  |
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -291,32 +294,34 @@ Command | Purpose | Format
 
 ## Features
 
-### Notes about the command format:
-
+### Notes About the Command Format
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
   as `add n/Faker rk/Grandmaster rl/ADC c/Sivir`.
 
-* Parameters are _**case-insensitive**_ (except for `name`)
-
 * Items in square brackets are optional.<br>
   e.g., `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]` can be used as `filter rk/Gold`.
 
-* Items with `...` after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG ...]` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items followed by `...` can be used multiple times (or not at all).<br>
+  e.g. `[t/TAG ...]` can be omitted, used once (`t/friend`), or used multiple times (`t/friend t/family`).
 
+### Notes About the Parameter Rules
 * Parameters can be in any order.<br>
-  e.g., for `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `add rk/RANK n/NAME rl/ROLE c/CHAMPION` is also acceptable.
+  e.g., `add n/Faker rk/Gold rl/Mid c/Ahri` is the same as `add rk/Gold n/Faker rl/Mid c/Ahri`.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `clear`, `exit`) will be ignored.<br>
-  e.g. if the command specifies `help 123`, it will be interpreted as `help`.
+* Most parameter values are case-insensitive **except** for the player `NAME` during the `add` command.<br>
+  e.g. `rk/Gold` is the same as `rk/gold`.
 
-* Indices refer to the **currently displayed** list (people or teams), starting from 1.
+### Key Terminology
+* `INDEX` refers to the number shown in the **currently displayed** list of **players**, **starting from 1**.
 
+* `TEAM_INDEX` refers to the number shown in the **currently displayed** list of **teams**, **starting from 1**.
+
+### General Tips
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines
   as space characters surrounding line-breaks may be omitted when copied over to the application.
 
-* As new LoL champions may be added in the future, you can find **all champions supported by SummonersBook** in the **Appendix**.
+* As new **League of Legends** champions may be added in the future, you can find **all champions supported by SummonersBook** in the **[Appendix](#appendix)**.
 
 ---
 
@@ -391,17 +396,13 @@ find KEYWORD [MORE_KEYWORDS]...
 
 **Examples:**
 
-* Finds **Joanne Koh**, **Joanne Lim**, and **June Lim**, but **not** **John Kim**.
+* Finds **Faker**, **Deft**, but **not** **Canyon**.
 ```
-find joanne lim
+find faker deft
 ```
-* Finds **John Doe** and **John Smith**.
+* Finds **Faker**, but **not** **Faker2** or **Faker3** (fails partial match).
 ```
-find john
-```
-* Finds **Jo Lin**, but **not** "John Doe" or "John Smith" (whole word match).
-```
-find jo
+find faker
 ```
 
 ### Filtering players: `filter`
@@ -454,13 +455,10 @@ view INDEX
     - Basic information (name, role, rank, champion, tags)
     - Win/loss record
     - Performance score over time
-    - CS per minute trends
-    - KDA trends
+    - Creep Score per minute trends
     - Gold difference at 15 minutes trends
+    - Kill/Death/Assist score trends
 * Up to the latest 10 matches are shown in the performance graphs.
-
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 
 **Examples:**
 * Open a detailed window for the 1st player in the list
@@ -489,12 +487,12 @@ edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]
     - **Case-insensitive duplicates** are not allowed (`friend` and `FRIEND` are considered duplicates)
     - Multiple tags in one command must all be unique
 
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
+**Note:**
 * At least one field to edit must be provided.
 
 <box type="important" seamless>
-**Important:** Editing a player that is in a team may not be allowed due to duplicate roles or champions. Ungroup the team first using `ungroup`.
+
+**Important:** An edit will be rejected if it creates a role or champion conflict within the player's current team. To avoid this, you may need to ungroup the team first using `ungroup`.
 
 </box>
 
@@ -515,9 +513,9 @@ edit 3 rl/Top rk/Gold
 ```
 edit 4 t/friend t/ally
 ```
-* Invalid: attempting to add duplicate tags (case-insensitive).
+* **Invalid:** attempting to add duplicate tags (case-insensitive).
 ```
-edit 5 t/Friend t/friend # ❌Error: duplicate tag detected
+edit 5 t/Friend t/friend
 ```
 ### Deleting a player: `delete`
 
@@ -530,9 +528,6 @@ delete INDEX
 
 **How it works:**
 * Deletes the player at the specified `INDEX`.
-
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 
 <box type="important" seamless>
 
@@ -564,11 +559,10 @@ Records a new set of performance values for a player after a match:
 addStats INDEX cpm/CPM gd15/GD15 kda/KDA
 ```
 **How it works:**
-* A new set of performance values (cpm, gd15, kda) will be added.
+* A new set of performance values (CPM, GD15, KDA) will be added.
 * These values will be recorded and the player's average performance score will be updated automatically.
 
 **Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
 * All fields must be provided.
 * CPM must be a decimal between 0.0 and 40.0
 * GD15 must be an integer between -10,000 and 10,000
@@ -596,9 +590,6 @@ Deletes the most recent performance record for a player (useful for correcting m
 * The most recent set of performance values (cpm, gd15, kda) will be deleted.
 * The player's average score will be recalculated automatically.
 
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
-
 **Example:**
 * Removes the latest performance entry for the 1st player in the list.
 ```
@@ -606,7 +597,7 @@ deleteStats 1
 ```
 ---
 
-### Recording a team win : `win`
+### Recording a team win: `win`
 
 Records a win for a team, updating both the team's record and all team members' individual records.
 
@@ -618,9 +609,6 @@ win TEAM_INDEX
 **How it works:**
 * The selected team will have its win count incremented.
 * The team's members will also have their win counts incremented.
-
-**Notes:**
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 <box type="important" seamless>
 
@@ -635,7 +623,7 @@ win 1
 ```
 ---
 
-### Recording a team loss : `lose`
+### Recording a team loss: `lose`
 
 Records a loss for a team, updating both the team's record and all team members' individual records.
 
@@ -647,9 +635,6 @@ lose TEAM_INDEX
 **How it works:**
 * The selected team will have its loss count incremented.
 * The team's members will also have their loss counts incremented.
-
-**Notes:**
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Records a loss for the 2nd team in the list.
@@ -773,7 +758,7 @@ makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
 ```
 makeGroup 1 2 3 4 5
 ```
-### Viewing team details : `viewTeam`
+### Viewing team details: `viewTeam`
 
 Opens a detailed window showing comprehensive information about a team, including all members and the team's win/loss record.
 
@@ -784,9 +769,6 @@ viewTeam TEAM_INDEX
 
 **How it works:**
 * A new window displays team member details and win/loss record.
-
-**Notes:**
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Opens a detailed window for the 1st team in the list.
@@ -813,9 +795,6 @@ ungroup all
 * Use `all` (case-insensitive) to disband all teams at once.
 * After ungrouping, all team members become available for forming new teams.
 * If there are no teams, the command will show an error.
-
-**Notes:**
-* `TEAM_INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Disbands the 1st team in the displayed team list.
@@ -967,8 +946,8 @@ Always **back up the file** before making changes, and only edit it if you are c
 **What to check:**
 - Run list and confirm you have at least 5 ungrouped players. 
   - If some players already belong to teams, use ungroup to free them. 
-- Check if there’s at least one player for each of the 5 roles: Top, Jungle, Mid, ADC, Support. 
-  - Run `find rl/Top`, `find rl/Mid`, etc. to verify. 
+- Check if there’s at least one player **not in a team** for each of the 5 roles: Top, Jungle, Mid, ADC, Support. 
+  - Run `filter rl/Top`, `filter rl/Mid`, etc. to verify. 
 - Ensure players have unique champions within a potential team. 
   - Example: Two players both using “Ahri” would block auto-grouping.
 
@@ -1120,7 +1099,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 
 ## Future Enhancements
 
-### 1. Smart Team Formation (AI-Enhanced Grouping) — *Planned*
+### 1. Smart Team Formation *(Planned)*
 
 **Goal:**  
 Develop a more comprehensive algorithm for balancing teams, beyond simple rank-based grouping.
@@ -1140,7 +1119,7 @@ Coaches can reference past performance data instantly instead of manually testin
 
 ---
 
-### 2. Archived Teams & Player History — *Planned*
+### 2. Archived Teams & Player History *(Planned)*
 
 **Goal:**  
 Keep the active roster clean while preserving valuable history.
@@ -1160,7 +1139,7 @@ Reduces clutter while maintaining institutional memory for coaching analytics.
 
 ---
 
-### 3. Undo/Redo & Command History — *Proposed*
+### 3. Undo/Redo & Command History *(Proposed)*
 
 **Goal:**  
 Make experimentation risk-free.
@@ -1179,7 +1158,7 @@ Encourages coaches/team managers to confidently explore new team setups while en
 
 ---
 
-### 4. Enhanced Import/Export System — *Planned*
+### 4. Enhanced Import/Export System *(Planned)*
 
 **Goal:**  
 Enable full data portability — including player performance statistics.
@@ -1204,45 +1183,45 @@ Provides full data continuity of player statistics between seasons or machines, 
 ## Command Summary
 
 ### Player Management
-Action | Format                                                              | Example
--------|---------------------------------------------------------------------|--------
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                 | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-**List all players** | `list`                                                              | `list`
-**Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                   | `find john`
-**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE ...]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
-**View player details** | `view INDEX`                                                        | `view 1`
-**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`  | `edit 1 rl/Top rk/Diamond`
-**Delete player** | `delete INDEX`                                                      | `delete 3`
+| Action                  | Format                                                             | Example                                    |
+|-------------------------|--------------------------------------------------------------------|--------------------------------------------|
+| **Add player**          | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                | `add n/Faker rk/Grandmaster rl/Mid c/Azir` |
+| **List all players**    | `list`                                                             | `list`                                     |
+| **Find by name**        | `find KEYWORD [MORE_KEYWORDS...]`                                  | `find john`                                |
+| **Filter players**      | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`    | `filter rl/Mid rk/Diamond c/Ashe s/7.0`    |
+| **View player details** | `view INDEX`                                                       | `view 1`                                   |
+| **Edit player**         | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]` | `edit 1 rl/Top rk/Diamond`                 |
+| **Delete player**       | `delete INDEX`                                                     | `delete 3`                                 |
 
 ### Performance Tracking
-Action | Format | Example
--------|--------|--------
-**Add stats** | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA` | `addStats 1 cpm/8.8 gd15/450 kda/4.5`
-**Delete stats** | `deleteStats INDEX` | `deleteStats 1`
+| Action           | Format                                     | Example                               |
+|------------------|--------------------------------------------|---------------------------------------|
+| **Add stats**    | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA` | `addStats 1 cpm/8.8 gd15/450 kda/4.5` |
+| **Delete stats** | `deleteStats INDEX`                        | `deleteStats 1`                       |
 
 ### Team Management
-Action | Format                                              | Example
--------|-----------------------------------------------------|--------
-**Auto-group teams** | `group`                                             | `group`
-**Manually create team** | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` | `makeGroup 1 2 3 4 5`
-**View team details** | `viewTeam TEAM_INDEX`                               | `viewTeam 1`
-**Record win** | `win TEAM_INDEX`                                    | `win 2`
-**Record loss** | `lose TEAM_INDEX`                                   | `lose 2`
-**Disband team(s)** | `ungroup TEAM_INDEX` or `ungroup all`               | `ungroup 1` or `ungroup all`
+| Action                   | Format                                              | Example                      |
+|--------------------------|-----------------------------------------------------|------------------------------|
+| **Auto-group teams**     | `group`                                             | `group`                      |
+| **Manually create team** | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5` | `makeGroup 1 2 3 4 5`        |
+| **View team details**    | `viewTeam TEAM_INDEX`                               | `viewTeam 1`                 |
+| **Record win**           | `win TEAM_INDEX`                                    | `win 2`                      |
+| **Record loss**          | `lose TEAM_INDEX`                                   | `lose 2`                     |
+| **Disband team(s)**      | `ungroup TEAM_INDEX` or `ungroup all`               | `ungroup 1` or `ungroup all` |
 
 ### Data Import/Export
-Action | Format                            | Example
--------|-----------------------------------|--------
-**Export players** | `export players [to CUSTOM_PATH]` | `export players`
-**Export teams** | `export teams [to CUSTOM_PATH]`   | `export teams to data/myTeams.csv`
-**Import players** | `import players from FILE_PATH`   | `import players from data/players.csv`
+| Action             | Format                            | Example                                |
+|--------------------|-----------------------------------|----------------------------------------|
+| **Export players** | `export players [to CUSTOM_PATH]` | `export players`                       |
+| **Export teams**   | `export teams [to CUSTOM_PATH]`   | `export teams to data/myTeams.csv`     |
+| **Import players** | `import players from FILE_PATH`   | `import players from data/players.csv` |
 
 ### Utility Commands
-Action | Format | Example
--------|--------|--------
-**Help** | `help` | `help`
-**Clear all** | `clear` | `clear`
-**Exit** | `exit` | `exit`
+| Action        | Format  | Example |
+|---------------|---------|---------|
+| **Help**      | `help`  | `help`  |
+| **Clear all** | `clear` | `clear` |
+| **Exit**      | `exit`  | `exit`  |
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -1251,43 +1230,45 @@ Action | Format | Example
 You can refer to the table below to see all champions supported by SummonersBook.
 
 ## Supported Champions
+Note: This list is current as of **League of Legends** Patch [25.21]. Support for newly released champions will be added in **future updates**.
 
-| Aatrox | Ahri | Akali | Akshan | Alistar |
-|--------|------|--------|---------|----------|
-| Ambessa | Amumu | Anivia | Annie | Aphelios |
-| Ashe | Aurelion Sol | Aurora | Azir | Bard |
-| Bel'Veth | Blitzcrank | Brand | Braum | Briar |
-| Caitlyn | Camille | Cassiopeia | Cho'Gath | Corki |
-| Darius | Diana | Dr. Mundo | Draven | Ekko |
-| Elise | Evelynn | Ezreal | Fiddlesticks | Fiora |
-| Fizz | Galio | Gangplank | Garen | Gnar |
-| Gragas | Graves | Gwen | Hecarim | Heimerdinger |
-| Hwei | Illaoi | Irelia | Ivern | Janna |
-| Jarvan IV | Jax | Jayce | Jhin | Jinx |
-| K'Sante | Kai'Sa | Kalista | Karma | Karthus |
-| Kassadin | Katarina | Kayle | Kayn | Kennen |
-| Kha'Zix | Kindred | Kled | Kog'Maw | LeBlanc |
-| Lee Sin | Leona | Lillia | Lissandra | Lucian |
-| Lulu | Lux | Malphite | Malzahar | Maokai |
-| Master Yi | Mel | Milio | Miss Fortune | Mordekaiser |
-| Morgana | Naafiri | Nami | Nasus | Nautilus |
-| Neeko | Nidalee | Nilah | Nocturne | Nunu & Willump |
-| Olaf | Orianna | Ornn | Pantheon | Poppy |
-| Pyke | Qiyana | Quinn | Rakan | Rammus |
-| Rek'Sai | Rell | Renata Glasc | Renekton | Rengar |
-| Riven | Rumble | Ryze | Samira | Sejuani |
-| Senna | Seraphine | Sett | Shaco | Shen |
-| Shyvana | Singed | Sion | Sivir | Skarner |
-| Smolder | Sona | Soraka | Swain | Sylas |
-| Syndra | Tahm Kench | Taliyah | Talon | Taric |
-| Teemo | Thresh | Tristana | Trundle | Tryndamere |
-| Twisted Fate | Twitch | Udyr | Urgot | Varus |
-| Vayne | Veigar | Vel'Koz | Vex | Vi |
-| Viego | Viktor | Vladimir | Volibear | Warwick |
-| Wukong | Xayah | Xerath | Xin Zhao | Yasuo |
-| Yone | Yorick | Yunara | Yuumi | Zac |
-| Zed | Zeri | Ziggs | Zilean | Zoe |
-| Zyra |  |  |  |  |
+|              |              |              |              |                |
+|--------------|--------------|--------------|--------------|----------------|
+| Aatrox       | Ahri         | Akali        | Akshan       | Alistar        |
+| Ambessa      | Amumu        | Anivia       | Annie        | Aphelios       |
+| Ashe         | Aurelion Sol | Aurora       | Azir         | Bard           |
+| Bel'Veth     | Blitzcrank   | Brand        | Braum        | Briar          |
+| Caitlyn      | Camille      | Cassiopeia   | Cho'Gath     | Corki          |
+| Darius       | Diana        | Dr. Mundo    | Draven       | Ekko           |
+| Elise        | Evelynn      | Ezreal       | Fiddlesticks | Fiora          |
+| Fizz         | Galio        | Gangplank    | Garen        | Gnar           |
+| Gragas       | Graves       | Gwen         | Hecarim      | Heimerdinger   |
+| Hwei         | Illaoi       | Irelia       | Ivern        | Janna          |
+| Jarvan IV    | Jax          | Jayce        | Jhin         | Jinx           |
+| K'Sante      | Kai'Sa       | Kalista      | Karma        | Karthus        |
+| Kassadin     | Katarina     | Kayle        | Kayn         | Kennen         |
+| Kha'Zix      | Kindred      | Kled         | Kog'Maw      | LeBlanc        |
+| Lee Sin      | Leona        | Lillia       | Lissandra    | Lucian         |
+| Lulu         | Lux          | Malphite     | Malzahar     | Maokai         |
+| Master Yi    | Mel          | Milio        | Miss Fortune | Mordekaiser    |
+| Morgana      | Naafiri      | Nami         | Nasus        | Nautilus       |
+| Neeko        | Nidalee      | Nilah        | Nocturne     | Nunu & Willump |
+| Olaf         | Orianna      | Ornn         | Pantheon     | Poppy          |
+| Pyke         | Qiyana       | Quinn        | Rakan        | Rammus         |
+| Rek'Sai      | Rell         | Renata Glasc | Renekton     | Rengar         |
+| Riven        | Rumble       | Ryze         | Samira       | Sejuani        |
+| Senna        | Seraphine    | Sett         | Shaco        | Shen           |
+| Shyvana      | Singed       | Sion         | Sivir        | Skarner        |
+| Smolder      | Sona         | Soraka       | Swain        | Sylas          |
+| Syndra       | Tahm Kench   | Taliyah      | Talon        | Taric          |
+| Teemo        | Thresh       | Tristana     | Trundle      | Tryndamere     |
+| Twisted Fate | Twitch       | Udyr         | Urgot        | Varus          |
+| Vayne        | Veigar       | Vel'Koz      | Vex          | Vi             |
+| Viego        | Viktor       | Vladimir     | Volibear     | Warwick        |
+| Wukong       | Xayah        | Xerath       | Xin Zhao     | Yasuo          |
+| Yone         | Yorick       | Yunara       | Yuumi        | Zac            |
+| Zed          | Zeri         | Ziggs        | Zilean       | Zoe            |
+| Zyra         |              |              |              |                |
 
 [Back to Top](#summonersbook-user-guide)
 ---
