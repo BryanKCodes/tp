@@ -226,7 +226,7 @@ Command | Purpose | Format
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players or export teams [to/PATH]`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export players or export teams [to PATH]`
 [`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
 
 ### Utility
@@ -754,7 +754,7 @@ Imports player information from a CSV file into SummonersBook. This is useful fo
 
 **Format:**
 ```
-import players from/FILE_PATH
+import players from FILE_PATH
 ```
 
 **Notes:**
@@ -1017,9 +1017,9 @@ Action | Format                                              | Example
 ### Data Import/Export
 Action | Format                     | Example
 -------|----------------------------|--------
-**Export players** | `export players [to/PATH]` | `export players`
-**Export teams** | `export teams [to/PATH]`   | `export teams to/data/myTeams.csv`
-**Import players** | `import players from/PATH` | `import players from data/players.csv`
+**Export players** | `export players [to PATH]` | `export players`
+**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
+**Import players** | `import players from PATH` | `import players from data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
