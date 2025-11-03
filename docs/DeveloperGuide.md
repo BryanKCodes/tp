@@ -1535,13 +1535,13 @@ testers are expected to do more *exploratory* testing.
 
 1. Dealing with missing/corrupted data files
 
-    1. Test case: Delete the `data/addressbook.json` file, then launch the application<br>
+    1. Test case: Delete the `data/summonersbook.json` file, then launch the application<br>
        Expected: Application starts with sample data populated.
 
-    2. Test case: Corrupt the `data/addressbook.json` file by adding invalid JSON syntax, then launch the application<br>
+    2. Test case: Corrupt the `data/summonersbook.json` file by adding invalid JSON syntax, then launch the application<br>
        Expected: Application starts with an empty data set (no players or teams).
 
-    3. Test case: Manually edit `data/addressbook.json` to add a person with invalid field values (e.g., invalid rank), then launch the application<br>
+    3. Test case: Manually edit `data/summonersbook.json` to add a person with invalid field values (e.g., invalid rank), then launch the application<br>
        Expected: Application starts with an empty data set, discarding the corrupted data.
 
 2. Data persistence
