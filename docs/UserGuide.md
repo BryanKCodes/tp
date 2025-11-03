@@ -196,12 +196,12 @@ Click on any command to jump to its detailed explanation.
 
 Command | Purpose | Format
 --------|---------|-------
-[`add`](#adding-a-player-add) | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`
+[`add`](#adding-a-player-add) | Add a new player to roster | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`
 [`list`](#listing-all-players-list) | Show all players | `list`
 [`find`](#finding-players-by-name-find) | Search players by name | `find KEYWORD [MORE_KEYWORDS...]`
 [`filter`](#filtering-players-filter) | Filter by role/rank | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]`
 [`view`](#viewing-detailed-player-information-view) | View detailed player stats | `view INDEX`
-[`edit`](#editing-a-player-edit) | Update player details | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`
+[`edit`](#editing-a-player-edit) | Update player details | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`
 [`delete`](#deleting-a-player-delete) | Remove a player | `delete INDEX`
 
 ### Performance Tracking
@@ -246,7 +246,7 @@ Command | Purpose | Format
 **Notes about the command format:**
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
+  e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
   as `add n/Faker rk/Grandmaster rl/ADC c/Sivir`.
 
 * Parameters are _**case-insensitive**_ (except for `name`)
@@ -268,6 +268,8 @@ Command | Purpose | Format
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines
   as space characters surrounding line-breaks may be omitted when copied over to the application.
 
+* As new LoL champions may be added in the future, you can find **all champions supported by SummonersBook** in the **Appendix**.
+
 ---
 
 ## Player Management
@@ -278,8 +280,14 @@ Adds a new player with mandatory details to your roster.
 
 **Format:**
 ```
-add n/NAME rk/RANK rl/ROLE c/CHAMPION
+add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]
 ```
+
+**Note:**
+- `name` has to be **3-16 alphanumerical characters** with **no spaces allowed.** 
+  - is treated as in-game displayed username rather than real names.
+- Duplicate names are **not allowed**, an error message will be shown.
+- `tag` can only be **up to 20 alphanumerical character**, with **no spaces allowed.**
 
 **Examples:**
 
@@ -345,6 +353,7 @@ You can filter by:
 - `rk/` — rank (exact match), can be used multiple times
 - `c/` — champion (exact match), can be used multiple times
 - `s/` — score (shows players with score rating greater or equal to the given value), supply it **only once**!
+  - If more than 1 `s/SCORE` field is provided, an error message will appear.
 
 **Format (any order, at least one filter):**
 ```
@@ -1021,3 +1030,45 @@ Action | Format | Example
 
 [Back to Top](#summonersbook-user-guide)
 
+## Appendix
+
+You can refer to the table below to see all champions supported by SummonersBook.
+
+## Supported Champions
+
+| Aatrox | Ahri | Akali | Akshan | Alistar |
+|--------|------|--------|---------|----------|
+| Ambessa | Amumu | Anivia | Annie | Aphelios |
+| Ashe | Aurelion Sol | Aurora | Azir | Bard |
+| Bel'Veth | Blitzcrank | Brand | Braum | Briar |
+| Caitlyn | Camille | Cassiopeia | Cho'Gath | Corki |
+| Darius | Diana | Dr. Mundo | Draven | Ekko |
+| Elise | Evelynn | Ezreal | Fiddlesticks | Fiora |
+| Fizz | Galio | Gangplank | Garen | Gnar |
+| Gragas | Graves | Gwen | Hecarim | Heimerdinger |
+| Hwei | Illaoi | Irelia | Ivern | Janna |
+| Jarvan IV | Jax | Jayce | Jhin | Jinx |
+| K'Sante | Kai'Sa | Kalista | Karma | Karthus |
+| Kassadin | Katarina | Kayle | Kayn | Kennen |
+| Kha'Zix | Kindred | Kled | Kog'Maw | LeBlanc |
+| Lee Sin | Leona | Lillia | Lissandra | Lucian |
+| Lulu | Lux | Malphite | Malzahar | Maokai |
+| Master Yi | Mel | Milio | Miss Fortune | Mordekaiser |
+| Morgana | Naafiri | Nami | Nasus | Nautilus |
+| Neeko | Nidalee | Nilah | Nocturne | Nunu & Willump |
+| Olaf | Orianna | Ornn | Pantheon | Poppy |
+| Pyke | Qiyana | Quinn | Rakan | Rammus |
+| Rek'Sai | Rell | Renata Glasc | Renekton | Rengar |
+| Riven | Rumble | Ryze | Samira | Sejuani |
+| Senna | Seraphine | Sett | Shaco | Shen |
+| Shyvana | Singed | Sion | Sivir | Skarner |
+| Smolder | Sona | Soraka | Swain | Sylas |
+| Syndra | Tahm Kench | Taliyah | Talon | Taric |
+| Teemo | Thresh | Tristana | Trundle | Tryndamere |
+| Twisted Fate | Twitch | Udyr | Urgot | Varus |
+| Vayne | Veigar | Vel'Koz | Vex | Vi |
+| Viego | Viktor | Vladimir | Volibear | Warwick |
+| Wukong | Xayah | Xerath | Xin Zhao | Yasuo |
+| Yone | Yorick | Yunara | Yuumi | Zac |
+| Zed | Zeri | Ziggs | Zilean | Zoe |
+| Zyra |  |  |  |  |
