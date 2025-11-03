@@ -78,7 +78,6 @@ public class TeamCard extends UiPart<Region> {
 
         Label nameLabel = new Label(person.getName().fullName);
         nameLabel.getStyleClass().add("cell_small_label");
-        nameLabel.setMinWidth(120);
 
         StyledLabel roleLabel = new StyledLabel(person.getRole().value, "role", "details_label");
         StyledLabel rankLabel = new StyledLabel(person.getRank().value, "rank", "details_label");
