@@ -33,8 +33,8 @@ public class Stats {
                     + "Kill/Death/Assist (kda) must be an integer or decimal between 0.00 and 200.00 "
                     + "(at most 2 decimal digits, at most 6 digits in the integer part)";
 
-    /** Message used when trying to delete from an empty stats history. */
-    public static final String NOT_DELETED_MESSAGE = "This Player has no statistics record to be deleted";
+    /** Message used when trying to delete from an empty Stats history. */
+    public static final String NOT_DELETED_MESSAGE = "This player has no statistics record to be deleted";
 
     /** Inclusive upper/lower bounds for semantic range checks. */
     public static final float MAX_CPM = 40.0F;
