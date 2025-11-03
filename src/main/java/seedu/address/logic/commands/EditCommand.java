@@ -35,7 +35,7 @@ import seedu.address.model.team.exceptions.DuplicateChampionException;
 import seedu.address.model.team.exceptions.DuplicateRoleException;
 
 /**
- * Edits the details of an existing person in the address book.
+ * Edits the details of an existing person in Summonersbook.
  */
 public class EditCommand extends Command {
 

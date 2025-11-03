@@ -61,4 +61,4 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[portfolio](team/landonzhao.md)]
 
 * Role: Developer
-* Responsibilities: Getting work done
+* Responsibilities: Implementing features, Documentation, Debugging
