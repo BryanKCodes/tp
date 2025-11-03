@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
+import static seedu.address.logic.commands.DeleteCommand.MESSAGE_PERSON_IN_TEAM;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.ALICE;
@@ -96,7 +97,7 @@ public class DeleteCommandTest {
         // ALICE is at index 0 in the typical address book
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
-        assertCommandFailure(deleteCommand, modelWithTeam, Messages.MESSAGE_PERSON_IN_TEAM);
+        assertCommandFailure(deleteCommand, modelWithTeam, MESSAGE_PERSON_IN_TEAM);
     }
 
     @Test
