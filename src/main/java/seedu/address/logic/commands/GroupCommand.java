@@ -24,7 +24,7 @@ public class GroupCommand extends Command {
     public static final String COMMAND_WORD = "group";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Automatically creates balanced teams from all unassigned persons.\n"
+            + ": Automatically creates balanced teams from all unassigned players.\n"
             + "The algorithm groups players by role, sorts by rank, and ensures no duplicate champions per team.\n"
             + "Example: " + COMMAND_WORD;
 
