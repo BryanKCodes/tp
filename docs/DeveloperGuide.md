@@ -630,12 +630,28 @@ A success message shows the number of teams created and remaining unassigned per
 
 <box type="info" seamless>
 
-**Note:**
-If there are insufficient persons to form a full team (i.e., missing a required role), the command will throw a `CommandException` with:
+**Note: Error Handling**
 
-`No teams could be formed. Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).`
+**Missing Roles:**
+If one or more required roles are missing (i.e., there is no unassigned person for at least one role), the command will throw a `CommandException` with:
 
-Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations.
+`Cannot form a team: No persons available for role(s): [Role1, Role2, ...].`
+
+For example, if there are no unassigned Support and Jungle players:
+
+`Cannot form a team: No persons available for role(s): Support, Jungle.`
+
+**Duplicate Champion Conflicts:**
+If champion conflicts prevent forming even the first team (i.e., the highest-ranked available players for each role have champion duplicates), the command will throw a `CommandException` with:
+
+`Operation would result in duplicate champions in the team. [Name1] and [Name2] both play: [Champion].`
+
+For example, if the highest-ranked Mid player "Faker" and the highest-ranked Support player "Keria" both play Ahri:
+
+`Operation would result in duplicate champions in the team. Faker and Keria both play: Ahri.`
+
+**Partial Success:**
+Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations. If some teams are successfully formed but champion conflicts prevent forming additional teams, the command will succeed with the teams that were formed.
 
 </box>
 
@@ -1241,20 +1257,28 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### UC05 – Auto-Group People (Create Teams)
 **MSS**
 1. User requests to group all unassigned players into teams.
-2. SummonersBook forms as many valid teams as possible based on rank, role balance, and champion uniqueness.
-3. SummonersBook displays all newly formed teams and confirms that grouping has been completed.  
+2. SummonersBook validates that at least one player exists for each of the five required roles (Top, Jungle, Mid, ADC, Support).
+3. SummonersBook forms as many valid rank-ordered teams as possible, ensuring no duplicate champions within each team.
+4. SummonersBook displays all newly formed teams with their members and the number of remaining unassigned players.
    Use case ends.
 
 **Extensions**
-- 2a. Required roles are missing.
-  - 2a1. SummonersBook shows an error about missing roles.  
+- 1a. No unassigned players are available.
+  - 1a1. SummonersBook shows an error about no unassigned players.
     Use case ends.
-- 2b. Champion conflicts prevent forming further teams.
-  - 2b1. SummonersBook shows an error about champion conflicts and stops grouping.  
+
+- 2a. One or more required roles have no unassigned players.
+  - 2a1. SummonersBook shows an error about missing roles.
     Use case ends.
-- 2c. Fewer than five total unassigned players exist.
-  - 2c1. SummonersBook shows an error about insufficient players.  
+
+- 3a. Champion conflicts prevent forming even the first team.
+  - 3a1. SummonersBook shows an error about duplicate champions.
     Use case ends.
+
+- 3b. Some teams are formed, but champion conflicts prevent forming additional teams.
+  - 3b1. SummonersBook displays the successfully formed teams.
+  - 3b2. Remaining players stay in the unassigned pool.
+    Use case ends with partial success.
 
 ---
 
