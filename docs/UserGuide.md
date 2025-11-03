@@ -8,16 +8,12 @@ pageNav: 3
 
 **Are you a League of Legends esports coach or team manager** spending hours juggling rosters, balancing skill levels, and tracking player performance across scrimmages?
 
-SummonersBook is built specifically for you.
-
-## What SummonersBook Does
-
-Manage your player roster and form 5v5 teams **in seconds** instead of hours:
+SummonersBook is built specifically to help you manage your player roster and form 5v5 teams **in seconds** instead of hours:
 - **Auto-group teams** by rank, role, and champion pool
 - **Track player performance** with built-in stats and visualizations
 - **Fast keyboard commands** optimized for coaches who type quickly
 
-If you're comfortable with typing commands (like using Slack or Discord), SummonersBook will be 3x faster than spreadsheets or traditional apps.
+If you're comfortable typing commands (like using Slack or Discord), SummonersBook will be faster than spreadsheets or traditional apps.
 
 ---
 ## Table of Contents
@@ -25,7 +21,7 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 1. [Quick Start](#quick-start)
     - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
-    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team-2-minute-tutorial)
+    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team)
     - [Step 4: Learn the Essentials](#step-4-learn-the-essentials)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
@@ -37,11 +33,49 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
     - [Team Management](#team-management)
     - [Data Import/Export](#data-importexport)
     - [Utility Commands](#utility-commands)
-4. [Troubleshooting](#troubleshooting)
-5. [FAQ](#faq)
-6. [Known Issues](#known-issues)
-7. [Glossary](#glossary)
-8. [Command Summary](#command-summary)
+4. [Features](#features)
+    - [Notes about the command format](#notes-about-the-command-format)
+    - **Player Management**
+        - [Adding a player: `add`](#adding-a-player-add)
+        - [Listing all players: `list`](#listing-all-players-list)
+        - [Finding players by name: `find`](#finding-players-by-name-find)
+        - [Filtering players: `filter`](#filtering-players-filter)
+        - [Viewing detailed player information: `view`](#viewing-detailed-player-information-view)
+        - [Editing a player: `edit`](#editing-a-player-edit)
+        - [Deleting a player: `delete`](#deleting-a-player-delete)
+    - **Performance Tracking**
+        - [Adding performance stats: `addStats`](#adding-performance-stats-addstats)
+        - [Removing performance stats: `deleteStats`](#removing-performance-stats-deletestats)
+        - [Recording a team win: `win`](#recording-a-team-win--win)
+        - [Recording a team loss: `lose`](#recording-a-team-loss--lose)
+    - **Team Management**
+        - [Auto-grouping players into teams: `group`](#auto-grouping-players-into-teams-group)
+        - [Manually creating a team: `makeGroup`](#manually-creating-a-team-makegroup)
+        - [Viewing team details: `viewTeam`](#viewing-team-details--viewteam)
+        - [Disbanding teams: `ungroup`](#disbanding-teams-ungroup)
+    - **Data Import/Export**
+        - [Exporting data: `export`](#exporting-data-export)
+        - [Importing player data: `import`](#importing-player-data-import)
+    - **Utility Commands**
+        - [Viewing help: `help`](#viewing-help-help)
+        - [Clearing all data: `clear`](#clearing-all-data-clear)
+        - [Exiting the program: `exit`](#exiting-the-program-exit)
+        - [Saving the data](#saving-the-data)
+        - [Editing the data file](#editing-the-data-file)
+5. [Troubleshooting](#troubleshooting)
+6. [FAQ](#faq)
+7. [Known Issues](#known-issues)
+8. [Glossary](#glossary)
+    - [General Terminology](#general-terminology)
+    - [Domain-Specific Terminology](#domain-specific-terminology)
+9. [Future Enhancements](#future-enhancements)
+    - [Smart Team Formation (AI-Enhanced Grouping)](#1-smart-team-formation-ai-enhanced-grouping--planned)
+    - [Archived Teams & Player History](#2-archived-teams--player-history--planned)
+    - [Undo/Redo & Command History](#3-undoredo--command-history--proposed)
+    - [Enhanced Import/Export System](#4-enhanced-importexport-system--planned)
+10. [Command Summary](#command-summary)
+11. [Appendix](#appendix)
+    - [Supported Champions](#supported-champions)
 
 ---
 ## Quick Start
@@ -78,25 +112,17 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 The SummonersBook window should look like the image below:
 ![Ui](images/Ui.png)
 
-### Step 3: Your First Team (2-Minute Tutorial)
+### Step 3: Your First Team
 
 Let's form your first balanced team to see SummonersBook in action!
 
-**a) Add 5 players** (copy-paste these one-by-one into the command box):
-
-1. `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-2. `add n/Zeus rk/Diamond rl/Top c/Gnar`
-3. `add n/Oner rk/Master rl/Jungle c/Lee Sin`
-4. `add n/Gumayusi rk/Challenger rl/ADC c/Aphelios`
-5. `add n/Keria rk/Master rl/Support c/Thresh`
-
-**b) Auto-create a balanced team:**
+**a) Auto-create a balanced team:**
 
 ```
 group
 ```
 
-🎉 **Done!** You just formed a balanced team in under 30 seconds. The team will appear in the team panel on the right.
+🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
 ### Step 4: Learn the Essentials
 
@@ -210,8 +236,8 @@ Command | Purpose                                 | Format
 --------|-----------------------------------------|-------
 [`addStats`](#adding-performance-stats-addstats) | Record match performance                | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
 [`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry               | `deleteStats INDEX`
-[`win`](#recording-a-team-win-win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
-[`lose`](#recording-a-team-loss-lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
+[`win`](#recording-a-team-win--win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
+[`lose`](#recording-a-team-loss--lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
 
 ### Team Management
 
@@ -219,15 +245,15 @@ Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
-[`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
-[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
+[`viewTeam`](#viewing-team-details--viewteam) | View detailed team stats | `viewTeam TEAM_INDEX`
+[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup TEAM_INDEX` or `ungroup all`
 
 ### Data Import/Export
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players or export teams [to PATH]`
-[`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export teams [to CUSTOM_PATH]` or `export players [to CUSTOM_PATH]`
+[`import`](#importing-player-data-import) | Import players from CSV | `import players from FILE_PATH`
 
 ### Utility
 
@@ -243,7 +269,7 @@ Command | Purpose | Format
 
 ## Features
 
-**Notes about the command format:**
+### Notes about the command format:
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
@@ -573,10 +599,6 @@ win TEAM_INDEX
 **Notes:**
 * `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
-> [!IMPORTANT]
-> If a team is removed, all its recorded wins and losses are deleted.
-> Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
-
 <box type="important" seamless>
 
 **Important:** If a team is removed, all its recorded wins and losses are deleted. Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
@@ -663,10 +685,6 @@ makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
 * The selected players will be verified if they form a valid team.
 * Once verified, the team is created and added to your team list.
 
-**How it works:**
-* The selected players will be verified if they form a valid team.
-* Once verified, the team is created and added to your team list.
-
 **Notes:**
 * `INDEX` (1 to 5) refers to the number shown in the displayed player list. Must be a positive integer (1, 2, 3…).
 * **Exactly 5** index numbers must be provided.
@@ -681,7 +699,7 @@ makeGroup 1 2 3 4 5
 ```
 ### Viewing team details : `viewTeam`
 
-Opens a detailed window showing comprehensive information about a team, including all members and team statistics.
+Opens a detailed window showing comprehensive information about a team, including all members and the team's win/loss record.
 
 **Format:**
 ```
@@ -708,7 +726,7 @@ Removes one or more teams from the system, returning their members to the unassi
 
 **Format:**
 ```
-ungroup INDEX
+ungroup TEAM_INDEX
 ```
 or
 ```
@@ -721,7 +739,7 @@ ungroup all
 * If there are no teams, the command will show an error.
 
 **Notes:**
-* `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* `TEAM_INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Disbands the 1st team in the displayed team list.
@@ -753,7 +771,7 @@ export teams [to CUSTOM_PATH]
 ```
 
 **How it works:**
-* If no path is provided, exports are saved to:
+* If no custom path is provided, exports are saved to:
     - `data/players.csv` for player data
     - `data/teams.csv` for team data
 * Each CSV file contains structured data for easy re-import or analysis (e.g., Excel, Google Sheets).
@@ -761,10 +779,10 @@ export teams [to CUSTOM_PATH]
 
 **Examples:**
 * `export players`
-  Exports all player data to `data/players.csv`.
+  Exports all player data to default path `data/players.csv`.
 
 * `export teams to data/myTeams.csv`
-  Exports all team data to a custom location.
+  Exports all team data to a custom path `data/myTeams.csv`.
 
 **Success message:**
 ```
@@ -784,15 +802,12 @@ import players from FILE_PATH
 * The CSV file must be properly formatted. Supported headers include:
     - `Name,Role,Rank,Champion`
     - `Name,Role,Rank,Champion,Wins,Losses`
-* Duplicate player entries (by name and role) will be ignored automatically.
+* Duplicate/invalid player entries (by name and role) will be ignored automatically.
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
 **Examples:**
 * `import players from data/players.csv`
   Imports players from data/players.csv.
-
-* `import players from data/backup.csv`
-  Imports players from a backup file under data directory.
 
 **Success message:**
 ```
@@ -861,7 +876,7 @@ Always **back up the file** before making changes, and only edit it if you are c
 
 ## Troubleshooting
 
-### "Cannot delete player - currently on team"
+### "Unable to delete this player. This player is currently in a team."
 
 **Problem:** You tried to delete a player who is assigned to a team.
 
@@ -874,20 +889,27 @@ Always **back up the file** before making changes, and only edit it if you are c
 **Problem:** Not enough players or missing a required role when running `group`.
 
 **What to check:**
-- Do you have at least 5 unassigned players?
-- Do you have at least 1 player per role (Top, Jungle, Mid, ADC, Support)?
-- Run `list` to see who's available (unassigned players show in the player list).
+- Run list and confirm you have at least 5 ungrouped players. 
+  - If some players already belong to teams, use ungroup to free them. 
+- Check if there’s at least one player for each of the 5 roles: Top, Jungle, Mid, ADC, Support. 
+  - Run `find rl/Top`, `find rl/Mid`, etc. to verify. 
+- Ensure players have unique champions within a potential team. 
+  - Example: Two players both using “Ahri” would block auto-grouping.
 
-**Quick fix:** Add missing role players with `add n/... rl/Support ...`
+**Quick fix:** Add missing role players. 
+- Example: 
+```
+add n/... rl/Support ...
+```
 
-### "Invalid index" or "The player index provided is invalid"
+### Invalid index
 
-**Problem:** You referenced a player number that doesn't exist in the current displayed list.
+**Problem:** You entered a player number that doesn't exist in the current displayed list.
 
 **Solution:**
-1. Always run `list` first to see current player numbers.
-2. Remember: Numbers change after filtering or deleting!
-3. The index must refer to the **displayed list**, not the total roster.
+1. Always run `list` first to refresh the player list and see current player numbers.
+2. Remember that numbers change after filtering or deleting.
+3. The index must refer to the **displayed list index**, not the total roster.
 
 **Example:**
 ```
@@ -896,14 +918,26 @@ view 5               # ERROR - only 3 players are displayed
 view 2               # OK - refers to 2nd player in filtered list
 ```
 
-### "Duplicate champion detected" when creating teams
+### Duplicate roles/champions when manually creating teams
 
-**Problem:** Multiple players in the same team play the same champion.
+**Problem:** Multiple players in the same team play the same **role** or **champion**.
+
+**Explanation**:
+Each team in SummonersBook follows the standard 5-role composition: Top, Jungle, Mid, ADC, and Support.
+To ensure balanced and valid teams, each player in a team must have a **unique role** and **champion**.
 
 **Solution:**
-- SummonersBook requires unique champions within each team
-- Edit one player's champion: `edit 3 c/Yasuo`
-- Or use `group` (auto-grouping avoids champion conflicts automatically)
+- Edit the conflicting player’s details accordingly using the edit command :
+  - Examples:
+    - for duplicate role:
+      ```
+      edit 3 rl/ADC` 
+      ```
+    - for duplicate champion:
+      ```
+      edit 3 c/Yasuo
+      ```
+- Alternatively, use the `group` command to automatically form valid teams. SummonersBook will handle role and champion assignments to prevent duplicates.
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -943,9 +977,9 @@ view 2               # OK - refers to 2nd player in filtered list
 
 ---
 
-### Glossary
+## Glossary
 
-#### General Terminology
+### General Terminology
 
 **Java**
 : The programming language required to run SummonersBook (version 17 or higher).
@@ -976,7 +1010,7 @@ view 2               # OK - refers to 2nd player in filtered list
 
 ---
 
-#### Domain-Specific Terminology
+### Domain-Specific Terminology
 
 **Champion**
 : A playable character in *League of Legends*. SummonersBook validates champion names against an internal list stored in `champions.txt`. Only names from this list are accepted (case-insensitive). If a newly released champion (e.g., *Aurora*) is not yet recognized, the input will be rejected until the list is updated in a future release.
@@ -1003,6 +1037,89 @@ view 2               # OK - refers to 2nd player in filtered list
 **Rank-Ordered Team**
 : A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This creates balanced, tiered teams (Team 1 > Team 2, etc.).
 
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
+## Future Enhancements
+
+### 1. Smart Team Formation (AI-Enhanced Grouping) — *Planned*
+
+**Goal:**  
+Develop a more comprehensive algorithm for balancing teams, beyond simple rank-based grouping.
+
+**Why it matters:**  
+Coaches often spend significant time trialing different player combinations to find balance. True synergy comes not only from player rank but also from how **champions and playstyles complement each other**.
+
+**You’ll be able to:**
+- Use `smartGroup` to generate **AI-informed team compositions** that consider champion synergies, recent performance metrics, and consistency trends.
+- View a **balance score** reflecting how well players’ past stats and roles fit together.
+- Switch between **standard** (rank-based) and **AI-enhanced** grouping for flexibility.
+
+**User impact:**  
+Coaches can reference past performance data instantly instead of manually testing combinations — greatly reducing the time and effort spent on lineup experimentation.
+
+**Related commands:** `group`, `viewTeam`, `addStats`
+
+---
+
+### 2. Archived Teams & Player History — *Planned*
+
+**Goal:**  
+Keep the active roster clean while preserving valuable history.
+
+**Why it matters:**  
+Teams evolve over tournaments — users shouldn’t have to delete data to stay organized.
+
+**You’ll be able to:**
+- Move retired players and past teams into an **Archive** with one command.
+- **Filter, search, and restore** archived entries seamlessly.
+- View **historical win/loss records** to track progression across seasons.
+
+**User impact:**  
+Reduces clutter while maintaining institutional memory for coaching analytics.
+
+**Related commands:** `list`, `find`, `import`, `export`
+
+---
+
+### 3. Undo/Redo & Command History — *Proposed*
+
+**Goal:**  
+Make experimentation risk-free.
+
+**Why it matters:**  
+Fast CLI workflows mean errors happen — deleting the wrong team or player shouldn’t be irreversible.
+
+**You’ll be able to:**
+- **Undo or redo** recent actions (`add`, `edit`, `delete`, `ungroup`).
+- View a **command history log** with timestamps and success states.
+
+**User impact:**  
+Encourages coaches/team managers to confidently explore new team setups while ensuring data safety.
+
+**Related commands:** `edit`, `ungroup`, `delete`
+
+---
+
+### 4. Enhanced Import/Export System — *Planned*
+
+**Goal:**  
+Enable full data portability — including player performance statistics.
+
+**Why it matters:**  
+Current CSV export/import excludes detailed player statistics (stats arrays), making long-term analysis and data sharing cumbersome.
+
+**You’ll be able to:**
+- Export all **player stats** (CS/min, GD@15, KDA) alongside basic player details.
+- Export **full team breakdowns**, including average performance scores of every member.
+- Import **complete player profiles** — SummonersBook will intelligently parse player statistics arrays and skip invalid rows automatically.
+
+**User impact:**  
+Provides full data continuity of player statistics between seasons or machines, allowing coaches to track performance history seamlessly.
+
+**Related commands:** `import`, `export`, `addStats`
 
 [Back to Top](#summonersbook-user-guide)
 
@@ -1038,11 +1155,11 @@ Action | Format                                              | Example
 **Disband team(s)** | `ungroup TEAM_INDEX` or `ungroup all`               | `ungroup 1` or `ungroup all`
 
 ### Data Import/Export
-Action | Format                     | Example
--------|----------------------------|--------
-**Export players** | `export players [to PATH]` | `export players`
-**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
-**Import players** | `import players from PATH` | `import players from data/players.csv`
+Action | Format                            | Example
+-------|-----------------------------------|--------
+**Export players** | `export players [to CUSTOM_PATH]` | `export players`
+**Export teams** | `export teams [to CUSTOM_PATH]`   | `export teams to data/myTeams.csv`
+**Import players** | `import players from FILE_PATH`   | `import players from data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
@@ -1095,3 +1212,5 @@ You can refer to the table below to see all champions supported by SummonersBook
 | Yone | Yorick | Yunara | Yuumi | Zac |
 | Zed | Zeri | Ziggs | Zilean | Zoe |
 | Zyra |  |  |  |  |
+
+[Back to Top](#summonersbook-user-guide)
