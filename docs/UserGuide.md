@@ -245,7 +245,7 @@ Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
-[`viewTeam`](#viewing-team-details--viewteam) | View detailed team stats | `viewteam TEAM_INDEX`
+[`viewTeam`](#viewing-team-details--viewteam) | View detailed team stats | `viewTeam TEAM_INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup TEAM_INDEX` or `ungroup all`
 
 ### Data Import/Export
@@ -576,10 +576,6 @@ win TEAM_INDEX
 **Notes:**
 * `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
-> [!IMPORTANT]
-> If a team is removed, all its recorded wins and losses are deleted.
-> Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
-
 <box type="important" seamless>
 
 **Important:** If a team is removed, all its recorded wins and losses are deleted. Even if you later create a new team with the same players, the previous team's win/loss record will **not** be restored.
@@ -661,10 +657,6 @@ Creates a new team with the specified players by their index numbers.
 ```
 makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
 ```
-
-**How it works:**
-* The selected players will be verified if they form a valid team.
-* Once verified, the team is created and added to your team list.
 
 **How it works:**
 * The selected players will be verified if they form a valid team.
