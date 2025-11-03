@@ -21,20 +21,20 @@ import seedu.address.model.Model;
  *     <li><b>Players</b> — exported to {@code data/players.csv} by default</li>
  *     <li><b>Teams</b> — exported to {@code data/teams.csv} by default</li>
  * </ul>
- * Users can optionally specify a custom file path using the {@code to/} prefix.
+ * Users can optionally specify a custom file path using the {@code to} keyword.
  * </p>
  *
  * <p><b>Example usages:</b></p>
  * <pre>
  *     export players
- *     export teams to/data/my_teams.csv
+ *     export teams to data/my_teams.csv
  * </pre>
  */
 public class ExportCommand extends Command {
     public static final String COMMAND_WORD = "export";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Exports players or teams to CSV.\n"
-            + "Parameters: export [players|teams] [to/FILEPATH]\n"
-            + "Examples: export players | export teams to/data/my_teams.csv";
+            + "Parameters: export [players|teams] [to CUSTOM_PATH]\n"
+            + "Examples: export players | export teams to data/my_teams.csv";
 
     private static final Path DEFAULT_PLAYERS_PATH = Paths.get("data/players.csv");
     private static final Path DEFAULT_TEAMS_PATH = Paths.get("data/teams.csv");

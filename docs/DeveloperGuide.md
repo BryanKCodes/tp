@@ -1528,7 +1528,7 @@ testers are expected to do more *exploratory* testing.
     3. Test case: `export teams`<br>
        Expected: Team data is exported to `data/teams.csv`. Success message shows "Exported team data to data/teams.csv."
 
-    4. Test case: `export players to/custom_path.csv`<br>
+    4. Test case: `export players to custom_path.csv`<br>
        Expected: Player data is exported to the specified custom path. Success message confirms the export location.
 
 ### Saving data

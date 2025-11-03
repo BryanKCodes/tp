@@ -40,7 +40,7 @@ public class ExportCommandParserTest {
 
     @Test
     public void parse_teamsWithPath_success() throws Exception {
-        ExportCommand cmd = parser.parse("teams to/data/t.csv");
+        ExportCommand cmd = parser.parse("teams to data/t.csv");
         assertEquals(new ExportCommand(Target.TEAMS, Paths.get("data/t.csv")), cmd);
     }
 

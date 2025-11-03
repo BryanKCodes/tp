@@ -96,7 +96,7 @@ public class AddressBookParserTest {
         // with path
         ExportCommand expected2 =
                 new ExportCommand(ExportCommand.Target.TEAMS, Paths.get("data/teams.csv"));
-        assertEquals(expected2, parser.parseCommand("export teams to/data/teams.csv"));
+        assertEquals(expected2, parser.parseCommand("export teams to data/teams.csv"));
     }
 
     @Test

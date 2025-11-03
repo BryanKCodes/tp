@@ -13,16 +13,16 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * <ul>
  *   <li>{@code export players}</li>
  *   <li>{@code export teams}</li>
- *   <li>{@code export players to/data/players.csv}</li>
- *   <li>{@code export teams to/data/teams.csv}</li>
+ *   <li>{@code export players to data/players.csv}</li>
+ *   <li>{@code export teams to data/teams.csv}</li>
  * </ul>
- * If no {@code to/FILEPATH} is provided, a default path is used.
+ * If no {@code CUSTOM_PATH} is provided, a default path is used.
  */
 public class ExportCommandParser implements Parser<ExportCommand> {
 
     private static final String PLAYERS_KEYWORD = "players";
     private static final String TEAMS_KEYWORD = "teams";
-    private static final String TO_PREFIX = "to/";
+    private static final String TO_KEYWORD = "to";
 
     /**
      * Parses the given user input and constructs an {@link ExportCommand}.
@@ -50,20 +50,20 @@ public class ExportCommandParser implements Parser<ExportCommand> {
 
         Path customPath = null;
         if (!remainder.isEmpty()) {
-            if (!remainder.startsWith(TO_PREFIX)) {
-                throw new ParseException("Expected 'to/' prefix before file path.\n"
+            if (!remainder.startsWith(TO_KEYWORD + " ")) {
+                throw new ParseException("Expected 'to' before file path.\n"
                         + ExportCommand.MESSAGE_USAGE);
             }
-            String pathString = remainder.substring(TO_PREFIX.length()).trim();
+
+            String pathString = remainder.substring(TO_KEYWORD.length()).trim();
             if (pathString.isEmpty()) {
-                throw new ParseException("File path cannot be empty after 'to/'.");
+                throw new ParseException("File path cannot be empty after 'to'.");
             }
             if (!pathString.endsWith(".csv")) {
                 throw new ParseException("File path must end with .csv");
             }
             customPath = Paths.get(pathString);
         }
-
         return new ExportCommand(target, customPath);
     }
 }
