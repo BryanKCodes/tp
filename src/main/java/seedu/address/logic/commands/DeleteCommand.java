@@ -12,7 +12,7 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
 /**
- * Deletes a person identified using it's displayed index from the address book.
+ * Deletes a person identified using it's displayed index from SummonersBook.
  */
 public class DeleteCommand extends Command {
 
@@ -24,6 +24,8 @@ public class DeleteCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Player: %1$s";
+    public static final String MESSAGE_PERSON_IN_TEAM = Messages.MESSAGE_PERSON_IN_TEAM
+            + " Try ungrouping the team, then delete the player again.";
 
     private final Index targetIndex;
 
@@ -43,7 +45,7 @@ public class DeleteCommand extends Command {
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
 
         if (model.isPersonInAnyTeam(personToDelete)) {
-            throw new CommandException(Messages.MESSAGE_PERSON_IN_TEAM);
+            throw new CommandException(MESSAGE_PERSON_IN_TEAM);
         }
 
         model.deletePerson(personToDelete);

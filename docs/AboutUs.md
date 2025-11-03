@@ -67,4 +67,4 @@ You can reach us via email:
 [[portfolio](team/landonzhao.md)]
 
 * Role: Developer
-* Responsibilities: Getting work done
+* Responsibilities: Implementing features, Documentation, Debugging
