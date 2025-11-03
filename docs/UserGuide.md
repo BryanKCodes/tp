@@ -169,48 +169,42 @@ Refer to the [Features](#features) section below for complete details on all com
 
 These workflows show you how to accomplish typical coaching tasks with SummonersBook.
 
-### Workflow 1: Preparing for Scrimmage Night
+### Workflow 1: Creating Balanced Teams Automatically
 
-**Your goal:** You have 15 players and need to form 3 balanced teams for practice matches.
-
-**Steps:**
-
-1. **Add your players** (if not already in the system):
-   ```
-   add n/Faker rk/Grandmaster rl/Mid c/Azir
-   add n/Zeus rk/Diamond rl/Top c/Renekton
-   add n/ShowMaker rk/Master rl/Mid c/Syndra
-   ... (continue adding remaining players)
-   ```
-
-2. **Auto-create balanced teams:**
-   ```
-   group
-   ```
-   → SummonersBook instantly creates up to 3 rank-ordered teams, ensuring unique roles and champions per team.
-   → Teams appear automatically in the team panel on the right side of the window.
-
-**Time saved:** ~45 minutes compared to manual balancing in spreadsheets.
-
-### Workflow 2: Finding Substitutes Mid-Tournament
-
-**Your goal:** Your support player is unavailable. Find high-rank support substitutes quickly.
+**Your goal:** You have 10 players (2 for each role) and want to form 2 balanced teams for practice matches in one click.
 
 **Steps:**
 
-1. **Filter by role and rank:**
-   ```
-   filter rl/Support rk/Diamond rk/Master
-   ```
-   → Shows only Diamond and Master ranked Support players.
+1. **Add your players to the system, one line at a time** (if they’re not already added):
 
-2. **Check detailed stats for the top candidate:**
-   ```
-   view 1
-   ```
-   → Opens performance window showing KDA, CS/min, win rate, and recent form.
+```
+add n/Faker rk/Master rl/Mid c/Ahri
+add n/ShowMaker rk/Master rl/Mid c/Syndra
+add n/Zeus rk/Grandmaster rl/Top c/Renekton
+add n/Impact rk/Grandmaster rl/Top c/Gnar
+add n/CoreJJ rk/Master rl/Support c/Leona
+add n/BeryL rk/Master rl/Support c/Nautilus
+add n/Deft rk/Grandmaster rl/ADC c/Jhin
+add n/Gumayusi rk/Grandmaster rl/ADC c/Kai'Sa
+add n/Cuzz rk/Master rl/Jungle c/Graves
+add n/Smeb rk/Grandmaster rl/Jungle c/Elise
+```
+2. **Generate balanced teams:**
+```group```
 
-**Time saved:** ~10 minutes compared to manually scrolling through your entire roster.
+Wow, you now have 2 ready-to-play teams within seconds!
+
+### Workflow 2: Finding a Specific Player Quickly
+
+**Your goal:** You need a **Master rank Support player** to fill a gap in your roster.
+
+**Steps:**
+
+1. **Filter your roster by role and rank:**
+```filter rl/Support rk/Master```
+→ SummonersBook will show only Support players at Master rank.
+
+That's it! Just one command, and you have instantly found the right player!
 
 ### Workflow 3: Post-Match Performance Tracking
 
@@ -363,7 +357,8 @@ add n/Doublelift rk/Platinum rl/ADC c/Jinx t/friend t/ally
 ```
 * Invalid: attempting to add duplicate tags (case-insensitive):
 ```
-add n/Player1 rk/Gold rl/Mid c/Ahri t/friend t/Friend # ❌Error: duplicate tag detected
+# Error: duplicate tag detected
+add n/Player1 rk/Gold rl/Mid c/Ahri t/friend t/Friend 
 ```
 ### Listing all players: `list`
 
