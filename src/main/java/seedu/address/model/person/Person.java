@@ -63,6 +63,7 @@ public class Person {
     public Person(String id, Name name, Role role, Rank rank, Champion champion, Set<Tag> tags,
                   Stats stats, int wins, int losses) {
         requireAllNonNull(id, name, role, rank, champion, tags);
+        validateWinLossValues(wins, losses);
         this.id = id;
         this.name = name;
         this.role = role;
@@ -138,6 +139,19 @@ public class Person {
 
     public Stats getStats() {
         return this.stats;
+    }
+
+    /**
+     * Validates that the given win and loss values are non-negative.
+     *
+     * @param wins   Number of wins to validate.
+     * @param losses Number of loses to validate.
+     * @throws IllegalArgumentException if {@code wins} or {@code losses} is negative.
+     */
+    private void validateWinLossValues(int wins, int losses) {
+        if (wins < 0 || losses < 0) {
+            throw new IllegalArgumentException("Wins and losses cannot be negative.");
+        }
     }
 
     /**
