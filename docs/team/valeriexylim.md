@@ -7,30 +7,20 @@ title: "Valerie's Project Portfolio Page"
 
 **SummonersBook** is a desktop address book application used by gaming coaches to manage team members and gamers, and to create balanced teams for training and mock matches. It is written in Java and has both a CLI and GUI (JavaFX).
 
-Given below are my contributions to the project.
-
-* **New Feature**: Placeholder
-    * What it does: Placeholder
-    * Justification: Placeholder
-    * Highlights: Placeholder
-    * Credits: Placeholder
-
-* **Code contributed**: [RepoSense link]()
+* **Project contributions**:
+  * import/export 
+  * viewTeam - simple & pretty pie chart, help you see a team's synergy (win/loss ratio) at a glance
+  * documentation
 
 * **Project management**:
-    * Placeholder
-
-* **Enhancements to existing features**:
-    * Placeholder (Pull requests [\#n]())
+  * Setting up the occasional team meeting
+  * Proofreading UG,DG sections done by peers
 
 * **Documentation**:
-    * User Guide:
-        * Placeholder [\#n]()
-    * Developer Guide:
-        * Placeholder
+  * User Guide:
+    * Learnt the extent of AI hallucination the hard way ...
+    * Improving navigability and user-friendliness for non-gamers like myself...
+  * Developer Guide:
+    * Fix a lot of formatting issues...
+    * Added table of contents, standardised terminology
 
-* **Community**:
-    * Placeholder: [\#n]()
-
-* **Tools**:
-    * Placeholder ([\#n]())
