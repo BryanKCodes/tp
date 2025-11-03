@@ -8,16 +8,12 @@ pageNav: 3
 
 **Are you a League of Legends esports coach or team manager** spending hours juggling rosters, balancing skill levels, and tracking player performance across scrimmages?
 
-SummonersBook is built specifically for you.
-
-## What SummonersBook Does
-
-Manage your player roster and form 5v5 teams **in seconds** instead of hours:
+SummonersBook is built specifically to help you manage your player roster and form 5v5 teams **in seconds** instead of hours:
 - **Auto-group teams** by rank, role, and champion pool
 - **Track player performance** with built-in stats and visualizations
 - **Fast keyboard commands** optimized for coaches who type quickly
 
-If you're comfortable with typing commands (like using Slack or Discord), SummonersBook will be 3x faster than spreadsheets or traditional apps.
+If you're comfortable typing commands (like using Slack or Discord), SummonersBook will be faster than spreadsheets or traditional apps.
 
 ---
 ## Table of Contents
@@ -25,7 +21,7 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 1. [Quick Start](#quick-start)
     - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
-    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team-2-minute-tutorial)
+    - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team)
     - [Step 4: Learn the Essentials](#step-4-learn-the-essentials)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
@@ -37,11 +33,49 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
     - [Team Management](#team-management)
     - [Data Import/Export](#data-importexport)
     - [Utility Commands](#utility-commands)
-4. [Troubleshooting](#troubleshooting)
-5. [FAQ](#faq)
-6. [Known Issues](#known-issues)
-7. [Glossary](#glossary)
-8. [Command Summary](#command-summary)
+4. [Features](#features)
+    - [Notes about the command format](#notes-about-the-command-format)
+    - **Player Management**
+        - [Adding a player: `add`](#adding-a-player-add)
+        - [Listing all players: `list`](#listing-all-players-list)
+        - [Finding players by name: `find`](#finding-players-by-name-find)
+        - [Filtering players: `filter`](#filtering-players-filter)
+        - [Viewing detailed player information: `view`](#viewing-detailed-player-information-view)
+        - [Editing a player: `edit`](#editing-a-player-edit)
+        - [Deleting a player: `delete`](#deleting-a-player-delete)
+    - **Performance Tracking**
+        - [Adding performance stats: `addStats`](#adding-performance-stats-addstats)
+        - [Removing performance stats: `deleteStats`](#removing-performance-stats-deletestats)
+        - [Recording a team win: `win`](#recording-a-team-win--win)
+        - [Recording a team loss: `lose`](#recording-a-team-loss--lose)
+    - **Team Management**
+        - [Auto-grouping players into teams: `group`](#auto-grouping-players-into-teams-group)
+        - [Manually creating a team: `makeGroup`](#manually-creating-a-team-makegroup)
+        - [Viewing team details: `viewTeam`](#viewing-team-details--viewteam)
+        - [Disbanding teams: `ungroup`](#disbanding-teams-ungroup)
+    - **Data Import/Export**
+        - [Exporting data: `export`](#exporting-data-export)
+        - [Importing player data: `import`](#importing-player-data-import)
+    - **Utility Commands**
+        - [Viewing help: `help`](#viewing-help-help)
+        - [Clearing all data: `clear`](#clearing-all-data-clear)
+        - [Exiting the program: `exit`](#exiting-the-program-exit)
+        - [Saving the data](#saving-the-data)
+        - [Editing the data file](#editing-the-data-file)
+5. [Troubleshooting](#troubleshooting)
+6. [FAQ](#faq)
+7. [Known Issues](#known-issues)
+8. [Glossary](#glossary)
+    - [General Terminology](#general-terminology)
+    - [Domain-Specific Terminology](#domain-specific-terminology)
+9. [Future Enhancements](#future-enhancements)
+    - [Smart Team Formation (AI-Enhanced Grouping)](#1-smart-team-formation-ai-enhanced-grouping--planned)
+    - [Archived Teams & Player History](#2-archived-teams--player-history--planned)
+    - [Undo/Redo & Command History](#3-undoredo--command-history--proposed)
+    - [Enhanced Import/Export System](#4-enhanced-importexport-system--planned)
+10. [Command Summary](#command-summary)
+11. [Appendix](#appendix)
+    - [Supported Champions](#supported-champions)
 
 ---
 ## Quick Start
@@ -78,25 +112,17 @@ If you're comfortable with typing commands (like using Slack or Discord), Summon
 The SummonersBook window should look like the image below:
 ![Ui](images/Ui.png)
 
-### Step 3: Your First Team (2-Minute Tutorial)
+### Step 3: Your First Team
 
 Let's form your first balanced team to see SummonersBook in action!
 
-**a) Add 5 players** (copy-paste these one-by-one into the command box):
-
-1. `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-2. `add n/Zeus rk/Diamond rl/Top c/Gnar`
-3. `add n/Oner rk/Master rl/Jungle c/Lee Sin`
-4. `add n/Gumayusi rk/Challenger rl/ADC c/Aphelios`
-5. `add n/Keria rk/Master rl/Support c/Thresh`
-
-**b) Auto-create a balanced team:**
+**a) Auto-create a balanced team:**
 
 ```
 group
 ```
 
-🎉 **Done!** You just formed a balanced team in under 30 seconds. The team will appear in the team panel on the right.
+🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
 ### Step 4: Learn the Essentials
 
@@ -210,8 +236,8 @@ Command | Purpose                                 | Format
 --------|-----------------------------------------|-------
 [`addStats`](#adding-performance-stats-addstats) | Record match performance                | `addStats INDEX cpm/CPM gd15/GD15 kda/KDA`
 [`deleteStats`](#removing-performance-stats-deletestats) | Remove latest stats entry               | `deleteStats INDEX`
-[`win`](#recording-a-team-win-win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
-[`lose`](#recording-a-team-loss-lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
+[`win`](#recording-a-team-win--win) | Record a win for a team<br/> and its players | `win TEAM_INDEX`
+[`lose`](#recording-a-team-loss--lose) | Record a loss for a team<br/> and its players | `lose TEAM_INDEX`
 
 ### Team Management
 
@@ -219,7 +245,7 @@ Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
-[`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam TEAM_INDEX`
+[`viewTeam`](#viewing-team-details--viewteam) | View detailed team stats | `viewteam TEAM_INDEX`
 [`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup TEAM_INDEX` or `ungroup all`
 
 ### Data Import/Export
@@ -243,7 +269,7 @@ Command | Purpose | Format
 
 ## Features
 
-**Notes about the command format:**
+### Notes about the command format:
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`, `NAME` , `RANK`, `ROLE`, `CHAMPION` are parameters which can be used
@@ -936,9 +962,9 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 
 ---
 
-### Glossary
+## Glossary
 
-#### General Terminology
+### General Terminology
 
 **Java**
 : The programming language required to run SummonersBook (version 17 or higher).
@@ -969,7 +995,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 
 ---
 
-#### Domain-Specific Terminology
+### Domain-Specific Terminology
 
 **Champion**
 : A playable character in *League of Legends*. SummonersBook validates champion names against an internal list stored in `champions.txt`. Only names from this list are accepted (case-insensitive). If a newly released champion (e.g., *Aurora*) is not yet recognized, the input will be rejected until the list is updated in a future release.
@@ -1080,6 +1106,8 @@ Provides full data continuity of player statistics between seasons or machines, 
 
 **Related commands:** `import`, `export`, `addStats`
 
+[Back to Top](#summonersbook-user-guide)
+
 ---
 
 ## Command Summary
@@ -1169,3 +1197,5 @@ You can refer to the table below to see all champions supported by SummonersBook
 | Yone | Yorick | Yunara | Yuumi | Zac |
 | Zed | Zeri | Ziggs | Zilean | Zoe |
 | Zyra |  |  |  |  |
+
+[Back to Top](#summonersbook-user-guide)
