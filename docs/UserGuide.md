@@ -859,7 +859,7 @@ Data is saved automatically to disk after any command that changes data. No manu
 
 ### Editing the data file
 
-SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/addressbook.json`.
+SummonersBook data is saved automatically as a JSON file located at `[JAR file location]/data/summonersbook.json`.
 Advanced users can edit this file directly if needed.
 
 <box type="warning" seamless>
@@ -946,7 +946,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app on the other computer and overwrite the empty data file it creates with the file from your previous SummonersBook home folder (located at `[JAR file location]/data/addressbook.json`).
+**A**: Install the app on the other computer and overwrite the empty data file it creates with the file from your previous SummonersBook home folder (located at `[JAR file location]/data/summonersbook.json`).
 
 **Q:** Why can't I delete a player who's on a team?<br>
 **A:** Team rosters must always have 5 players. Ungroup the player's current team (via `ungroup`), then delete the player.
