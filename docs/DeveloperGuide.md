@@ -619,7 +619,7 @@ The user executes the `group` command.
 - Persons are grouped by role.
 - Each role group is sorted by rank (highest to lowest).
 - Teams are formed iteratively by selecting the highest-ranked available person from each role while avoiding champion conflicts.
-- This creates rank-ordered teams where Team 1 contains the highest-ranked persons, Team 2 contains the next-highest-ranked persons, and so on.
+- This creates rank-ordered teams where Team 1 contains the highest-ranked person from each role, Team 2 contains the next-highest-ranked person from each role, and so on.
 
 **Step 4.**
 Teams are successfully formed according to role, rank, and champion constraints.
@@ -664,7 +664,7 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 - **Alternative 1 (current implementation):**
   Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
     - *Pros:* Simple, predictable, and efficient in typical cases. Time complexity is **O(n) average case** (when champion conflicts are minimal), **O(n^5) worst case** (with extensive champion conflicts across all roles and teams). The average case is highly favorable for practical use.
-    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked players, Team 2 gets the next-highest-ranked players, etc. This is useful for organizing scrimmages by skill level.
+    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked player from each role, Team 2 gets the next-highest-ranked player from each role, etc. This is useful for organizing scrimmages by skill level.
     - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
 
 - **Alternative 2:**
@@ -1531,7 +1531,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 *   **Scrim**: An organized practice match between two teams, used to test strategies and evaluate players.
 
-*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This process creates balanced, tiered teams (Team 1 > Team 2, etc.).
+*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available player for each of the five required roles, while ensuring no duplicate champions. The algorithm sorts players by rank within each role separately, then selects the highest-ranked player from each role for Team 1, the next-highest-ranked player from each role for Team 2, and so on. This process creates tiered teams (Team 1 > Team 2, etc.).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1733,10 +1733,10 @@ testers are expected to do more *exploratory* testing.
     1. Prerequisites: Have at least 5 unassigned persons with at least one person for each required role (Top, Jungle, Mid, ADC, Support).
 
     2. Test case: `group`<br>
-       Expected: One or more rank-ordered teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right. Team 1 should contain the highest-ranked persons, Team 2 the next-highest-ranked, and so on.
+       Expected: One or more rank-ordered teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right. Team 1 should contain the highest-ranked person from each role, Team 2 the next-highest-ranked person from each role, and so on.
 
     3. Test case: `group` with exactly 10 unassigned persons (2 per role) with unique champions<br>
-       Expected: 2 teams are created with 0 persons remaining unassigned. Team 1 contains the 5 highest-ranked persons (one from each role), Team 2 contains the remaining 5 persons.
+       Expected: 2 teams are created with 0 persons remaining unassigned. Team 1 contains the highest-ranked person from each role, Team 2 contains the second-highest-ranked person from each role.
 
     4. Test case: `group` with 12 unassigned persons (mixed roles, e.g., 3 Top, 3 Jungle, 2 Mid, 2 ADC, 2 Support) with unique champions<br>
        Expected: 2 complete teams are created. The success message indicates 2 persons remain unassigned (since only 2 Mid players exist).

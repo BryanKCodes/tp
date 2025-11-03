@@ -658,7 +658,7 @@ The algorithm follows these steps:
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
 
-**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked players, Team 2 contains the next-highest-ranked players, and so on.
+**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked player from each role, Team 2 contains the next-highest-ranked player from each role, and so on.
 
 **Notes:**
 * At least one unassigned player for each of the five roles is required to form a team.
@@ -678,21 +678,25 @@ The algorithm follows these steps:
 
 **What "rank-ordered" means in practice:**
 
-When you run `group`, SummonersBook creates **tiered teams** rather than balanced teams:
-- **Team 1** = Your strongest 5 players (highest ranks across all roles)
-- **Team 2** = Your next-strongest 5 players
-- **Team 3** = The remaining 5 players
+When you run `group`, SummonersBook creates **tiered teams** by selecting the highest-ranked player **within each role**:
+- **Team 1** gets the highest-ranked Top, Jungle, Mid, ADC, and Support
+- **Team 2** gets the next-highest-ranked player for each role
+- **Team 3** gets the remaining players
 
 **Example:**
-You have 15 players:
-- 3 Grandmaster, 5 Master, 4 Diamond, 3 Platinum
+You have 15 players distributed across roles:
+- **Top**: 1 Grandmaster, 1 Master, 1 Diamond
+- **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
+- **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
+- **ADC**: 1 Master, 1 Diamond, 1 Platinum
+- **Support**: 1 Master, 1 Diamond, 1 Platinum
 
 After running `group`:
-- **Team 1**: 2 GM + 3 Master (strongest possible)
-- **Team 2**: 1 GM + 2 Master + 2 Diamond
-- **Team 3**: 2 Diamond + 3 Platinum
+- **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
+- **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
+- **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
 
-This is **different from balanced grouping**, which would mix ranks to make all teams equal strength.
+This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
 
 **Why tiered teams are useful:**
 1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
@@ -1129,7 +1133,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 : An organized practice match between two teams, used to test strategies and evaluate players.
 
 **Rank-Ordered Team**
-: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This creates balanced, tiered teams (Team 1 > Team 2, etc.).
+: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players per role, Team 2 will contain the next-highest-ranked players per role, and so on. This creates tiered teams (Team 1 > Team 2, etc.).
 
 
 [Back to Top](#summonersbook-user-guide)
