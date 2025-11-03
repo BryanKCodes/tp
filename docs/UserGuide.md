@@ -252,15 +252,15 @@ Command | Purpose | Format
 * Parameters are _**case-insensitive**_ (except for `name`)
 
 * Items in square brackets are optional.<br>
-  e.g., `filter [rl/ROLE] [rk/RANK] [c/CHAMPION] [s/SCORE]` can be used as `filter rk/Gold`.
+  e.g., `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]` can be used as `filter rk/Gold`.
 
-* Items with `…` after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items with `...` after them can be used multiple times including zero times.<br>
+  e.g. `[t/TAG ...]` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
 
 * Parameters can be in any order.<br>
   e.g., for `add n/NAME rk/RANK rl/ROLE c/CHAMPION`, `add rk/RANK n/NAME rl/ROLE c/CHAMPION` is also acceptable.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `exit`) will be ignored.<br>
+* Extraneous parameters for commands that do not take in parameters (such as `help`, `clear`, `exit`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 
 * Indices refer to the **currently displayed** list (people or teams), starting from 1.
@@ -283,11 +283,15 @@ Adds a new player with mandatory details to your roster.
 add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]
 ```
 
-**Note:**
-- `name` has to be **3-16 alphanumerical characters** with **no spaces allowed.** 
-  - is treated as in-game displayed username rather than real names.
-- Duplicate names are **not allowed**, an error message will be shown.
-- `tag` can only be **up to 20 alphanumerical character**, with **no spaces allowed.**
+**Notes:**
+* `name` must be **3–16 alphanumeric characters** with **no spaces allowed**. It represents the in-game username, not the real name.
+* Duplicate names are **not allowed**; attempting to add a name that already exists will result in an error.
+* Tags are **optional** but must follow these rules:
+    - **1–20 alphanumeric characters** per tag
+    - **No spaces or special characters allowed**
+    - **Case-insensitive duplicates** are not allowed (`friend` and `FRIEND` are considered duplicates)
+    - Multiple tags in a single command must all be unique
+* If tags are provided, they are associated with the player at creation.
 
 **Examples:**
 
@@ -299,7 +303,14 @@ add n/Faker rk/Grandmaster rl/ADC c/Sivir
 ```
 add n/Imissher rk/Gold rl/Support c/Thresh
 ```
-
+* Adds the player "Doublelift" with multiple tags:
+```
+add n/Doublelift rk/Platinum rl/ADC c/Jinx t/friend t/ally
+```
+* Invalid: attempting to add duplicate tags (case-insensitive):
+```
+add n/Player1 rk/Gold rl/Mid c/Ahri t/friend t/Friend # ❌Error: duplicate tag detected
+```
 ### Listing all players: `list`
 
 Shows a list of all players in your SummonersBook roster.
@@ -418,19 +429,23 @@ Updates an existing player's details in your roster.
 
 **Format:**
 ```
-edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]
+edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]
 ```
 
 **How it works:**
 * Existing values are **overwritten** by the new input.
 * Tags are **replaced**, not added. To clear all tags, type `t/` with no tag values.
+    * Tags must follow these constraints:
+    - **1–20 alphanumeric characters** (no spaces or symbols)
+    - **Case-insensitive duplicates** are not allowed (`friend` and `FRIEND` are considered duplicates)
+    - Multiple tags in one command must all be unique
 
 **Notes:**
 * `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 * At least one field to edit must be provided.
 
 <box type="important" seamless>
-**Important:** Editing a player that is in a team may not be allowed due to duplicate roles or champions. Remove them from the team first using `ungroup`
+**Important:** Editing a player that is in a team may not be allowed due to duplicate roles or champions. Ungroup the team first using `ungroup`.
 
 </box>
 
@@ -447,7 +462,14 @@ edit 2 t/
 ```
 edit 3 rl/Top rk/Gold
 ```
-
+* Replace tags of the 4th player with `friend` and `ally`.
+```
+edit 4 t/friend t/ally
+```
+* Invalid: attempting to add duplicate tags (case-insensitive).
+```
+edit 5 t/Friend t/friend # ❌Error: duplicate tag detected
+```
 ### Deleting a player: `delete`
 
 Removes a player permanently from your roster.
@@ -991,12 +1013,12 @@ view 2               # OK - refers to 2nd player in filtered list
 ### Player Management
 Action | Format                                                              | Example
 -------|---------------------------------------------------------------------|--------
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`                             | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                 | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
 **List all players** | `list`                                                              | `list`
 **Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                   | `find john`
 **Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE ...]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
 **View player details** | `view INDEX`                                                        | `view 1`
-**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`      | `edit 1 rl/Top rk/Diamond`
+**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`  | `edit 1 rl/Top rk/Diamond`
 **Delete player** | `delete INDEX`                                                      | `delete 3`
 
 ### Performance Tracking
