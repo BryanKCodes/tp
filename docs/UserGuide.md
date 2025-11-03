@@ -1001,6 +1001,87 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 
 ---
 
+## Future Enhancements
+
+### 1. Smart Team Formation (AI-Enhanced Grouping) — *Planned*
+
+**Goal:**  
+Develop a more comprehensive algorithm for balancing teams, beyond simple rank-based grouping.
+
+**Why it matters:**  
+Coaches often spend significant time trialing different player combinations to find balance. True synergy comes not only from player rank but also from how **champions and playstyles complement each other**.
+
+**You’ll be able to:**
+- Use `smartGroup` to generate **AI-informed team compositions** that consider champion synergies, recent performance metrics, and consistency trends.
+- View a **balance score** reflecting how well players’ past stats and roles fit together.
+- Switch between **standard** (rank-based) and **AI-enhanced** grouping for flexibility.
+
+**User impact:**  
+Coaches can reference past performance data instantly instead of manually testing combinations — greatly reducing the time and effort spent on lineup experimentation.
+
+**Related commands:** `group`, `viewTeam`, `addStats`
+
+---
+
+### 2. Archived Teams & Player History — *Planned*
+
+**Goal:**  
+Keep the active roster clean while preserving valuable history.
+
+**Why it matters:**  
+Teams evolve over tournaments — users shouldn’t have to delete data to stay organized.
+
+**You’ll be able to:**
+- Move retired players and past teams into an **Archive** with one command.
+- **Filter, search, and restore** archived entries seamlessly.
+- View **historical win/loss records** to track progression across seasons.
+
+**User impact:**  
+Reduces clutter while maintaining institutional memory for coaching analytics.
+
+**Related commands:** `list`, `find`, `import`, `export`
+
+---
+
+### 3. Undo/Redo & Command History — *Proposed*
+
+**Goal:**  
+Make experimentation risk-free.
+
+**Why it matters:**  
+Fast CLI workflows mean errors happen — deleting the wrong team or player shouldn’t be irreversible.
+
+**You’ll be able to:**
+- **Undo or redo** recent actions (`add`, `edit`, `delete`, `ungroup`).
+- View a **command history log** with timestamps and success states.
+
+**User impact:**  
+Encourages coaches/team managers to confidently explore new team setups while ensuring data safety.
+
+**Related commands:** `edit`, `ungroup`, `delete`
+
+---
+
+### 4. Enhanced Import/Export System — *Planned*
+
+**Goal:**  
+Enable full data portability — including player performance statistics.
+
+**Why it matters:**  
+Current CSV export/import excludes detailed player statistics (stats arrays), making long-term analysis and data sharing cumbersome.
+
+**You’ll be able to:**
+- Export all **player stats** (CS/min, GD@15, KDA) alongside basic player details.
+- Export **full team breakdowns**, including average performance scores of every member.
+- Import **complete player profiles** — SummonersBook will intelligently parse player statistics arrays and skip invalid rows automatically.
+
+**User impact:**  
+Provides full data continuity of player statistics between seasons or machines, allowing coaches to track performance history seamlessly.
+
+**Related commands:** `import`, `export`, `addStats`
+
+---
+
 ## Command Summary
 
 ### Player Management
