@@ -1730,34 +1730,40 @@ testers are expected to do more *exploratory* testing.
 
 1. Auto-grouping with sufficient persons
 
-    1. Prerequisites: Have at least 5 unassigned persons with unique roles (Top, Jungle, Mid, ADC, Support) and unique champions.
+    1. Prerequisites: Have at least 5 unassigned persons with at least one person for each required role (Top, Jungle, Mid, ADC, Support).
 
     2. Test case: `group`<br>
-       Expected: One or more teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right.
+       Expected: One or more rank-ordered teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right. Team 1 should contain the highest-ranked persons, Team 2 the next-highest-ranked, and so on.
 
-    3. Test case: Have exactly 10 unassigned persons (2 per role) with unique champions, then run `group`<br>
-       Expected: 2 teams are created with 0 persons remaining unassigned.
+    3. Test case: `group` with exactly 10 unassigned persons (2 per role) with unique champions<br>
+       Expected: 2 teams are created with 0 persons remaining unassigned. Team 1 contains the 5 highest-ranked persons (one from each role), Team 2 contains the remaining 5 persons.
 
-    4. Test case: Have 12 unassigned persons (mixed roles) then run `group`<br>
-       Expected: As many complete teams as possible are created. The success message indicates how many persons remain unassigned.
+    4. Test case: `group` with 12 unassigned persons (mixed roles, e.g., 3 Top, 3 Jungle, 2 Mid, 2 ADC, 2 Support) with unique champions<br>
+       Expected: 2 complete teams are created. The success message indicates 2 persons remain unassigned (since only 2 Mid players exist).
 
-2. Auto-grouping with insufficient persons
+2. Auto-grouping with missing roles
 
-    1. Test case: Have only 4 unassigned persons with 4 different roles, then run `group`<br>
-       Expected: No teams created. Error message indicates insufficient persons for all required roles.
+    1. Test case: `group` with only 4 unassigned persons with 4 different roles (e.g., Top, Jungle, Mid, ADC but no Support)<br>
+       Expected: No teams created. Error message "Cannot form a team: No persons available for role(s): Support."
 
-    2. Test case: Have 5 unassigned persons but missing one required role (e.g., no Support), then run `group`<br>
-       Expected: No teams created. Error message indicates at least one person per role is required.
+    2. Test case: `group` with 8 unassigned persons but missing two required roles (e.g., no Support and no Jungle)<br>
+       Expected: No teams created. Error message "Cannot form a team: No persons available for role(s): Support, Jungle."
 
-    3. Test case: Run `group` when all persons are already assigned to teams<br>
+    3. Test case: `group` when all persons are already assigned to teams<br>
        Expected: Error message "No unassigned persons available to form teams."
 
 3. Auto-grouping with champion conflicts
 
-    1. Prerequisites: Have 10 unassigned persons (2 per role) where 2 persons play the same champion and have the same role.
+    1. Prerequisites: Have at least 10 unassigned persons (at least 2 per role) where multiple persons in different roles play the same champion.
 
-    2. Test case: Run `group`<br>
-       Expected: One team is created with the higher-ranked person of the duplicate champion. The second person with the duplicate champion remains unassigned (along with 4 others).
+    2. Test case: `group` with 10 persons (2 per role) where the highest-ranked Mid player and highest-ranked Support player both play "Ahri"<br>
+       Expected: No teams created. Error message "Operation would result in duplicate champions in the team. [MidPlayer] and [SupportPlayer] both play: Ahri."
+
+    3. Test case: `group` with 15 persons (3 per role). The highest-ranked Mid and Support for Team 1 have unique champions. For Team 2, the 2nd-ranked Mid and 2nd-ranked Support both play "Lux"<br>
+       Expected: One team is created successfully (Team 1). Error message indicates team formation stopped due to champion conflicts. 10 persons remain unassigned.
+
+    4. Test case: `group` with 10 persons (2 per role) where the 2nd-ranked Mid player plays the same champion as the 1st-ranked Support player<br>
+       Expected: One team is created with the higher-ranked persons, avoiding the conflict by selecting the 1st-ranked Mid. The 2nd-ranked Mid remains unassigned along with 4 others.
 
 ### Ungrouping teams
 
