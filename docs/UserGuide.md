@@ -658,7 +658,7 @@ makeGroup 1 2 3 4 5
 ```
 ### Viewing team details : `viewTeam`
 
-Opens a detailed window showing comprehensive information about a team, including all members and team statistics.
+Opens a detailed window showing comprehensive information about a team, including all members and the team's win/loss record.
 
 **Format:**
 ```
