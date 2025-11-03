@@ -68,6 +68,14 @@ We thank the original AB3 contributors and the authors of the above libraries fo
 Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
+## **Person vs Player**
+
+> **NOTE:**  
+> In **SummonersBook’s** codebase, a *player* is represented by a `Person` object.  
+> In implementation and code examples, the term `Person` is used to remain consistent with the codebase.  
+> In use cases and feature descriptions, we refer to them as *players* for contextual clarity and readability.
+
+---
 
 ## **Design**
 
