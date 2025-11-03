@@ -22,7 +22,8 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
     - [Step 1: Install (One-Time Setup)](#step-1-install-one-time-setup)
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
     - [Step 3: Your First Team (2-Minute Tutorial)](#step-3-your-first-team)
-    - [Step 4: Learn the Essentials](#step-4-learn-the-essentials)
+    - [Step 4: Navigating the UI and Understanding Indexes](#step-4-navigating-the-ui-and-understanding-indexes)
+    - [Step 5: Learn the Essentials](#step-5-learn-the-essentials)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
     - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
@@ -94,7 +95,7 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
 3. Place the file in a folder you want to use as the home folder for SummonersBook.
     - For convenience, you can create a new folder on your Desktop and place `summonersbook.jar` file in the new folder.
 
----
+
 ### Step 2: Running SummonersBook
 1. Open a terminal or command prompt:
 
@@ -124,7 +125,49 @@ group
 
 🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
-### Step 4: Quickstart — Using Commands
+---
+## Step 4: Navigating the UI and Understanding Indexes
+
+Before we learn more commands, let’s get familiar with SummonersBook’s interface and **how indexes work** — since many commands depend on them.
+
+
+### The Interface
+
+When you open SummonersBook, you’ll see three main areas:
+![Ui](images/Ui.png)
+1. **Command Box (Top)**  
+   This is where you type your commands (e.g., `add`, `filter`, `view`).
+
+2. **Result Display (Below the Command Box)**  
+   After you run a command, SummonersBook will show a confirmation message or result here.
+
+3. **Main Panels (Bottom Section)**
+    - **Left Panel — Player List:** Shows all players currently in your roster.
+    - **Right Panel — Team List:** Shows all teams currently formed.  
+      Both panels are scrollable.
+
+
+### Understanding Indexes
+
+Many commands in SummonersBook use **indexes** to refer to players or teams.  
+For example:
+```
+view 2
+```
+means **“view the 2nd player in the currently displayed player list.”**
+
+Indexes are **based on what’s currently visible** in each panel — not the full roster or all teams overall.  
+This means that:
+- If you use a command like `filter rl/Mid`, the indexes will update to reflect **only** the filtered results.
+- Using `delete 1` after filtering removes the **first player in the filtered list**, not necessarily the first player in your full roster.
+
+> ⚠️ **Important:** Always check the panel you’re interacting with before using an index-based command.
+
+Once you’re comfortable navigating the interface and understanding indexes, move on to [Step 5: Quickstart — Using Commands](#step-5-quickstart--using-commands) to understand how to use commands!
+
+---
+
+### Step 5: Quickstart — Using Commands
 
 Now that SummonersBook is set up, let’s try your first command!
 
@@ -449,6 +492,9 @@ Opens a detailed window showing comprehensive information about a player, includ
 view INDEX
 ```
 
+Once you’re comfortable navigating the interface and understanding indexes,  
+move on to [Step 5: Quickstart — Using Commands](#step-5-quickstart--using-commands) to try your first command.
+
 **How it works:**
 * The window displays:
     - Basic information (name, role, rank, champion, tags)
@@ -458,9 +504,6 @@ view INDEX
     - KDA trends
     - Gold difference at 15 minutes trends
 * Up to the latest 10 matches are shown in the performance graphs.
-
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 
 **Examples:**
 * Open a detailed window for the 1st player in the list
@@ -490,7 +533,6 @@ edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]
     - Multiple tags in one command must all be unique
 
 **Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
 * At least one field to edit must be provided.
 
 <box type="important" seamless>
@@ -531,9 +573,6 @@ delete INDEX
 **How it works:**
 * Deletes the player at the specified `INDEX`.
 
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…)
-
 <box type="important" seamless>
 
 **Important:** You cannot delete a player who is currently on a team. Remove them from the team first using `ungroup`.
@@ -568,7 +607,6 @@ addStats INDEX cpm/CPM gd15/GD15 kda/KDA
 * These values will be recorded and the player's average performance score will be updated automatically.
 
 **Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
 * All fields must be provided.
 * CPM must be a decimal between 0.0 and 40.0
 * GD15 must be an integer between -10,000 and 10,000
@@ -595,9 +633,6 @@ Deletes the most recent performance record for a player (useful for correcting m
 **How it works:**
 * The most recent set of performance values (cpm, gd15, kda) will be deleted.
 * The player's average score will be recalculated automatically.
-
-**Notes:**
-* `INDEX` refers to the number shown in the current displayed player list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Removes the latest performance entry for the 1st player in the list.
@@ -647,9 +682,6 @@ lose TEAM_INDEX
 **How it works:**
 * The selected team will have its loss count incremented.
 * The team's members will also have their loss counts incremented.
-
-**Notes:**
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Records a loss for the 2nd team in the list.
@@ -809,7 +841,6 @@ makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
 * Once verified, the team is created and added to your team list.
 
 **Notes:**
-* `INDEX` (1 to 5) refers to the number shown in the displayed player list. Must be a positive integer (1, 2, 3…).
 * **Exactly 5** index numbers must be provided.
 * Players **cannot already belong** to another team.
 * All players must have **unique roles**
@@ -831,9 +862,6 @@ viewTeam TEAM_INDEX
 
 **How it works:**
 * A new window displays team member details and win/loss record.
-
-**Notes:**
-* `TEAM_INDEX` refers to the number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Opens a detailed window for the 1st team in the list.
@@ -860,9 +888,6 @@ ungroup all
 * Use `all` (case-insensitive) to disband all teams at once.
 * After ungrouping, all team members become available for forming new teams.
 * If there are no teams, the command will show an error.
-
-**Notes:**
-* `TEAM_INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Disbands the 1st team in the displayed team list.
@@ -1028,6 +1053,7 @@ add n/... rl/Support ...
 ### Invalid index
 
 **Problem:** You entered a player number that doesn't exist in the current displayed list.
+> ⚠️ **Important:** Always check the panel you’re interacting with before using an index-based command.
 
 **Solution:**
 1. Always run `list` first to refresh the player list and see current player numbers.
@@ -1251,15 +1277,15 @@ Provides full data continuity of player statistics between seasons or machines, 
 ## Command Summary
 
 ### Player Management
-Action | Format                                                              | Example
--------|---------------------------------------------------------------------|--------
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                 | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
-**List all players** | `list`                                                              | `list`
-**Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                   | `find john`
-**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE ...]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
-**View player details** | `view INDEX`                                                        | `view 1`
-**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`  | `edit 1 rl/Top rk/Diamond`
-**Delete player** | `delete INDEX`                                                      | `delete 3`
+Action | Format                                                             | Example
+-------|--------------------------------------------------------------------|--------
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**List all players** | `list`                                                             | `list`
+**Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                  | `find john`
+**Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
+**View player details** | `view INDEX`                                                       | `view 1`
+**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]` | `edit 1 rl/Top rk/Diamond`
+**Delete player** | `delete INDEX`                                                     | `delete 3`
 
 ### Performance Tracking
 Action | Format | Example
@@ -1293,6 +1319,7 @@ Action | Format | Example
 
 [Back to Top](#summonersbook-user-guide)
 
+---
 ## Appendix
 
 You can refer to the table below to see all champions supported by SummonersBook.
@@ -1337,3 +1364,57 @@ You can refer to the table below to see all champions supported by SummonersBook
 | Zyra |  |  |  |  |
 
 [Back to Top](#summonersbook-user-guide)
+
+---
+## Algorithm Details
+
+The auto-grouping feature uses a greedy role-based matching algorithm that prioritizes rank within each role while handling champion conflicts.
+
+**For technical users interested in:**
+- Detailed algorithm explanation and pseudocode
+- Time and space complexity analysis
+- Design alternatives and trade-offs
+- Edge case handling
+
+Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+## Understanding Rank-Ordered Teams
+
+**What "rank-ordered" means in practice:**
+
+When you run `group`, SummonersBook creates **tiered teams** by selecting the highest-ranked player **within each role**:
+- **Team 1** gets the highest-ranked Top, Jungle, Mid, ADC, and Support
+- **Team 2** gets the next-highest-ranked player for each role
+- **Team 3** gets the remaining players
+
+**Example (assuming no champion conflicts):**
+You have 15 players distributed across roles with unique champions:
+- **Top**: 1 Grandmaster, 1 Master, 1 Diamond
+- **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
+- **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
+- **ADC**: 1 Master, 1 Diamond, 1 Platinum
+- **Support**: 1 Master, 1 Diamond, 1 Platinum
+
+After running `group`:
+- **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
+- **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
+- **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
+
+**Note:** If champion conflicts exist (e.g., the GM Mid and Master Support both play Ahri), the algorithm will skip players with conflicting champions and select the next available player from that role. This may result in teams that deviate from the pure rank-ordering shown above.
+
+This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
+
+**Why tiered teams are useful:**
+1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
+2. **Clear progression paths** — Players see what skill level they need to reach to move up
+3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
+4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+
+[Back to Top](#summonersbook-user-guide)
+
+---
+
