@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FilterCommand.FilterPersonDescriptor;
@@ -40,6 +41,12 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                     MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
 
+        // Reject prefixes with empty values
+        if (hasEmptyPrefixValue(argMultimap)) {
+            throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        }
+
         FilterPersonDescriptor filterPersonDescriptor = new FilterPersonDescriptor();
 
         parseRanksForFilter(argMultimap.getAllValues(PREFIX_RANK))
@@ -60,6 +67,16 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
 
         return new FilterCommand(filterPersonDescriptor);
+    }
+
+    /**
+     * Returns true if any prefix has empty values (i.e., user typed "rk/" without a value)
+     */
+    private boolean hasEmptyPrefixValue(ArgumentMultimap argMultimap) {
+        return Stream.of(PREFIX_RANK, PREFIX_ROLE, PREFIX_CHAMPION, PREFIX_SCORE)
+                .anyMatch(prefix ->
+                        argMultimap.getAllValues(prefix).stream().anyMatch(String::isEmpty)
+                );
     }
 
     /**
