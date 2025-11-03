@@ -1175,20 +1175,20 @@ SummonersBook is designed specifically for **League of Legends (LoL) esports coa
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a … | I want to …                                 | So that I can…                                  |
-|----------|---------|----------------------------------------------|---------------------------------------------------|
-| `* * *`  | coach   | add new people with their in-game names      | track and manage them in the system               |
-| `* * *`  | coach   | update a person’s details                    | always have accurate and current information      |
-| `* * *`  | coach   | record each person’s primary roles           | assign them to suitable teams                     |
-| `* * *`  | coach   | record each person’s preferred champions     | avoid role duplication and build effective teams  |
-| `* * *`  | coach   | filter people by role, rank, or score rating | quickly find suitable players for forming teams   |
-| `* * *`  | coach   | create practice teams of 5 people            | simulate real match conditions                    |
-| `* * *`  | coach   | record wins and losses for teams             | track team performance over time                  |
-| `* *`    | coach   | balance teams automatically by rank          | ensure matches are fair and competitive           |
-| `* *`    | coach   | see role distribution in each team           | avoid having duplicate roles in the same lineup   |
-| `* *`    | coach   | view detailed team information               | review team composition and statistics            |
-| `* *`    | coach   | import players from CSV files                | quickly add multiple players from external sources|
-| `* *`    | coach   | export players and teams to CSV files        | backup data or share with others                  |
+| Priority | As a … | I want to …                                 | So that I can…                                     |
+|----------|---------|----------------------------------------------|----------------------------------------------------|
+| `* * *`  | coach   | add new people with their in-game names      | track and manage them in the system                |
+| `* * *`  | coach   | update a person’s details                    | always have accurate and current information       |
+| `* * *`  | coach   | record each person’s primary roles           | assign them to suitable teams                      |
+| `* * *`  | coach   | record each person’s preferred champions     | avoid role duplication and build effective teams   |
+| `* * *`  | coach   | filter people by role, rank, or score rating | quickly find suitable players for forming teams    |
+| `* * *`  | coach   | create practice teams of 5 people            | simulate real match conditions                     |
+| `* * *`  | coach   | record wins and losses for teams             | track team performance over time                   |
+| `* *`    | coach   | balance teams automatically by rank          | ensure matches are fair and competitive            |
+| `* *`    | coach   | see role distribution in each team           | avoid having duplicate roles in the same lineup    |
+| `* *`    | coach   | view detailed team information               | review team composition and win-loss statistics    |
+| `* *`    | coach   | import players from CSV files                | quickly add multiple players from external sources |
+| `* *`    | coach   | export players and teams to CSV files        | backup data or share with others                   |
 
 ---
 

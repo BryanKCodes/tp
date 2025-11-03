@@ -7,7 +7,13 @@ title: "About Us"
 
 We are a team based in the [School of Computing, National University of Singapore](http://www.comp.nus.edu.sg).
 
-You can reach us at the email `seer[at]comp.nus.edu.sg`
+
+You can reach us via email:
+- [zhaoxintong@u.nus.edu](mailto:zhaoxintong@u.nus.edu)
+- [e1399129@u.nus.edu](mailto:e1399129@u.nus.edu) — Bryan Koh
+- [e1399145@u.nus.edu](mailto:e1399145@u.nus.edu) — Justin Wong
+- [e1375388@u.nus.edu](mailto:e1375388@u.nus.edu) — Duong
+- [e1355751@u.nus.edu](mailto:e1355751@u.nus.edu) — Valerie
 
 ## Project team
 
