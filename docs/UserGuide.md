@@ -683,8 +683,8 @@ When you run `group`, SummonersBook creates **tiered teams** by selecting the hi
 - **Team 2** gets the next-highest-ranked player for each role
 - **Team 3** gets the remaining players
 
-**Example:**
-You have 15 players distributed across roles:
+**Example (assuming no champion conflicts):**
+You have 15 players distributed across roles with unique champions:
 - **Top**: 1 Grandmaster, 1 Master, 1 Diamond
 - **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
 - **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
@@ -695,6 +695,8 @@ After running `group`:
 - **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
 - **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
 - **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
+
+**Note:** If champion conflicts exist (e.g., the GM Mid and Master Support both play Ahri), the algorithm will skip players with conflicting champions and select the next available player from that role. This may result in teams that deviate from the pure rank-ordering shown above.
 
 This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
 
@@ -1133,7 +1135,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 : An organized practice match between two teams, used to test strategies and evaluate players.
 
 **Rank-Ordered Team**
-: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players per role, Team 2 will contain the next-highest-ranked players per role, and so on. This creates tiered teams (Team 1 > Team 2, etc.).
+: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available player for each of the five required roles, while ensuring no duplicate champions. The algorithm sorts players by rank within each role separately, then selects the highest-ranked player from each role for Team 1, the next-highest-ranked player from each role for Team 2, and so on. When champion conflicts occur, lower-ranked players may be selected to avoid duplicates. This creates tiered teams (Team 1 > Team 2, etc.).
 
 
 [Back to Top](#summonersbook-user-guide)
