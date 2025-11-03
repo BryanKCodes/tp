@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FilterCommand.FilterPersonDescriptor;
@@ -34,6 +35,18 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_ROLE, PREFIX_RANK, PREFIX_CHAMPION, PREFIX_SCORE);
 
+        // Reject any extraneous preamble or invalid fields
+        if (!argMultimap.getPreamble().isEmpty()) {
+            throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        }
+
+        // Reject prefixes with empty values
+        if (hasEmptyPrefixValue(argMultimap)) {
+            throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        }
+
         FilterPersonDescriptor filterPersonDescriptor = new FilterPersonDescriptor();
 
         parseRanksForFilter(argMultimap.getAllValues(PREFIX_RANK))
@@ -54,6 +67,16 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         }
 
         return new FilterCommand(filterPersonDescriptor);
+    }
+
+    /**
+     * Returns true if any prefix has empty values (i.e., user typed "rk/" without a value)
+     */
+    private boolean hasEmptyPrefixValue(ArgumentMultimap argMultimap) {
+        return Stream.of(PREFIX_RANK, PREFIX_ROLE, PREFIX_CHAMPION, PREFIX_SCORE)
+                .anyMatch(prefix ->
+                        argMultimap.getAllValues(prefix).stream().anyMatch(String::isEmpty)
+                );
     }
 
     /**
@@ -104,9 +127,16 @@ public class FilterCommandParser implements Parser<FilterCommand> {
     }
 
     /**
-     * Parses {@code Collection<String> scores} into a {@code Float} if {@code scores} is non-empty.
-     * If {@code scores} contain only one element which is an empty string, it will be parsed as empty.
-     * Only the first score is considered; others are ignored.
+     * Parses {@code Collection<String> scores} into an {@code Optional<Float>} for filtering.
+     *
+     * <p>Rules:</p>
+     * <ul>
+     *   <li>No score → returns {@code Optional.empty()}.</li>
+     *   <li>Exactly one score → must be a valid positive float (> 0.0).</li>
+     *   <li>More than one score → throws {@link ParseException}.</li>
+     *   <li>Only 2 decimal places are allowed; more decimals → {@link ParseException}.</li>
+     *   <li>Scores outside the valid float range → throws {@link ParseException}.</li>
+     * </ul>
      */
     private Optional<Float> parseScoreForFilter(Collection<String> scores) throws ParseException {
         assert scores != null;
@@ -115,16 +145,43 @@ public class FilterCommandParser implements Parser<FilterCommand> {
             return Optional.empty();
         }
 
-        Collection<String> scoreSet = scores.size() == 1 && scores.contains("")
-                ? Collections.emptySet()
-                : scores;
+        if (scores.size() > 1) {
+            throw new ParseException("You can only provide 1 score!");
+        }
 
-        if (scoreSet.isEmpty()) {
+        String scoreString = scores.iterator().next().trim();
+
+        if (scoreString.isEmpty()) {
             return Optional.empty();
         }
 
-        // Use ParserUtil for validation and parsing
-        String firstScore = scoreSet.iterator().next();
-        return Optional.of(ParserUtil.parseScore(firstScore));
+        // Check for more than 2 decimal places
+        if (scoreString.contains(".")) {
+            String[] parts = scoreString.split("\\.");
+            if (parts.length > 1 && parts[1].length() > 2) {
+                throw new ParseException("Score can have at most 2 decimal places.");
+            }
+        }
+
+        final float parsedScore;
+        try {
+            parsedScore = Float.parseFloat(scoreString);
+        } catch (NumberFormatException e) {
+            throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE
+            ) + "\nScore must be a valid number.");
+        }
+
+        if (Float.isNaN(parsedScore) || Float.isInfinite(parsedScore)) {
+            throw new ParseException(
+                    "Score is out of range. Valid range: 0.0 < score ≤ 10.0"
+            );
+        }
+
+        if (parsedScore <= 0.0F || parsedScore > 10.0F) {
+            throw new ParseException("Score is out of range. Valid range: 0.0 < score ≤ 10.0");
+        }
+
+        return Optional.of(parsedScore);
     }
 }
