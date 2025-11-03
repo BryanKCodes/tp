@@ -120,7 +120,7 @@ public class DeleteStatsCommand extends Command {
      * @param personToEdit The original person to update. Must be non-null.
      * @return A new {@code Person} with updated {@code Stats}.
      */
-    private static Person createEditedPerson(Person personToEdit) {
+    private static Person createEditedPerson(Person personToEdit) throws CommandException {
         assert personToEdit != null;
 
         String id = personToEdit.getId();

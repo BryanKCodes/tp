@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.exceptions.CommandException;
+
 public class StatsTest {
 
     private static final double EPS = 1e-6;
@@ -104,15 +106,14 @@ public class StatsTest {
     // Delete latest
 
     @Test
-    void deleteLatestStats_onEmpty_returnsEqual() {
-        Stats s0 = new Stats();
-        Stats s1 = s0.deleteLatestStats();
-        assertEquals(s0, s1); // equals compares lists + value
-        assertEquals(0.0F, s1.getValue(), EPS);
+    void deleteLatestStats_onEmpty_returnsEqual() throws CommandException {
+        Stats s = new Stats();
+        assertThrows(CommandException.class, Stats.NOT_DELETED_MESSAGE, s::deleteLatestStats);
+
     }
 
     @Test
-    void deleteLatestStats_removesLast() {
+    void deleteLatestStats_removesLast() throws CommandException {
         Stats s = new Stats()
                 .addLatestStats("7.0", "1000", "2.2")
                 .addLatestStats("9.0", "1200", "2.0");
@@ -157,7 +158,7 @@ public class StatsTest {
     // equals/hashCode & toString
 
     @Test
-    void equals_basic() {
+    void equals_basic() throws CommandException {
         Stats a = new Stats()
                 .addLatestStats("7.0", "1000", "2.2")
                 .addLatestStats("4.0", "-200", "0.7");
@@ -179,4 +180,123 @@ public class StatsTest {
                 .addLatestStats("7.0", "1000", "2.2");
         assertEquals(Float.toString(s.getValue()), s.toString());
     }
+
+    // --- Regex-only tests (shape, not range) ---
+
+    @Test
+    void floatRegex_validShapes() {
+        // Accept non-negative integers (≤6 digits)
+        assertTrue("0".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("7".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("000007".matches(Stats.FLOAT_VALIDATION_REGEX)); // leading zeros allowed
+        assertTrue("123456".matches(Stats.FLOAT_VALIDATION_REGEX)); // 6 digits
+
+        // Accept with 1–2 decimal digits
+        assertTrue("0.0".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("0.00".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("12.3".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("12.34".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertTrue("000001.20".matches(Stats.FLOAT_VALIDATION_REGEX)); // leading zeros + 2 dp
+
+        // Max integer digits with decimals
+        assertTrue("123456.78".matches(Stats.FLOAT_VALIDATION_REGEX)); // 6 digits + 2 dp
+    }
+
+    @Test
+    void floatRegex_invalidShapes() {
+        // Too many integer digits
+        assertFalse("1234567".matches(Stats.FLOAT_VALIDATION_REGEX)); // 7 digits
+        assertFalse("1234567.89".matches(Stats.FLOAT_VALIDATION_REGEX));
+
+        // Decimal part problems
+        assertFalse("1.".matches(Stats.FLOAT_VALIDATION_REGEX)); // missing fraction
+        assertFalse(".5".matches(Stats.FLOAT_VALIDATION_REGEX)); // missing integer part
+        assertFalse("0.000".matches(Stats.FLOAT_VALIDATION_REGEX)); // >2 dp
+        assertFalse("1.2.3".matches(Stats.FLOAT_VALIDATION_REGEX)); // multiple dots
+
+        // Signs / format not allowed
+        assertFalse("-1.0".matches(Stats.FLOAT_VALIDATION_REGEX)); // negative not allowed
+        assertFalse("+1.0".matches(Stats.FLOAT_VALIDATION_REGEX)); // '+' not allowed
+        assertFalse("1e3".matches(Stats.FLOAT_VALIDATION_REGEX)); // scientific notation not allowed
+
+        // Whitespace or junk
+        assertFalse(" 1.0".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertFalse("1.0 ".matches(Stats.FLOAT_VALIDATION_REGEX));
+        assertFalse("NaN".matches(Stats.FLOAT_VALIDATION_REGEX));
+    }
+
+    @Test
+    void intRegex_validShapes() {
+        // Signed or unsigned, up to 6 digits
+        assertTrue("0".matches(Stats.INT_VALIDATION_REGEX));
+        assertTrue("-0".matches(Stats.INT_VALIDATION_REGEX)); // allowed by pattern
+        assertTrue("7".matches(Stats.INT_VALIDATION_REGEX));
+        assertTrue("-7".matches(Stats.INT_VALIDATION_REGEX));
+        assertTrue("000123".matches(Stats.INT_VALIDATION_REGEX)); // leading zeros allowed
+        assertTrue("123456".matches(Stats.INT_VALIDATION_REGEX)); // 6 digits
+        assertTrue("-123456".matches(Stats.INT_VALIDATION_REGEX));
+    }
+
+    @Test
+    void intRegex_invalidShapes() {
+        // Too many digits
+        assertFalse("1234567".matches(Stats.INT_VALIDATION_REGEX)); // 7 digits
+        assertFalse("-1234567".matches(Stats.INT_VALIDATION_REGEX));
+
+        // Plus sign not allowed; decimals not allowed
+        assertFalse("+5".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse("5.0".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse("5.".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse(".5".matches(Stats.INT_VALIDATION_REGEX));
+
+        // Whitespace or junk
+        assertFalse(" 10".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse("10 ".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse("1e3".matches(Stats.INT_VALIDATION_REGEX));
+        assertFalse("--5".matches(Stats.INT_VALIDATION_REGEX));
+    }
+
+    @Test
+    void isValidStats_shapeEdgeCases_thatStillPassRange() {
+        // Leading zeros allowed and within range
+        assertTrue(Stats.isValidStats("000040.00", "000000", "000200.00")); // 40.00, 0, 200.00
+        assertTrue(Stats.isValidStats("000000.10", "-000001", "000000.00")); // 0.10, -1, 0.00
+
+        // Minimal forms still valid
+        assertTrue(Stats.isValidStats("0", "-0", "0")); // "-0" matches int regex and equals 0
+        assertTrue(Stats.isValidStats("10.0", "5", "3.00"));
+    }
+
+    @Test
+    void isValidStats_shapeLooksOk_butRangeFails() {
+        // Regex passes, semantic ranges fail
+        assertFalse(Stats.isValidStats("123456.78", "0", "1.0")); // cpm > 40
+        assertFalse(Stats.isValidStats("1.0", "999999", "1.0")); // gd15 > 10000
+        assertFalse(Stats.isValidStats("1.0", "0", "999999.99")); // kda > 200
+    }
+
+    @Test
+    void isValidStats_plusSignAndSpaces_rejectedByShape() {
+        // '+' sign not allowed by regex; spaces not allowed
+        assertFalse(Stats.isValidStats("+1.0", "0", "0"));
+        assertFalse(Stats.isValidStats("1.0", "+10", "0"));
+        assertFalse(Stats.isValidStats("1.0", "0", "+0.5"));
+
+        assertFalse(Stats.isValidStats(" 1.0", "0", "0"));
+        assertFalse(Stats.isValidStats("1.0 ", "0", "0"));
+        assertFalse(Stats.isValidStats("1.0", " 0", "0"));
+        assertFalse(Stats.isValidStats("1.0", "0 ", "0"));
+        assertFalse(Stats.isValidStats("1.0", "0", " 0"));
+        assertFalse(Stats.isValidStats("1.0", "0", "0 "));
+    }
+
+    @Test
+    void isValidStats_decimalEdgeCases() {
+        // Exactly 2 dp allowed; more than 2 rejects
+        assertTrue(Stats.isValidStats("3.50", "10", "2.75"));
+        assertFalse(Stats.isValidStats("3.500", "10", "2.75"));
+        assertFalse(Stats.isValidStats("3.", "10", "2")); // missing fractional digits
+        assertFalse(Stats.isValidStats(".5", "10", "2")); // missing integer digits
+    }
+
 }
