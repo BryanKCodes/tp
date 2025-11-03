@@ -991,12 +991,12 @@ view 2               # OK - refers to 2nd player in filtered list
 ### Player Management
 Action | Format                                                              | Example
 -------|---------------------------------------------------------------------|--------
-**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION`                             | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
+**Add player** | `add n/NAME rk/RANK rl/ROLE c/CHAMPION [t/TAG ...]`                 | `add n/Faker rk/Grandmaster rl/Mid c/Azir`
 **List all players** | `list`                                                              | `list`
 **Find by name** | `find KEYWORD [MORE_KEYWORDS...]`                                   | `find john`
 **Filter players** | `filter [rl/ROLE ...] [rk/RANK ...] [c/CHAMPION ...] [s/SCORE ...]` | `filter rl/Mid rk/Diamond c/Ashe s/7.0`
 **View player details** | `view INDEX`                                                        | `view 1`
-**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG]`      | `edit 1 rl/Top rk/Diamond`
+**Edit player** | `edit INDEX [n/NAME] [rl/ROLE] [rk/RANK] [c/CHAMPION] [t/TAG ...]`  | `edit 1 rl/Top rk/Diamond`
 **Delete player** | `delete INDEX`                                                      | `delete 3`
 
 ### Performance Tracking

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,15 +85,42 @@ public class ParserUtil {
     }
 
     /**
-     * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     * Parses a {@code Collection<String> tags} into a {@code Set<Tag>} with strict validation:
+     * - Tags must be 1-20 alphanumeric characters
+     * - No spaces allowed
+     * - Empty tags are not allowed
+     * - Case-insensitive duplicates are not allowed
+     *
+     * @throws ParseException if any tag is invalid or duplicated
      */
-    public static Set<Tag> parseTags(Collection<String> tags) throws ParseException {
-        requireNonNull(tags);
-        final Set<Tag> tagSet = new HashSet<>();
-        for (String tagName : tags) {
-            tagSet.add(parseTag(tagName));
+    public static Set<Tag> parseTags(Collection<String> inputTags) throws ParseException {
+        requireNonNull(inputTags);
+
+        if (inputTags.isEmpty()) {
+            return Collections.emptySet();
         }
-        return tagSet;
+
+        Set<String> lowerCaseTags = new HashSet<>();
+        Set<Tag> validatedTags = new HashSet<>();
+
+        for (String tagStr : inputTags) {
+            if (tagStr.isEmpty()) {
+                throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+            }
+
+            if (!tagStr.matches("^[a-zA-Z0-9]{1,20}$")) {
+                throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+            }
+
+            String lower = tagStr.toLowerCase();
+            if (!lowerCaseTags.add(lower)) {
+                throw new ParseException("Duplicate tag detected (case-insensitive): '" + tagStr + "'.");
+            }
+
+            validatedTags.add(new Tag(tagStr));
+        }
+
+        return validatedTags;
     }
 
     /**
