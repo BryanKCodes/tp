@@ -665,29 +665,22 @@ lose 2
 
 ### Auto-grouping players into teams: `group`
 
-Automatically forms as many teams of five as possible from **unassigned** players using a rank-based matching algorithm.
+Automatically forms as many teams of 5 as possible from **unassigned** players. 
+The system will form teams of players with **similar ranks** (where possible).
+The team will have **1 player of each role**, with **no duplicate champions**.
 
 **Format:**
 ```
 group
 ```
-
-**How it works:**
-
-The algorithm follows these steps:
-1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
-2. Sorts each role group by rank (highest to lowest).
-3. Iteratively forms teams by selecting the highest-ranked available player from each role.
-4. Ensures no duplicate champions within each team to avoid conflicts.
-5. Continues creating teams until there are insufficient players to form a complete team.
-
-**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked player from each role, Team 2 contains the next-highest-ranked player from each role, and so on.
-
 **Notes:**
 * At least one unassigned player for each of the five roles is required to form a team.
 * Only players **not already in a team** are considered.
 * If champion conflicts prevent forming a team, the algorithm stops and reports how many teams were created.
 * Any remaining unassigned players stay in the pool and can be grouped later.
+
+**Note:** This creates **rank-ordered** teams where Team 1 contains the highest-ranked player from each role, Team 2 contains the next-highest-ranked player from each role, and so on.
+If you wish to find out more about how **rank-ordered** team formation works, click [here](#understanding-rank-ordered-teams)
 
 <box type="warning" seamless>
 
@@ -697,37 +690,16 @@ The algorithm follows these steps:
 
 ---
 
-#### Understanding Rank-Ordered Teams
+**How it works (Optional):**
 
-**What "rank-ordered" means in practice:**
+The algorithm follows these steps:
+1. Groups all unassigned players by their roles (Top, Jungle, Mid, ADC, Support).
+2. Sorts each role group by rank (highest to lowest).
+3. Iteratively forms teams by selecting the highest-ranked available player from each role.
+4. Ensures no duplicate champions within each team to avoid conflicts.
+5. Continues creating teams until there are insufficient players to form a complete team.
 
-When you run `group`, SummonersBook creates **tiered teams** by selecting the highest-ranked player **within each role**:
-- **Team 1** gets the highest-ranked Top, Jungle, Mid, ADC, and Support
-- **Team 2** gets the next-highest-ranked player for each role
-- **Team 3** gets the remaining players
-
-**Example (assuming no champion conflicts):**
-You have 15 players distributed across roles with unique champions:
-- **Top**: 1 Grandmaster, 1 Master, 1 Diamond
-- **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
-- **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
-- **ADC**: 1 Master, 1 Diamond, 1 Platinum
-- **Support**: 1 Master, 1 Diamond, 1 Platinum
-
-After running `group`:
-- **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
-- **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
-- **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
-
-**Note:** If champion conflicts exist (e.g., the GM Mid and Master Support both play Ahri), the algorithm will skip players with conflicting champions and select the next available player from that role. This may result in teams that deviate from the pure rank-ordering shown above.
-
-This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
-
-**Why tiered teams are useful:**
-1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
-2. **Clear progression paths** — Players see what skill level they need to reach to move up
-3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
-4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+If you're interested in finding out more about the implementation details, click [here](#algorithm-details).
 
 ---
 
@@ -742,11 +714,8 @@ This is **different from balanced grouping**, which would mix ranks across teams
 
 **Example scenario:**
 You have 50+ players and 2 hours before scrims:
-1. Run `group` → Creates 9 teams instantly
-2. Use `view` to check each player's recent form
-3. Use `makeGroup` to create 1 custom team by swapping underperformers
-
-**Time saved:** 30-45 minutes compared to manual team balancing in spreadsheets.
+1. Use `makeGroup` to create 1 custom team for a specific playstyle/champion lineup
+2. Run `group` → Creates 9 teams instantly
 
 ---
 
@@ -757,41 +726,25 @@ You have 50+ players and 2 hours before scrims:
 **Problem:** `group` only creates 2 teams when you expected 3.
 
 **Common causes:**
-1. **Champion pool diversity** — If 3 Mid players all main Ahri, only 2 can be grouped
+1. **Champion pool diversity** — e.g. People with different roles playing the same champions
 2. **Role imbalance** — Having 6 ADCs but only 2 Supports limits teams to 2
 
 **Solutions:**
 - **Before grouping:** Run `filter rl/Mid` to check champion diversity per role
-- **Ask players to add backup champions** — Use `edit INDEX c/CHAMPION` to update
+- **Ask players to use other champions** — Use `edit INDEX c/CHAMPION` to update a player's champion
 - **Strategic recruiting** — Use `filter` to identify which roles need more players
 
 </box>
 
-**What happens to leftover players?**
+#### The issue of leftover players
+**Note:** A limitation of the current algorithm: it always picks the highest-ranked player for each role, so running `group` again produces the same teams and leftover players.
 
-If you have 17 players, `group` will form **3 complete teams** (15 players), leaving **2 unassigned**.
-
-**Important:** The `group` algorithm is **deterministic** — it always selects the highest-ranked player for each role. Running `group` then `ungroup all` then `group` again will produce the **exact same teams** with the **same leftover players**.
-
-**To include leftover players in teams:**
-- **Add more players** to reach the next multiple of 5 (e.g., recruit 3 more players to form a 4th team)
-- **Use a combination of `ungroup` and `makeGroup` to manually create a team** that includes leftover players by swapping them with players from existing teams
-- **Edit players' champions** (using `edit INDEX c/CHAMPION`) to resolve champion conflicts that may be preventing team formation
-- **Wait and accumulate more players** over time until you have enough for another complete team
-
----
-
-#### Algorithm Details
-
-The auto-grouping feature uses a greedy role-based matching algorithm that prioritizes rank within each role while handling champion conflicts.
-
-**For technical users interested in:**
-- Detailed algorithm explanation and pseudocode
-- Time and space complexity analysis
-- Design alternatives and trade-offs
-- Edge case handling
-
-Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+If the number of players isn’t a multiple of 5 (e.g., 17 players), `group` will form only complete teams (3 teams = 15 players), leaving the remaining players unassigned.
+**Options to handle leftovers:**
+- **Add more players** to form another full team.
+- **Use `ungroup` + `makeGroup`** to manually create a team including leftover players.
+- **Edit champions** (`edit INDEX c/CHAMPION`) to resolve conflicts blocking team formation.
+- **Wait for more players** to accumulate before forming the next team.
 
 ---
 
@@ -1337,3 +1290,50 @@ You can refer to the table below to see all champions supported by SummonersBook
 | Zyra |  |  |  |  |
 
 [Back to Top](#summonersbook-user-guide)
+---
+#### Algorithm Details
+
+The auto-grouping feature uses a greedy role-based matching algorithm that prioritizes rank within each role while handling champion conflicts.
+
+**For technical users interested in:**
+- Detailed algorithm explanation and pseudocode
+- Time and space complexity analysis
+- Design alternatives and trade-offs
+- Edge case handling
+
+Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+[Back to Top](#summonersbook-user-guide)
+
+## Understanding Rank-Ordered Teams
+
+**What "rank-ordered" means in practice:**
+
+When you run `group`, SummonersBook creates **tiered teams** by selecting the highest-ranked player **within each role**:
+- **Team 1** gets the highest-ranked Top, Jungle, Mid, ADC, and Support
+- **Team 2** gets the next-highest-ranked player for each role
+- **Team 3** gets the remaining players
+
+**Example (assuming no champion conflicts):**
+You have 15 players distributed across roles with unique champions:
+- **Top**: 1 Grandmaster, 1 Master, 1 Diamond
+- **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
+- **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
+- **ADC**: 1 Master, 1 Diamond, 1 Platinum
+- **Support**: 1 Master, 1 Diamond, 1 Platinum
+
+After running `group`:
+- **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
+- **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
+- **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
+
+**Note:** If champion conflicts exist (e.g., the GM Mid and Master Support both play Ahri), the algorithm will skip players with conflicting champions and select the next available player from that role. This may result in teams that deviate from the pure rank-ordering shown above.
+
+This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
+
+**Why tiered teams are useful:**
+1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
+2. **Clear progression paths** — Players see what skill level they need to reach to move up
+3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
+4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+[Back to Top](#summonersbook-user-guide)
+---
