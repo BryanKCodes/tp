@@ -16,6 +16,8 @@ pageNav: 3
    - [Common Classes](#common-classes)
 4. [Implementation](#implementation)
    - [Filter Feature](#filter-feature)
+   - [Add Stats Feature](#addstats)
+   - [Delete Stats Feature](#delete-stats-feature)
    - [Auto-Grouping Feature](#auto-grouping-feature)
    - [Viewing Person Details Feature](#viewing-person-details-feature)
    - [Ungrouping Teams Feature](#ungrouping-teams-feature)
@@ -246,22 +248,28 @@ This section describes some noteworthy details on how certain features are imple
 #### Implementation
 
 The filter feature is implemented through the `FilterCommand` and `FilterPredicate` classes.
-It allows users to display only the persons whose attributes match the given criteria — such as name, role, rank, or champion.
+It allows users to display only the persons whose attributes match the given criteria — such as role, rank, champion
+and average score greater than a threshold.
 
 When the user executes a command such as:
 
-`filter rk/Gold rl/Mid`
+`filter rk/Gold rl/Mid s/0.5`
 
 the app filters the list of persons based on the provided criteria.
-In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid.
+In this example, the result will include all persons whose **rank** is Gold **and** whose **role** is Mid
+**and** whose **average score** is greater than or equal **0.5**.
 
 This functionality is supported by three key components:
 
 - **`FilterCommand`** — represents the command that performs filtering.
-- **`FilterPredicate`** — encapsulates the logical conditions for filtering.
+- **`FilterPredicate`** classes — encapsulates the logical conditions for filtering.
+  - `ChampionContainsKeywordsPredicate` — condition for matching champion
+  - `RankContainsKeywordsPredicate` — condition for matching rank
+  - `RoleContainsKetwordsPredicate` — condition for matching role
+  - `ScoreInRangePredicate` — condition for comparing the average score
 - **`Model#updateFilteredPersonList(Predicate<Person>)`** — applies the predicate to the main person list, updating the UI display.
 
-Each field type (e.g. rank, role, champion) within the same category uses **OR** logic:
+Each field type (rank, role, champion) within the same category uses **OR** logic:
 > Example: `filter rk/Gold rk/Silver` → persons with rank Gold **or** Silver.
 
 Across different field types, conditions are combined using **AND** logic:
@@ -304,6 +312,7 @@ The `list` command can be used to reset the view and display everyone.
 The following sequence diagram illustrates how a filter command flows through the app:
 
 <puml src="diagrams/FilterCommandExecutionSequenceDiagram.puml" alt="FilterCommandExecutionSequenceDiagram" />
+
 <puml src="diagrams/FilterCommandParserSequenceDiagram.puml" alt="FilterCommandParserSequenceDiagram" />
 
 ---
@@ -322,6 +331,167 @@ The following sequence diagram illustrates how a filter command flows through th
     - *Pros:* Enables cumulative filtering (e.g. filter by role, then by rank later).
     - *Cons:* Adds complexity and state management overhead.
 
+### AddStats
+
+#### Implementation
+The **add stats** feature is implemented with three components:
+
+- **`AddStatsCommand`** — applies the update to the selected `Person`.
+- **`AddStatsCommandParser`** — parses user input like `addStats 1 cpm/9.9 gd15/2000 kda/3.5`.
+- **`Stats#addLatestStats(String cpm, String gd15, String kda)`** — validates inputs and returns a **new** `Stats` with one additional record (immutability).
+
+When a user runs:
+
+`addStats 1 cpm/9.9 gd15/2000 kda/3.5`
+
+1. `AddStatsCommandParser` tokenizes arguments, extracts the **index** and the prefixed fields `cpm/`, `gd15/`, and `kda/`.  
+   Missing fields, duplicate unrelated prefixes, or malformed indices cause a `ParseException`
+   with `AddStatsCommand.MESSAGE_USAGE`.
+
+2. `AddStatsCommand#execute(model)`:
+    - Retrieves the target `Person` from `Model#getFilteredPersonList()`.
+    - Calls `person.getStats().addLatestStats(cpm, gd15, kda)`, which:
+        - Validates with regex and ranges (CPM ∈ `[0,40]`, KDA ∈ `[0,200]` allowing up to **2** decimal places; GD15 ∈ `[-10000,10000]`).
+        - Computes a per-match **score** using normalized CPM/KDA and a logistic transform of GD15.
+        - Returns a **new** `Stats` whose lists are appended and average (1 d.p.) recomputed.
+    - Builds a new `Person` (preserving id/name/role/rank/champion/tags/wins/losses) with the **updated `Stats`**.
+    - If the person is in a team, constructs an updated `Team` with that member replaced and calls `model.setTeam(old, updated)`.  
+      Otherwise only `model.setPerson(old, updated)` is invoked.
+    - Refreshes UI lists via `updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` and `updateFilteredTeamList(PREDICATE_SHOW_ALL_TEAMS)` and returns a `CommandResult`.
+
+<box type="info" seamless>
+`Stats` is **immutable in its API**: callers receive a fresh instance; original lists are not mutated.
+</box>
+
+---
+
+#### Example Usage
+
+**Step 1.**  
+User runs `addStats 1 cpm/10.2 gd15/2400 kda/2.6`.  
+The parser creates `AddStatsCommand(Index.fromOneBased(1), "10.2", "2400", "2.6")`.
+
+---
+
+**Step 2.**  
+`AddStatsCommand#execute(model)` reads the selected person, calls `Stats#addLatestStats(...)`, and obtains a new `Stats` with one more record and a new average.
+
+---
+
+**Step 3.**  
+If the person belongs to a team, that team is rebuilt with the edited person and saved back to the model.  
+The command reports success using `AddStatsCommand.MESSAGE_RECORD_SUCCESS`.
+
+---
+
+#### Design Considerations
+
+**Aspect: Where to validate the stats values**
+
+- **Alternative 1 (current):** Validate inside the domain (`Stats#isValidStats` and checks in `addLatestStats`).
+    - *Pros:* Single source of truth; reusable; `Command` stays thin.
+    - *Cons:* `IllegalArgumentException` must be surfaced as a user-facing error.
+
+- **Alternative 2:** Validate fully in the parser.
+    - *Pros:* Earliest feedback; `Command` never sees bad inputs.
+    - *Cons:* Duplicates rules if other features (e.g., imports) also add stats.
+
+**Aspect: Keeping team rosters consistent**
+
+- **Alternative 1 (current):** If edited person is in a team, rebuild and save the team with the updated member.
+    - *Pros:* Team view and data remain consistent.
+    - *Cons:* Extra lookup and update per command.
+
+- **Alternative 2:** Update only the person list and let team lists refresh indirectly.
+    - *Pros:* Simpler update path.
+    - *Cons:* Risk of stale team membership if teams store copies.
+
+---
+
+### Delete Stats Feature
+
+#### Implementation
+
+The **delete stats** feature removes the most recent (last) statistics entry from a player’s history while
+keeping the rest of the model consistent.
+
+It is implemented with three components:
+
+- **`DeleteStatsCommand`** — performs the deletion on the selected `Person` (by index).
+- **`DeleteStatsCommandParser`** — parses user input like `deleteStats 1`.
+- **`Stats#deleteLatestStats()`** — returns a **new** `Stats` with the last entry removed, or throws a
+  `CommandException` when the history is empty.
+
+When a user runs:
+
+`deleteStats 1`
+
+1. `DeleteStatsCommandParser` parses the **index** from the preamble.  
+   If the index is missing/invalid, it throws a `ParseException` with
+   `DeleteStatsCommand.MESSAGE_USAGE`.
+
+2. `DeleteStatsCommand#execute(model)`:
+    - Retrieves the target `Person` from `Model#getFilteredPersonList()`.
+    - Calls `person.getStats().deleteLatestStats()` which:
+        - Ensures there is at least one record; otherwise throws `CommandException`
+          with `Stats.NOT_DELETED_MESSAGE`.
+        - Produces a **new** `Stats` snapshot with the last CPM/GD15/KDA/score removed and the average recomputed.
+    - Builds a new `Person` (preserving id/name/role/rank/champion/tags/wins/losses) with the updated `Stats`.
+    - If the person is in a team, constructs an updated `Team` that replaces the old member with the edited one,
+      then calls `model.setTeam(old, updated)`. Otherwise only `model.setPerson(old, updated)` is called.
+    - Refreshes lists via `updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` and
+      `updateFilteredTeamList(PREDICATE_SHOW_ALL_TEAMS)`, and returns a `CommandResult`.
+
+<box type="info" seamless>
+`Stats` follows an immutable-API pattern. Deletion never mutates in-place; a fresh instance is returned and
+stored on the edited `Person`.
+</box>
+
+---
+
+#### Example Usage
+
+**Step 1.**  
+User runs `deleteStats 1`. The parser creates `DeleteStatsCommand(Index.fromOneBased(1))`.
+
+---
+
+**Step 2.**  
+`DeleteStatsCommand#execute(model)` retrieves the selected person, calls `Stats#deleteLatestStats()`,
+and receives a new `Stats` with one fewer entry and a recalculated average.
+
+---
+
+**Step 3.**  
+If the person belongs to a team, the team is rebuilt with the edited person and persisted in the model.
+The command reports success using `DeleteStatsCommand.MESSAGE_RECORD_SUCCESS`.
+
+---
+
+#### Design Considerations
+
+**Aspect: Behavior when there is no history to delete**
+
+- **Alternative 1 (current):** Throw `CommandException` from `Stats#deleteLatestStats()` with a clear
+  message (e.g., “This player has no statistics record to be deleted”).
+    - *Pros:* Explicit feedback; prevents silent no-op; keeps rule centralized in the domain.
+    - *Cons:* Command must catch/propagate a domain exception.
+
+- **Alternative 2:** Interpret as a no-op and still return success.
+    - *Pros:* Simpler flow for callers.
+    - *Cons:* Confusing to users; hides data errors (e.g., attempting to delete when nothing exists).
+
+**Aspect: Consistency with team rosters**
+
+- **Alternative 1 (current):** When a member’s stats change, rebuild and persist the containing team as well.
+    - *Pros:* UI and persistence always reflect the edited member consistently.
+    - *Cons:* Slightly more work per command.
+
+- **Alternative 2:** Update only the person list and rely on indirect refresh.
+    - *Pros:* Fewer writes.
+    - *Cons:* Risk of stale team state if teams hold copies.
+
+---
 
 ### Auto-Grouping Feature
 
