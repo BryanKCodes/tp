@@ -219,15 +219,15 @@ Command | Purpose | Format
 --------|---------|-------
 [`group`](#auto-grouping-players-into-teams-group) | Auto-create rank-ordered teams | `group`
 [`makeGroup`](#manually-creating-a-team-makegroup) | Manually create a team | `makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5`
-[`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam INDEX`
-[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup INDEX` or `ungroup all`
+[`viewTeam`](#viewing-team-details-viewteam) | View detailed team stats | `viewteam TEAM_INDEX`
+[`ungroup`](#disbanding-teams-ungroup) | Disband team(s) | `ungroup TEAM_INDEX` or `ungroup all`
 
 ### Data Import/Export
 
 Command | Purpose | Format
 --------|---------|-------
-[`export`](#exporting-data-export) | Export players or teams to CSV | `export players or export teams [to PATH]`
-[`import`](#importing-player-data-import) | Import players from CSV | `import players from PATH`
+[`export`](#exporting-data-export) | Export players or teams to CSV | `export teams [to CUSTOM_PATH]` or `export players [to CUSTOM_PATH]`
+[`import`](#importing-player-data-import) | Import players from CSV | `import players from FILE_PATH`
 
 ### Utility
 
@@ -685,7 +685,7 @@ Removes one or more teams from the system, returning their members to the unassi
 
 **Format:**
 ```
-ungroup INDEX
+ungroup TEAM_INDEX
 ```
 or
 ```
@@ -698,7 +698,7 @@ ungroup all
 * If there are no teams, the command will show an error.
 
 **Notes:**
-* `INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
+* `TEAM_INDEX` refers to the team number shown in the displayed team list. Must be a positive integer (1, 2, 3…).
 
 **Example:**
 * Disbands the 1st team in the displayed team list.
@@ -730,7 +730,7 @@ export teams [to CUSTOM_PATH]
 ```
 
 **How it works:**
-* If no path is provided, exports are saved to:
+* If no custom path is provided, exports are saved to:
     - `data/players.csv` for player data
     - `data/teams.csv` for team data
 * Each CSV file contains structured data for easy re-import or analysis (e.g., Excel, Google Sheets).
@@ -738,10 +738,10 @@ export teams [to CUSTOM_PATH]
 
 **Examples:**
 * `export players`
-  Exports all player data to `data/players.csv`.
+  Exports all player data to default path `data/players.csv`.
 
 * `export teams to data/myTeams.csv`
-  Exports all team data to a custom location.
+  Exports all team data to a custom path `data/myTeams.csv`.
 
 **Success message:**
 ```
@@ -761,15 +761,12 @@ import players from FILE_PATH
 * The CSV file must be properly formatted. Supported headers include:
     - `Name,Role,Rank,Champion`
     - `Name,Role,Rank,Champion,Wins,Losses`
-* Duplicate player entries (by name and role) will be ignored automatically.
+* Duplicate/invalid player entries (by name and role) will be ignored automatically.
 * The file path must point to a valid `.csv` file (e.g., `data/players.csv`).
 
 **Examples:**
 * `import players from data/players.csv`
   Imports players from data/players.csv.
-
-* `import players from data/backup.csv`
-  Imports players from a backup file under data directory.
 
 **Success message:**
 ```
@@ -1034,11 +1031,11 @@ Action | Format                                              | Example
 **Disband team(s)** | `ungroup TEAM_INDEX` or `ungroup all`               | `ungroup 1` or `ungroup all`
 
 ### Data Import/Export
-Action | Format                     | Example
--------|----------------------------|--------
-**Export players** | `export players [to PATH]` | `export players`
-**Export teams** | `export teams [to PATH]`   | `export teams to data/myTeams.csv`
-**Import players** | `import players from PATH` | `import players from data/players.csv`
+Action | Format                            | Example
+-------|-----------------------------------|--------
+**Export players** | `export players [to CUSTOM_PATH]` | `export players`
+**Export teams** | `export teams [to CUSTOM_PATH]`   | `export teams to data/myTeams.csv`
+**Import players** | `import players from FILE_PATH`   | `import players from data/players.csv`
 
 ### Utility Commands
 Action | Format | Example
