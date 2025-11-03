@@ -658,7 +658,7 @@ The algorithm follows these steps:
 4. Ensures no duplicate champions within each team to avoid conflicts.
 5. Continues creating teams until there are insufficient players to form a complete team.
 
-**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked players, Team 2 contains the next-highest-ranked players, and so on.
+**Note:** This creates rank-ordered teams where Team 1 contains the highest-ranked player from each role, Team 2 contains the next-highest-ranked player from each role, and so on.
 
 **Notes:**
 * At least one unassigned player for each of the five roles is required to form a team.
@@ -671,6 +671,106 @@ The algorithm follows these steps:
 **Common Mistake:** Make sure you have at least 1 player per role (Top, Jungle, Mid, ADC, Support). The algorithm can't form teams with missing roles.
 
 </box>
+
+---
+
+#### Understanding Rank-Ordered Teams
+
+**What "rank-ordered" means in practice:**
+
+When you run `group`, SummonersBook creates **tiered teams** by selecting the highest-ranked player **within each role**:
+- **Team 1** gets the highest-ranked Top, Jungle, Mid, ADC, and Support
+- **Team 2** gets the next-highest-ranked player for each role
+- **Team 3** gets the remaining players
+
+**Example (assuming no champion conflicts):**
+You have 15 players distributed across roles with unique champions:
+- **Top**: 1 Grandmaster, 1 Master, 1 Diamond
+- **Jungle**: 1 Grandmaster, 1 Master, 1 Platinum
+- **Mid**: 1 Grandmaster, 1 Diamond, 1 Platinum
+- **ADC**: 1 Master, 1 Diamond, 1 Platinum
+- **Support**: 1 Master, 1 Diamond, 1 Platinum
+
+After running `group`:
+- **Team 1**: GM Top, GM Jungle, GM Mid, Master ADC, Master Support (highest-ranked per role)
+- **Team 2**: Master Top, Master Jungle, Diamond Mid, Diamond ADC, Diamond Support
+- **Team 3**: Diamond Top, Platinum Jungle, Platinum Mid, Platinum ADC, Platinum Support
+
+**Note:** If champion conflicts exist (e.g., the GM Mid and Master Support both play Ahri), the algorithm will skip players with conflicting champions and select the next available player from that role. This may result in teams that deviate from the pure rank-ordering shown above.
+
+This is **different from balanced grouping**, which would mix ranks across teams to make all teams equal strength.
+
+**Why tiered teams are useful:**
+1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
+2. **Clear progression paths** — Players see what skill level they need to reach to move up
+3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
+4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+
+---
+
+#### Group vs. Manual: When to Use Which?
+
+| Use `group` when... | Use `makeGroup` when... |
+|---------------------|-------------------------|
+| You have 10+ players and need teams fast | You want to test specific player chemistry |
+| You want rank-based skill tiers | You're experimenting with off-meta strategies |
+| You're running multiple scrimmages simultaneously | You need one custom team for a tournament |
+| Fair role distribution matters | You want to balance teams by playstyle (not rank) |
+
+**Example scenario:**
+You have 50+ players and 2 hours before scrims:
+1. Run `group` → Creates 9 teams instantly
+2. Use `view` to check each player's recent form
+3. Use `makeGroup` to create 1 custom team by swapping underperformers
+
+**Time saved:** 30-45 minutes compared to manual team balancing in spreadsheets.
+
+---
+
+#### Tips for Maximizing Teams Formed
+
+<box type="tip" seamless>
+
+**Problem:** `group` only creates 2 teams when you expected 3.
+
+**Common causes:**
+1. **Champion pool diversity** — If 3 Mid players all main Ahri, only 2 can be grouped
+2. **Role imbalance** — Having 6 ADCs but only 2 Supports limits teams to 2
+
+**Solutions:**
+- **Before grouping:** Run `filter rl/Mid` to check champion diversity per role
+- **Ask players to add backup champions** — Use `edit INDEX c/CHAMPION` to update
+- **Strategic recruiting** — Use `filter` to identify which roles need more players
+
+</box>
+
+**What happens to leftover players?**
+
+If you have 17 players, `group` will form **3 complete teams** (15 players), leaving **2 unassigned**.
+
+**Important:** The `group` algorithm is **deterministic** — it always selects the highest-ranked player for each role. Running `group` then `ungroup all` then `group` again will produce the **exact same teams** with the **same leftover players**.
+
+**To include leftover players in teams:**
+- **Add more players** to reach the next multiple of 5 (e.g., recruit 3 more players to form a 4th team)
+- **Use a combination of `ungroup` and `makeGroup` to manually create a team** that includes leftover players by swapping them with players from existing teams
+- **Edit players' champions** (using `edit INDEX c/CHAMPION`) to resolve champion conflicts that may be preventing team formation
+- **Wait and accumulate more players** over time until you have enough for another complete team
+
+---
+
+#### Algorithm Details
+
+The auto-grouping feature uses a greedy role-based matching algorithm that prioritizes rank within each role while handling champion conflicts.
+
+**For technical users interested in:**
+- Detailed algorithm explanation and pseudocode
+- Time and space complexity analysis
+- Design alternatives and trade-offs
+- Edge case handling
+
+Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+
+---
 
 ### Manually creating a team: `makeGroup`
 
@@ -1035,7 +1135,7 @@ To ensure balanced and valid teams, each player in a team must have a **unique r
 : An organized practice match between two teams, used to test strategies and evaluate players.
 
 **Rank-Ordered Team**
-: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This creates balanced, tiered teams (Team 1 > Team 2, etc.).
+: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available player for each of the five required roles, while ensuring no duplicate champions. The algorithm sorts players by rank within each role separately, then selects the highest-ranked player from each role for Team 1, the next-highest-ranked player from each role for Team 2, and so on. When champion conflicts occur, lower-ranked players may be selected to avoid duplicates. This creates tiered teams (Team 1 > Team 2, etc.).
 
 
 [Back to Top](#summonersbook-user-guide)

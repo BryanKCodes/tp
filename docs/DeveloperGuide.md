@@ -547,6 +547,35 @@ The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamM
 
 ---
 
+#### Complexity Analysis
+
+**Time Complexity:**
+
+- **Average Case: O(n)**
+  - When champion conflicts are minimal (the typical scenario), each person is processed roughly once
+  - Grouping by role: O(n) — single pass through all persons
+  - Sorting within roles: O(n log n) — sorting at most n persons across 5 role groups
+  - Team formation: O(n) — each person is selected once without backtracking
+  - **Overall: O(n log n)**
+
+- **Worst Case: O(n^5)**
+  - Occurs when there are extensive champion conflicts requiring repeated searches for valid candidates
+  - For each team (up to n/5 teams): O(n/5)
+  - For each of the 5 roles per team: O(1)
+  - For each role, searching through remaining persons for a conflict-free candidate: O(n)
+  - **Overall: O((n/5) × 5 × n) = O(n^2) per iteration, with potential re-iterations leading to O(n^5) in pathological cases**
+  - In practice, this worst case is extremely rare as it requires specific adversarial champion distributions
+
+**Space Complexity: O(n)**
+- Stores persons grouped by role: O(n)
+- Stores formed teams: O(n) — at most n persons distributed across teams
+- Temporary storage for conflict checking: O(1) per team
+
+**Practical Performance:**
+For typical use cases with 10-100 persons and reasonable champion diversity, the algorithm performs in **near-linear time** with negligible overhead from champion conflict resolution.
+
+---
+
 #### Sequence Diagrams
 
 The execution of the `group` command involves complex logic for team formation, including several success and failure paths. To ensure clarity and avoid an overly complex diagram, the logic is presented in two distinct scenarios: one that covers successful team formation and another that details the initial failure conditions.
@@ -590,7 +619,7 @@ The user executes the `group` command.
 - Persons are grouped by role.
 - Each role group is sorted by rank (highest to lowest).
 - Teams are formed iteratively by selecting the highest-ranked available person from each role while avoiding champion conflicts.
-- This creates rank-ordered teams where Team 1 contains the highest-ranked persons, Team 2 contains the next-highest-ranked persons, and so on.
+- This creates rank-ordered teams where Team 1 contains the highest-ranked person from each role, Team 2 contains the next-highest-ranked person from each role, and so on (assuming no champion conflicts prevent this ideal ordering).
 
 **Step 4.**
 Teams are successfully formed according to role, rank, and champion constraints.
@@ -601,12 +630,28 @@ A success message shows the number of teams created and remaining unassigned per
 
 <box type="info" seamless>
 
-**Note:**
-If there are insufficient persons to form a full team (i.e., missing a required role), the command will throw a `CommandException` with:
+**Note: Error Handling**
 
-`No teams could be formed. Ensure there is at least one unassigned person for each role (Top, Jungle, Mid, ADC, Support).`
+**Missing Roles:**
+If one or more required roles are missing (i.e., there is no unassigned person for at least one role), the command will throw a `CommandException` with:
 
-Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations.
+`Cannot form a team: No persons available for role(s): [Role1, Role2, ...].`
+
+For example, if there are no unassigned Support and Jungle players:
+
+`Cannot form a team: No persons available for role(s): Support, Jungle.`
+
+**Duplicate Champion Conflicts:**
+If champion conflicts prevent forming even the first team (i.e., the highest-ranked available players for each role have champion duplicates), the command will throw a `CommandException` with:
+
+`Operation would result in duplicate champions in the team. [Name1] and [Name2] both play: [Champion].`
+
+For example, if the highest-ranked Mid player "Faker" and the highest-ranked Support player "Keria" both play Ahri:
+
+`Operation would result in duplicate champions in the team. Faker and Keria both play: Ahri.`
+
+**Partial Success:**
+Any leftover unassigned persons remain in the pool and can be used in future auto-grouping operations. If some teams are successfully formed but champion conflicts prevent forming additional teams, the command will succeed with the teams that were formed.
 
 </box>
 
@@ -618,8 +663,8 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 
 - **Alternative 1 (current implementation):**
   Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
-    - *Pros:* Simple, predictable, and efficient (O(n log n) for sorting + O(n) for team formation).
-    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked players, Team 2 gets the next-highest-ranked players, etc. This is useful for organizing scrimmages by skill level.
+    - *Pros:* Simple, predictable, and efficient in typical cases. Time complexity is **O(n) average case** (when champion conflicts are minimal), **O(n^5) worst case** (with extensive champion conflicts across all roles and teams). The average case is highly favorable for practical use.
+    - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked player from each role, Team 2 gets the next-highest-ranked player from each role, etc. This is useful for organizing scrimmages by skill level.
     - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
 
 - **Alternative 2:**
@@ -633,6 +678,93 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
     - *Pros:* Can handle complex constraints elegantly.
     - *Cons:* Requires external library and adds significant complexity.
     - *Cons:* Overkill for this domain where greedy approach works well.
+
+---
+
+**Aspect: Rank-ordered vs. balanced team formation**
+
+- **Alternative 1 (current implementation):**
+  Create rank-ordered teams where Team 1 > Team 2 > Team 3 in terms of average rank.
+    - *Pros:* Predictable and useful for organizing tiered scrimmages. Coaches can easily identify their "A team," "B team," etc.
+    - *Pros:* Deterministic behavior — same input always produces same output, making it easy to understand and debug.
+    - *Pros:* Aligns with real-world tournament structures where teams are ranked by skill.
+    - *Cons:* Creates skill imbalance between teams, which may not be ideal for balanced practice matches.
+
+- **Alternative 2:**
+  Create balanced teams where all teams have approximately equal average rank.
+    - *Pros:* More competitive and fair matches between formed teams.
+    - *Pros:* Better for training environments where equal competition is desired.
+    - *Cons:* More complex algorithm required (e.g., bin packing or dynamic programming).
+    - *Cons:* Less predictable — coaches cannot easily identify skill tiers.
+    - *Cons:* Requires additional balancing heuristics (should we prioritize equal average rank, equal total rank, or minimize variance?).
+
+**Decision rationale:** We chose rank-ordered teams because:
+1. Coaches specifically requested tiered team formation for organizing internal scrimmages
+2. The `makeGroup` command allows manual balancing when needed
+3. Deterministic behavior reduces user confusion and support burden
+4. Simpler implementation with better performance characteristics
+
+---
+
+**Aspect: Handling champion conflicts**
+
+- **Alternative 1 (current implementation):**
+  Skip persons with champion conflicts and try the next-ranked person in that role.
+    - *Pros:* Simple to implement and understand.
+    - *Pros:* Maintains role-based sorting priority (rank within role is preserved).
+    - *Cons:* May fail to form maximum possible teams if a better arrangement exists.
+    - *Cons:* Leftover persons might include high-ranked players blocked by champion conflicts.
+
+- **Alternative 2:**
+  Backtrack and rearrange previous team assignments to resolve champion conflicts.
+    - *Pros:* Guarantees forming the maximum number of teams possible.
+    - *Pros:* No high-ranked player left out unnecessarily.
+    - *Cons:* Significantly more complex implementation with potential bugs.
+    - *Cons:* Breaks the deterministic rank-ordering property (Team 1 may not always be strongest).
+    - *Cons:* Performance degrades to O(n!) in worst case.
+
+- **Alternative 3:**
+  Allow duplicate champions within a team and let coaches handle it manually.
+    - *Pros:* Simplest implementation — no conflict checking needed.
+    - *Pros:* Maximizes teams formed every time.
+    - *Cons:* Violates League of Legends game rules (no duplicate champions allowed).
+    - *Cons:* Frustrating user experience — teams would be invalid for actual matches.
+
+**Decision rationale:** We chose Alternative 1 because:
+1. Champion uniqueness is a hard constraint in League of Legends
+2. The greedy approach performs well in practice (conflicts are relatively rare with diverse champion pools)
+3. Coaches can use `edit` to change champions if they want to maximize team formation
+4. The error message clearly indicates when conflicts prevent team formation
+
+---
+
+**Aspect: Error handling for incomplete teams**
+
+- **Alternative 1 (current implementation):**
+  Stop team formation immediately when a complete team cannot be formed, and report partial success.
+    - *Pros:* Fail-fast approach provides immediate feedback to the user.
+    - *Pros:* Clear error messages guide users on what went wrong (missing role, champion conflict, etc.).
+    - *Cons:* Might stop prematurely if a better arrangement exists (see champion conflict handling).
+
+- **Alternative 2:**
+  Continue attempting to form teams even after failures, collecting all possible teams.
+    - *Pros:* Maximizes teams formed in all scenarios.
+    - *Cons:* More complex error state management (which failures are recoverable?).
+    - *Cons:* May produce confusing behavior (why were some teams formed and others not?).
+
+- **Alternative 3:**
+  Throw an exception immediately if any constraint is violated, forming zero teams.
+    - *Pros:* All-or-nothing approach ensures consistency.
+    - *Cons:* Poor user experience — even if 2 out of 3 teams could be formed, none would be.
+    - *Cons:* Forces users to manually fix issues before any progress can be made.
+
+**Decision rationale:** We chose Alternative 1 because:
+1. Partial success is valuable to users (forming 2 teams is better than forming none)
+2. Clear feedback helps users understand what needs to be fixed
+3. Users can manually create the final team using `makeGroup` if needed
+4. Aligns with the principle of "graceful degradation" in UX design
+
+---
 
 ### Viewing Person Details Feature
 
@@ -1125,20 +1257,28 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### UC05 – Auto-Group People (Create Teams)
 **MSS**
 1. User requests to group all unassigned players into teams.
-2. SummonersBook forms as many valid teams as possible based on rank, role balance, and champion uniqueness.
-3. SummonersBook displays all newly formed teams and confirms that grouping has been completed.  
+2. SummonersBook validates that at least one player exists for each of the five required roles (Top, Jungle, Mid, ADC, Support).
+3. SummonersBook forms as many valid rank-ordered teams as possible, ensuring no duplicate champions within each team.
+4. SummonersBook displays all newly formed teams with their members and the number of remaining unassigned players.
    Use case ends.
 
 **Extensions**
-- 2a. Required roles are missing.
-  - 2a1. SummonersBook shows an error about missing roles.  
+- 1a. No unassigned players are available.
+  - 1a1. SummonersBook shows an error about no unassigned players.
     Use case ends.
-- 2b. Champion conflicts prevent forming further teams.
-  - 2b1. SummonersBook shows an error about champion conflicts and stops grouping.  
+
+- 2a. One or more required roles have no unassigned players.
+  - 2a1. SummonersBook shows an error about missing roles.
     Use case ends.
-- 2c. Fewer than five total unassigned players exist.
-  - 2c1. SummonersBook shows an error about insufficient players.  
+
+- 3a. Champion conflicts prevent forming even the first team.
+  - 3a1. SummonersBook shows an error about duplicate champions.
     Use case ends.
+
+- 3b. Some teams are formed, but champion conflicts prevent forming additional teams.
+  - 3b1. SummonersBook displays the successfully formed teams.
+  - 3b2. Remaining players stay in the unassigned pool.
+    Use case ends with partial success.
 
 ---
 
@@ -1391,7 +1531,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 *   **Scrim**: An organized practice match between two teams, used to test strategies and evaluate players.
 
-*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available players for each of the five required roles, while ensuring no duplicate champions. The algorithm selects the highest-ranked available player for each role when forming teams, meaning Team 1 will contain the highest-ranked players, Team 2 will contain the next-highest-ranked players, and so on. This process creates balanced, tiered teams (Team 1 > Team 2, etc.).
+*   **Rank-Ordered Team**: A team automatically created by the `group` command. It is formed by selecting the highest-ranked available player for each of the five required roles, while ensuring no duplicate champions. The algorithm sorts players by rank within each role separately, then selects the highest-ranked player from each role for Team 1, the next-highest-ranked player from each role for Team 2, and so on. When champion conflicts occur, the algorithm skips the conflicting player and selects the next-highest-ranked player from that role, which may result in teams that deviate from pure rank ordering. This process creates tiered teams (Team 1 > Team 2, etc.).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1590,34 +1730,40 @@ testers are expected to do more *exploratory* testing.
 
 1. Auto-grouping with sufficient persons
 
-    1. Prerequisites: Have at least 5 unassigned persons with unique roles (Top, Jungle, Mid, ADC, Support) and unique champions.
+    1. Prerequisites: Have at least 5 unassigned persons with at least one person for each required role (Top, Jungle, Mid, ADC, Support).
 
     2. Test case: `group`<br>
-       Expected: One or more teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right.
+       Expected: One or more rank-ordered teams are created. Success message shows the number of teams created, their members (formatted by role), and the number of remaining unassigned persons. Verify teams were created by viewing the team panel on the right. Team 1 should contain the highest-ranked person from each role (unless champion conflicts prevent this), Team 2 the next-highest-ranked person from each role, and so on.
 
-    3. Test case: Have exactly 10 unassigned persons (2 per role) with unique champions, then run `group`<br>
-       Expected: 2 teams are created with 0 persons remaining unassigned.
+    3. Test case: `group` with exactly 10 unassigned persons (2 per role) where all players have unique champions<br>
+       Expected: 2 teams are created with 0 persons remaining unassigned. Team 1 contains the highest-ranked person from each role, Team 2 contains the second-highest-ranked person from each role.
 
-    4. Test case: Have 12 unassigned persons (mixed roles) then run `group`<br>
-       Expected: As many complete teams as possible are created. The success message indicates how many persons remain unassigned.
+    4. Test case: `group` with 12 unassigned persons (mixed roles, e.g., 3 Top, 3 Jungle, 2 Mid, 2 ADC, 2 Support) with unique champions<br>
+       Expected: 2 complete teams are created. The success message indicates 2 persons remain unassigned (since only 2 Mid players exist).
 
-2. Auto-grouping with insufficient persons
+2. Auto-grouping with missing roles
 
-    1. Test case: Have only 4 unassigned persons with 4 different roles, then run `group`<br>
-       Expected: No teams created. Error message indicates insufficient persons for all required roles.
+    1. Test case: `group` with only 4 unassigned persons with 4 different roles (e.g., Top, Jungle, Mid, ADC but no Support)<br>
+       Expected: No teams created. Error message "Cannot form a team: No persons available for role(s): Support."
 
-    2. Test case: Have 5 unassigned persons but missing one required role (e.g., no Support), then run `group`<br>
-       Expected: No teams created. Error message indicates at least one person per role is required.
+    2. Test case: `group` with 8 unassigned persons but missing two required roles (e.g., no Support and no Jungle)<br>
+       Expected: No teams created. Error message "Cannot form a team: No persons available for role(s): Support, Jungle."
 
-    3. Test case: Run `group` when all persons are already assigned to teams<br>
+    3. Test case: `group` when all persons are already assigned to teams<br>
        Expected: Error message "No unassigned persons available to form teams."
 
 3. Auto-grouping with champion conflicts
 
-    1. Prerequisites: Have 10 unassigned persons (2 per role) where 2 persons play the same champion and have the same role.
+    1. Prerequisites: Have at least 10 unassigned persons (at least 2 per role) where multiple persons in different roles play the same champion.
 
-    2. Test case: Run `group`<br>
-       Expected: One team is created with the higher-ranked person of the duplicate champion. The second person with the duplicate champion remains unassigned (along with 4 others).
+    2. Test case: `group` with 10 persons (2 per role) where the highest-ranked Mid player and highest-ranked Support player both play "Ahri"<br>
+       Expected: No teams created. Error message "Operation would result in duplicate champions in the team. [MidPlayer] and [SupportPlayer] both play: Ahri."
+
+    3. Test case: `group` with 15 persons (3 per role). The highest-ranked Mid and Support for Team 1 have unique champions. For Team 2, the 2nd-ranked Mid and 2nd-ranked Support both play "Lux"<br>
+       Expected: One team is created successfully (Team 1). Error message indicates team formation stopped due to champion conflicts. 10 persons remain unassigned.
+
+    4. Test case: `group` with 10 persons (2 per role) where the 2nd-ranked Mid player plays the same champion as the 1st-ranked Support player<br>
+       Expected: One team is created with the higher-ranked persons, avoiding the conflict by selecting the 1st-ranked Mid. The 2nd-ranked Mid remains unassigned along with 4 others.
 
 ### Ungrouping teams
 
