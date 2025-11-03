@@ -345,6 +345,7 @@ You can filter by:
 - `rk/` — rank (exact match), can be used multiple times
 - `c/` — champion (exact match), can be used multiple times
 - `s/` — score (shows players with score rating greater or equal to the given value), supply it **only once**!
+  - **We only accept up to 2 decimal places** (e.g. `3.4`, `7.89`), any inputs beyond 2 d.p. (e.g. `5.678`) will be rejected!
 
 **Format (any order, at least one filter):**
 ```

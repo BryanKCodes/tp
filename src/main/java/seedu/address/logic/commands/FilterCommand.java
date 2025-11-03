@@ -46,7 +46,7 @@ public class FilterCommand extends Command {
             + "[" + PREFIX_RANK + "RANK]... "
             + "[" + PREFIX_ROLE + "ROLE]... "
             + "[" + PREFIX_CHAMPION + "CHAMPION]... "
-            + "[" + PREFIX_SCORE + "SCORE]... (at least one field must be provided)\n"
+            + "[" + PREFIX_SCORE + "SCORE]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_RANK + "Diamond "
             + PREFIX_CHAMPION + "Yasuo "
