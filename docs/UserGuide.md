@@ -124,12 +124,40 @@ group
 
 🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
-### Step 4: Learn the Essentials
+### Step 4: Quickstart — Using Commands
 
-Now that you've seen the magic, explore these core commands:
-- `filter rl/Mid rk/Diamond` — Find specific players by role and rank
-- `view 1` — Check detailed player stats and performance trends
-- `help` — Open the full command reference guide
+Now that SummonersBook is set up, let’s try your first command!
+
+#### How Commands Work
+SummonersBook uses simple text commands to manage your player roster.  
+Commands generally follows this format:
+```
+command_word + prefix/VALUE (input) + prefix/VALUE (input)
+```
+- **Command** — what you want to do (e.g., `add`, `filter`, `view`)
+- **Prefixes** — short labels that tell SummonersBook what kind of information you’re giving (`n/` for name, `rk/` for rank, `rl/` for role, etc.)
+
+Some commands do not require inputs, and only need the command word (e.g. `help`).
+Don’t worry — you don’t need to memorize them all. You can always type `help` to see the full list.
+
+#### Example: Adding a Player
+Let’s add a new player to your roster: `add n/Faker rk/Challenger rl/Mid c/Ahri t/Shotcaller t/Carry`
+This means:
+- `add` → You’re adding a player
+- `n/Faker` → Name is **Faker**
+- `rk/Challenger` → Rank is **Challenger**
+- `rl/Mid` → Role is **Mid**
+- `c/Ahri` → Main champion is **Ahri**
+- `t/Shotcaller`, `t/Carry` → Optional tags describing their playstyle
+
+After running this command, Faker will appear in your roster instantly!
+
+---
+
+#### 💡 Try Next
+- `filter rl/Mid rk/Diamond` — See only Diamond-tier Mid players
+- `view 1` — Check stats and performance trends of the first player
+- `help` — See all available commands anytime
 
 Refer to the [Features](#features) section below for complete details on all commands.
 
