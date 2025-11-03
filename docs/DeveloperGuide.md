@@ -369,6 +369,35 @@ The key methods implementing this logic are `TeamMatcher#formTeams()` and `TeamM
 
 ---
 
+#### Complexity Analysis
+
+**Time Complexity:**
+
+- **Average Case: O(n)**
+  - When champion conflicts are minimal (the typical scenario), each person is processed roughly once
+  - Grouping by role: O(n) — single pass through all persons
+  - Sorting within roles: O(n log n) — sorting at most n persons across 5 role groups
+  - Team formation: O(n) — each person is selected once without backtracking
+  - **Overall: O(n log n)**
+
+- **Worst Case: O(n^5)**
+  - Occurs when there are extensive champion conflicts requiring repeated searches for valid candidates
+  - For each team (up to n/5 teams): O(n/5)
+  - For each of the 5 roles per team: O(1)
+  - For each role, searching through remaining persons for a conflict-free candidate: O(n)
+  - **Overall: O((n/5) × 5 × n) = O(n^2) per iteration, with potential re-iterations leading to O(n^5) in pathological cases**
+  - In practice, this worst case is extremely rare as it requires specific adversarial champion distributions
+
+**Space Complexity: O(n)**
+- Stores persons grouped by role: O(n)
+- Stores formed teams: O(n) — at most n persons distributed across teams
+- Temporary storage for conflict checking: O(1) per team
+
+**Practical Performance:**
+For typical use cases with 10-100 persons and reasonable champion diversity, the algorithm performs in **near-linear time** with negligible overhead from champion conflict resolution.
+
+---
+
 #### Sequence Diagrams
 
 The execution of the `group` command involves complex logic for team formation, including several success and failure paths. To ensure clarity and avoid an overly complex diagram, the logic is presented in two distinct scenarios: one that covers successful team formation and another that details the initial failure conditions.
@@ -440,7 +469,7 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
 
 - **Alternative 1 (current implementation):**
   Uses a greedy algorithm that prioritizes rank within each role and checks for champion conflicts.
-    - *Pros:* Simple, predictable, and efficient (O(n log n) for sorting + O(n) for team formation).
+    - *Pros:* Simple, predictable, and efficient in typical cases. Time complexity is **O(n) average case** (when champion conflicts are minimal), **O(n^5) worst case** (with extensive champion conflicts across all roles and teams). The average case is highly favorable for practical use.
     - *Pros:* Creates consistent rank-ordered teams where Team 1 gets the highest-ranked players, Team 2 gets the next-highest-ranked players, etc. This is useful for organizing scrimmages by skill level.
     - *Cons:* May not find an optimal solution if champion conflicts are complex. The algorithm stops when it cannot form a complete team, even if rearranging persons might allow more teams.
 
@@ -455,6 +484,93 @@ Any leftover unassigned persons remain in the pool and can be used in future aut
     - *Pros:* Can handle complex constraints elegantly.
     - *Cons:* Requires external library and adds significant complexity.
     - *Cons:* Overkill for this domain where greedy approach works well.
+
+---
+
+**Aspect: Rank-ordered vs. balanced team formation**
+
+- **Alternative 1 (current implementation):**
+  Create rank-ordered teams where Team 1 > Team 2 > Team 3 in terms of average rank.
+    - *Pros:* Predictable and useful for organizing tiered scrimmages. Coaches can easily identify their "A team," "B team," etc.
+    - *Pros:* Deterministic behavior — same input always produces same output, making it easy to understand and debug.
+    - *Pros:* Aligns with real-world tournament structures where teams are ranked by skill.
+    - *Cons:* Creates skill imbalance between teams, which may not be ideal for balanced practice matches.
+
+- **Alternative 2:**
+  Create balanced teams where all teams have approximately equal average rank.
+    - *Pros:* More competitive and fair matches between formed teams.
+    - *Pros:* Better for training environments where equal competition is desired.
+    - *Cons:* More complex algorithm required (e.g., bin packing or dynamic programming).
+    - *Cons:* Less predictable — coaches cannot easily identify skill tiers.
+    - *Cons:* Requires additional balancing heuristics (should we prioritize equal average rank, equal total rank, or minimize variance?).
+
+**Decision rationale:** We chose rank-ordered teams because:
+1. Coaches specifically requested tiered team formation for organizing internal scrimmages
+2. The `makeGroup` command allows manual balancing when needed
+3. Deterministic behavior reduces user confusion and support burden
+4. Simpler implementation with better performance characteristics
+
+---
+
+**Aspect: Handling champion conflicts**
+
+- **Alternative 1 (current implementation):**
+  Skip persons with champion conflicts and try the next-ranked person in that role.
+    - *Pros:* Simple to implement and understand.
+    - *Pros:* Maintains role-based sorting priority (rank within role is preserved).
+    - *Cons:* May fail to form maximum possible teams if a better arrangement exists.
+    - *Cons:* Leftover persons might include high-ranked players blocked by champion conflicts.
+
+- **Alternative 2:**
+  Backtrack and rearrange previous team assignments to resolve champion conflicts.
+    - *Pros:* Guarantees forming the maximum number of teams possible.
+    - *Pros:* No high-ranked player left out unnecessarily.
+    - *Cons:* Significantly more complex implementation with potential bugs.
+    - *Cons:* Breaks the deterministic rank-ordering property (Team 1 may not always be strongest).
+    - *Cons:* Performance degrades to O(n!) in worst case.
+
+- **Alternative 3:**
+  Allow duplicate champions within a team and let coaches handle it manually.
+    - *Pros:* Simplest implementation — no conflict checking needed.
+    - *Pros:* Maximizes teams formed every time.
+    - *Cons:* Violates League of Legends game rules (no duplicate champions allowed).
+    - *Cons:* Frustrating user experience — teams would be invalid for actual matches.
+
+**Decision rationale:** We chose Alternative 1 because:
+1. Champion uniqueness is a hard constraint in League of Legends
+2. The greedy approach performs well in practice (conflicts are relatively rare with diverse champion pools)
+3. Coaches can use `edit` to change champions if they want to maximize team formation
+4. The error message clearly indicates when conflicts prevent team formation
+
+---
+
+**Aspect: Error handling for incomplete teams**
+
+- **Alternative 1 (current implementation):**
+  Stop team formation immediately when a complete team cannot be formed, and report partial success.
+    - *Pros:* Fail-fast approach provides immediate feedback to the user.
+    - *Pros:* Clear error messages guide users on what went wrong (missing role, champion conflict, etc.).
+    - *Cons:* Might stop prematurely if a better arrangement exists (see champion conflict handling).
+
+- **Alternative 2:**
+  Continue attempting to form teams even after failures, collecting all possible teams.
+    - *Pros:* Maximizes teams formed in all scenarios.
+    - *Cons:* More complex error state management (which failures are recoverable?).
+    - *Cons:* May produce confusing behavior (why were some teams formed and others not?).
+
+- **Alternative 3:**
+  Throw an exception immediately if any constraint is violated, forming zero teams.
+    - *Pros:* All-or-nothing approach ensures consistency.
+    - *Cons:* Poor user experience — even if 2 out of 3 teams could be formed, none would be.
+    - *Cons:* Forces users to manually fix issues before any progress can be made.
+
+**Decision rationale:** We chose Alternative 1 because:
+1. Partial success is valuable to users (forming 2 teams is better than forming none)
+2. Clear feedback helps users understand what needs to be fixed
+3. Users can manually create the final team using `makeGroup` if needed
+4. Aligns with the principle of "graceful degradation" in UX design
+
+---
 
 ### Viewing Person Details Feature
 

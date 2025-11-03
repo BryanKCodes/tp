@@ -672,6 +672,100 @@ The algorithm follows these steps:
 
 </box>
 
+---
+
+#### Understanding Rank-Ordered Teams
+
+**What "rank-ordered" means in practice:**
+
+When you run `group`, SummonersBook creates **tiered teams** rather than balanced teams:
+- **Team 1** = Your strongest 5 players (highest ranks across all roles)
+- **Team 2** = Your next-strongest 5 players
+- **Team 3** = The remaining 5 players
+
+**Example:**
+You have 15 players:
+- 3 Grandmaster, 5 Master, 4 Diamond, 3 Platinum
+
+After running `group`:
+- **Team 1**: 2 GM + 3 Master (strongest possible)
+- **Team 2**: 1 GM + 2 Master + 2 Diamond
+- **Team 3**: 2 Diamond + 3 Platinum
+
+This is **different from balanced grouping**, which would mix ranks to make all teams equal strength.
+
+**Why tiered teams are useful:**
+1. **Structured scrimmages** — Team 1 vs Team 2 provides high-level competitive practice
+2. **Clear progression paths** — Players see what skill level they need to reach to move up
+3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
+4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+
+---
+
+#### Group vs. Manual: When to Use Which?
+
+| Use `group` when... | Use `makeGroup` when... |
+|---------------------|-------------------------|
+| You have 10+ players and need teams fast | You want to test specific player chemistry |
+| You want rank-based skill tiers | You're experimenting with off-meta strategies |
+| You're running multiple scrimmages simultaneously | You need one custom team for a tournament |
+| Fair role distribution matters | You want to balance teams by playstyle (not rank) |
+
+**Example scenario:**
+You have 50+ players and 2 hours before scrims:
+1. Run `group` → Creates 9 teams instantly
+2. Use `view` to check each player's recent form
+3. Use `makeGroup` to create 1 custom team by swapping underperformers
+
+**Time saved:** 30-45 minutes compared to manual team balancing in spreadsheets.
+
+---
+
+#### Tips for Maximizing Teams Formed
+
+<box type="tip" seamless>
+
+**Problem:** `group` only creates 2 teams when you expected 3.
+
+**Common causes:**
+1. **Champion pool diversity** — If 3 Mid players all main Ahri, only 2 can be grouped
+2. **Role imbalance** — Having 6 ADCs but only 2 Supports limits teams to 2
+
+**Solutions:**
+- **Before grouping:** Run `filter rl/Mid` to check champion diversity per role
+- **Ask players to add backup champions** — Use `edit INDEX c/CHAMPION` to update
+- **Strategic recruiting** — Use `filter` to identify which roles need more players
+
+</box>
+
+**What happens to leftover players?**
+
+If you have 17 players, `group` will form **3 complete teams** (15 players), leaving **2 unassigned**.
+
+**Important:** The `group` algorithm is **deterministic** — it always selects the highest-ranked player for each role. Running `group` then `ungroup all` then `group` again will produce the **exact same teams** with the **same leftover players**.
+
+**To include leftover players in teams:**
+- **Add more players** to reach the next multiple of 5 (e.g., recruit 3 more players to form a 4th team)
+- **Use a combination of `ungroup` and `makeGroup` to manually create a team** that includes leftover players by swapping them with players from existing teams
+- **Edit players' champions** (using `edit INDEX c/CHAMPION`) to resolve champion conflicts that may be preventing team formation
+- **Wait and accumulate more players** over time until you have enough for another complete team
+
+---
+
+#### Algorithm Details
+
+The auto-grouping feature uses a greedy role-based matching algorithm that prioritizes rank within each role while handling champion conflicts.
+
+**For technical users interested in:**
+- Detailed algorithm explanation and pseudocode
+- Time and space complexity analysis
+- Design alternatives and trade-offs
+- Edge case handling
+
+Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+
+---
+
 ### Manually creating a team: `makeGroup`
 
 Creates a new team with the specified players by their index numbers.
