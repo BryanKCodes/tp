@@ -838,7 +838,7 @@ Always **back up the file** before making changes, and only edit it if you are c
 
 ## Troubleshooting
 
-### "Cannot delete player - currently on team"
+### "Unable to delete this player. This player is currently in a team."
 
 **Problem:** You tried to delete a player who is assigned to a team.
 
@@ -851,20 +851,27 @@ Always **back up the file** before making changes, and only edit it if you are c
 **Problem:** Not enough players or missing a required role when running `group`.
 
 **What to check:**
-- Do you have at least 5 unassigned players?
-- Do you have at least 1 player per role (Top, Jungle, Mid, ADC, Support)?
-- Run `list` to see who's available (unassigned players show in the player list).
+- Run list and confirm you have at least 5 ungrouped players. 
+  - If some players already belong to teams, use ungroup to free them. 
+- Check if there’s at least one player for each of the 5 roles: Top, Jungle, Mid, ADC, Support. 
+  - Run `find rl/Top`, `find rl/Mid`, etc. to verify. 
+- Ensure players have unique champions within a potential team. 
+  - Example: Two players both using “Ahri” would block auto-grouping.
 
-**Quick fix:** Add missing role players with `add n/... rl/Support ...`
+**Quick fix:** Add missing role players. 
+- Example: 
+```
+add n/... rl/Support ...
+```
 
-### "Invalid index" or "The player index provided is invalid"
+### Invalid index
 
-**Problem:** You referenced a player number that doesn't exist in the current displayed list.
+**Problem:** You entered a player number that doesn't exist in the current displayed list.
 
 **Solution:**
-1. Always run `list` first to see current player numbers.
-2. Remember: Numbers change after filtering or deleting!
-3. The index must refer to the **displayed list**, not the total roster.
+1. Always run `list` first to refresh the player list and see current player numbers.
+2. Remember that numbers change after filtering or deleting.
+3. The index must refer to the **displayed list index**, not the total roster.
 
 **Example:**
 ```
@@ -873,14 +880,26 @@ view 5               # ERROR - only 3 players are displayed
 view 2               # OK - refers to 2nd player in filtered list
 ```
 
-### "Duplicate champion detected" when creating teams
+### Duplicate roles/champions when manually creating teams
 
-**Problem:** Multiple players in the same team play the same champion.
+**Problem:** Multiple players in the same team play the same **role** or **champion**.
+
+**Explanation**:
+Each team in SummonersBook follows the standard 5-role composition: Top, Jungle, Mid, ADC, and Support.
+To ensure balanced and valid teams, each player in a team must have a **unique role** and **champion**.
 
 **Solution:**
-- SummonersBook requires unique champions within each team
-- Edit one player's champion: `edit 3 c/Yasuo`
-- Or use `group` (auto-grouping avoids champion conflicts automatically)
+- Edit the conflicting player’s details accordingly using the edit command :
+  - Examples:
+    - for duplicate role:
+      ```
+      edit 3 rl/ADC` 
+      ```
+    - for duplicate champion:
+      ```
+      edit 3 c/Yasuo
+      ```
+- Alternatively, use the `group` command to automatically form valid teams. SummonersBook will handle role and champion assignments to prevent duplicates.
 
 [Back to Top](#summonersbook-user-guide)
 
