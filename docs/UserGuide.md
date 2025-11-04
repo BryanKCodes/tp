@@ -1013,7 +1013,14 @@ add n/... rl/Support ...
 ### Invalid index
 
 **Problem:** You entered a player number that doesn't exist in the current displayed list.
-> ⚠️ **Important:** Always check the panel you’re interacting with before using an index-based command.
+
+<box type="important" seamless>
+
+
+**Important:** Always check the panel you're interacting with before using an index-based command.
+
+
+</box>
 
 **Solution:**
 1. Always run `list` first to refresh the player list and see current player numbers.
