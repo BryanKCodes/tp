@@ -153,6 +153,8 @@ When you open SummonersBook, you’ll see three main areas:
 ### Understanding Indexes
 
 Many commands in SummonersBook use **indexes** to refer to players or teams.  
+**The index of a player/team is the number beside their name.**
+
 For example:
 ```
 view 2
@@ -164,7 +166,13 @@ This means that:
 - If you use a command like `filter rl/Mid`, the indexes will update to reflect **only** the filtered results.
 - Using `delete 1` after filtering removes the **first player in the filtered list**, not necessarily the first player in your full roster.
 
-> ⚠️ **Important:** Always check the panel you’re interacting with before using an index-based command.
+<box type="important" seamless>
+
+
+**Important:** Always check the panel you're interacting with before using an index-based command.
+
+
+</box>
 
 Once you’re comfortable navigating the interface and understanding indexes, move on to [Step 5: Quickstart — Using Commands](#step-5-quickstart--using-commands) to understand how to use commands!
 
