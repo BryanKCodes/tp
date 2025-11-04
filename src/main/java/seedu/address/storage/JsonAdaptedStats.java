@@ -79,13 +79,26 @@ public class JsonAdaptedStats {
         if (scores == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "scores"));
         }
+        if ((csPerMinute.size() != goldDiffAt15.size())
+                || (csPerMinute.size() != kdaScores.size())
+                || (csPerMinute.size() != scores.size())) {
+            return new Stats();
+        }
 
-        // Construct Stats model object directly
-        return new Stats(
-                new ArrayList<>(csPerMinute),
-                new ArrayList<>(goldDiffAt15),
-                new ArrayList<>(kdaScores),
-                new ArrayList<>(scores)
-        );
+        Stats re = new Stats();
+
+        for (int i = 0; i < csPerMinute.size(); i++) {
+            if (Stats.isValidStats(
+                    String.valueOf(csPerMinute.get(i)),
+                    String.valueOf(goldDiffAt15.get(i)),
+                    String.valueOf(kdaScores.get(i)))) {
+                re = re.addLatestStats(
+                        String.valueOf(csPerMinute.get(i)),
+                        String.valueOf(goldDiffAt15.get(i)),
+                        String.valueOf(kdaScores.get(i)));
+            }
+        }
+
+        return re;
     }
 }
