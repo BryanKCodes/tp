@@ -137,23 +137,28 @@ Before we learn more commands, let’s get familiar with SummonersBook’s inter
 ### The Interface
 
 When you open SummonersBook, you’ll see three main areas:
-![Ui](images/Ui.png)
 1. **Command Box (Top)**  
    This is where you type your commands (e.g., `add`, `filter`, `view`).
+   ![CommandBox](images/CommandBox.png)
 
 2. **Result Display (Below the Command Box)**  
    After you run a command, SummonersBook will show a confirmation message or result here.
+   ![ResultDisplay](images/ResultDisplay.png)
 
 3. **Main Panels (Bottom Section)**
     - **Left Panel — Player List:** Shows all players currently in your roster.
     - **Right Panel — Team List:** Shows all teams currently formed.  
       Both panels are scrollable.
 
+   ![Panels](images/Panels.png)
 
 ### Understanding Indexes
 
 Many commands in SummonersBook use **indexes** to refer to players or teams.  
 **The index of a player/team is the number beside their name.**
+
+The image below highlights, in **red boxes**, where the player and team indexes appear in the lists:
+![Indexes](images/Indexes.png)
 
 For example:
 ```
@@ -229,7 +234,14 @@ These workflows show you how to accomplish typical coaching tasks with Summoners
 
 **Steps:**
 
-1. **Add your players to the system, one line at a time** (if they’re not already added):
+1. **Add your players to the system (if they’re not already added):
+
+<box type="important" seamless>
+
+**Important:** Copy and paste the following commands **one line at a time**. Copying the entire block as a single
+command will **not work** in SummonersBook
+
+</box>
 
 ```
 add n/Faker rk/Master rl/Mid c/Ahri
