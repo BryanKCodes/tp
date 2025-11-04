@@ -61,6 +61,7 @@ public class Team {
      */
     public Team(String id, List<Person> persons, int wins, int losses) {
         requireAllNonNull(id, persons);
+        validateWinLossValues(wins, losses);
         validateTeamComposition(persons);
         this.id = id;
         this.persons = new ArrayList<>(persons);
@@ -84,6 +85,19 @@ public class Team {
         return ROLE_ORDER.getOrDefault(roleStr.toLowerCase(), 999);
     }
 
+
+    /**
+     * Validates that the given win and loss values are non-negative.
+     *
+     * @param wins   Number of wins to validate.
+     * @param losses Number of loses to validate.
+     * @throws IllegalArgumentException if {@code wins} or {@code losses} is negative.
+     */
+    private void validateWinLossValues(int wins, int losses) {
+        if (wins < 0 || losses < 0) {
+            throw new IllegalArgumentException("Wins and losses cannot be negative.");
+        }
+    }
 
     /**
      * Validates that the team has exactly 5 persons with unique roles and unique champions.

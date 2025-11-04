@@ -1,5 +1,6 @@
 package seedu.address.model.team;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,6 +12,7 @@ import static seedu.address.testutil.TypicalPersons.JUNGLE_PERSON;
 import static seedu.address.testutil.TypicalPersons.MID_PERSON;
 import static seedu.address.testutil.TypicalPersons.SUPPORT_PERSON;
 import static seedu.address.testutil.TypicalPersons.TOP_PERSON;
+import static seedu.address.testutil.TypicalTeams.TEAM_A;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.team.exceptions.DuplicateChampionException;
 import seedu.address.model.team.exceptions.DuplicateRoleException;
 import seedu.address.model.team.exceptions.InvalidTeamSizeException;
+import seedu.address.testutil.TeamBuilder;
 
 public class TeamTest {
     private static final String DUMMY_ID = "";
@@ -52,6 +55,29 @@ public class TeamTest {
         Team team = new Team(VALID_PERSONS);
         assertEquals(VALID_PERSONS, team.getPersons());
         assertNotNull(team.getId());
+    }
+
+    @Test
+    public void constructor_validWinsAndLosses_success() {
+        int zeroWins = 0;
+        int zeroLosses = 0;
+        assertDoesNotThrow(() -> new TeamBuilder(TEAM_A).withWins(zeroWins).withLosses(zeroLosses).build());
+
+        int positiveWins = 100;
+        int positiveLosses = 50;
+        assertDoesNotThrow(() -> new TeamBuilder(TEAM_A).withWins(positiveWins).withLosses(positiveLosses).build());
+    }
+
+    @Test
+    public void constructor_invalidWins_throwsIllegalArgumentException() {
+        int invalidWins = -1;
+        assertThrows(IllegalArgumentException.class, () -> new TeamBuilder(TEAM_A).withWins(invalidWins).build());
+    }
+
+    @Test
+    public void constructor_invalidLosses_throwsIllegalArgumentException() {
+        int invalidLosses = -1;
+        assertThrows(IllegalArgumentException.class, () -> new TeamBuilder(TEAM_A).withLosses(invalidLosses).build());
     }
 
     @Test

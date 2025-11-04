@@ -52,6 +52,22 @@ public class TeamBuilder {
     }
 
     /**
+     * Sets the {@code wins} of the {@code Team} that we are building.
+     */
+    public TeamBuilder withWins(int wins) {
+        this.wins = wins;
+        return this;
+    }
+
+    /**
+     * Sets the {@code losses} of the {@code Team} that we are building.
+     */
+    public TeamBuilder withLosses(int losses) {
+        this.losses = losses;
+        return this;
+    }
+
+    /**
      * Replaces the target {@code Person} in the team with the {@code editedPerson}.
      * If the target person does not exist in the team, the team remains unchanged.
      */

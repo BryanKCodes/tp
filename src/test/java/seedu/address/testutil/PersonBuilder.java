@@ -112,6 +112,22 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code wins} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withWins(int wins) {
+        this.wins = wins;
+        return this;
+    }
+
+    /**
+     * Sets the {@code losses} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withLosses(int losses) {
+        this.losses = losses;
+        return this;
+    }
+
     public Person build() {
         return new Person(id, name, role, rank, champion, tags, wins, losses, stats);
     }
