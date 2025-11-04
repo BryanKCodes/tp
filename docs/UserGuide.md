@@ -23,6 +23,7 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
     - [Step 2: Running SummonersBook](#step-2-running-summonersbook)
     - [Step 3: Your First Team](#step-3-your-first-team)
     - [Step 4: Learn the Essentials (2-Minute Tutorial)](#step-4-learn-the-essentials-2-minute-tutorial)
+    - [Step 5: Learn the Essentials](#step-5-learn-the-essentials)
 2. [Common Workflows](#common-workflows)
     - [Preparing for Scrimmage Night](#workflow-1-preparing-for-scrimmage-night)
     - [Finding Substitutes Mid-Tournament](#workflow-2-finding-substitutes-mid-tournament)
@@ -97,7 +98,7 @@ If you're comfortable typing commands (like using Slack or Discord), SummonersBo
 3. Place the file in a folder you want to use as the home folder for SummonersBook.
     - For convenience, you can create a new folder on your Desktop and place `summonersbook.jar` file in the new folder.
 
----
+
 ### Step 2: Running SummonersBook
 1. Open a terminal or command prompt:
 
@@ -127,7 +128,57 @@ group
 
 🎉 **Done!** You just formed a balanced team in under 5 seconds. The team will appear in the team panel on the right.
 
-### Step 4: Learn the Essentials (2-Minute Tutorial)
+---
+## Step 4: Navigating the UI and Understanding Indexes
+
+Before we learn more commands, let’s get familiar with SummonersBook’s interface and **how indexes work** — since many commands depend on them.
+
+
+### The Interface
+
+When you open SummonersBook, you’ll see three main areas:
+![Ui](images/Ui.png)
+1. **Command Box (Top)**  
+   This is where you type your commands (e.g., `add`, `filter`, `view`).
+
+2. **Result Display (Below the Command Box)**  
+   After you run a command, SummonersBook will show a confirmation message or result here.
+
+3. **Main Panels (Bottom Section)**
+    - **Left Panel — Player List:** Shows all players currently in your roster.
+    - **Right Panel — Team List:** Shows all teams currently formed.  
+      Both panels are scrollable.
+
+
+### Understanding Indexes
+
+Many commands in SummonersBook use **indexes** to refer to players or teams.  
+**The index of a player/team is the number beside their name.**
+
+For example:
+```
+view 2
+```
+means **“view the 2nd player in the currently displayed player list.”**
+
+Indexes are **based on what’s currently visible** in each panel — not the full roster or all teams overall.  
+This means that:
+- If you use a command like `filter rl/Mid`, the indexes will update to reflect **only** the filtered results.
+- Using `delete 1` after filtering removes the **first player in the filtered list**, not necessarily the first player in your full roster.
+
+<box type="important" seamless>
+
+
+**Important:** Always check the panel you're interacting with before using an index-based command.
+
+
+</box>
+
+Once you’re comfortable navigating the interface and understanding indexes, move on to [Step 5: Quickstart — Using Commands](#step-5-quickstart--using-commands) to understand how to use commands!
+
+---
+
+### Step 5: Learn the Essentials (2-Minute Tutorial)
 
 Now that SummonersBook is set up, let’s try some useful commands!
 
@@ -450,6 +501,9 @@ Opens a detailed window showing comprehensive information about a player, includ
 view INDEX
 ```
 
+Once you’re comfortable navigating the interface and understanding indexes,  
+move on to [Step 5: Quickstart — Using Commands](#step-5-quickstart--using-commands) to try your first command.
+
 **How it works:**
 * The window displays:
     - Basic information (name, role, rank, champion, tags)
@@ -747,7 +801,6 @@ makeGroup INDEX_1 INDEX_2 INDEX_3 INDEX_4 INDEX_5
 * Once verified, the team is created and added to your team list.
 
 **Notes:**
-* `INDEX` (1 to 5) refers to the number shown in the displayed player list. Must be a positive integer (1, 2, 3…).
 * **Exactly 5** index numbers must be provided.
 * Players **cannot already belong** to another team.
 * All players must have **unique roles**
@@ -960,6 +1013,7 @@ add n/... rl/Support ...
 ### Invalid index
 
 **Problem:** You entered a player number that doesn't exist in the current displayed list.
+> ⚠️ **Important:** Always check the panel you’re interacting with before using an index-based command.
 
 **Solution:**
 1. Always run `list` first to refresh the player list and see current player numbers.
@@ -1225,6 +1279,7 @@ Provides full data continuity of player statistics between seasons or machines, 
 
 [Back to Top](#summonersbook-user-guide)
 
+---
 ## Appendix
 
 You can refer to the table below to see all champions supported by SummonersBook.
@@ -1271,6 +1326,7 @@ Note: This list is current as of **League of Legends** Patch [25.21]. Support fo
 | Zyra         |              |              |              |                |
 
 [Back to Top](#summonersbook-user-guide)
+
 ---
 #### Algorithm Details
 
@@ -1283,8 +1339,11 @@ The auto-grouping feature uses a greedy role-based matching algorithm that prior
 - Edge case handling
 
 Please refer to the [Auto-Grouping Feature (specifically, the Design Considerations)](DeveloperGuide.md#auto-grouping-feature) section in the Developer Guide.
+
+
 [Back to Top](#summonersbook-user-guide)
 
+---
 ## Understanding Rank-Ordered Teams
 
 **What "rank-ordered" means in practice:**
@@ -1316,5 +1375,8 @@ This is **different from balanced grouping**, which would mix ranks across teams
 2. **Clear progression paths** — Players see what skill level they need to reach to move up
 3. **Benchmarking** — If Team 3 beats Team 1, you know something unexpected happened
 4. **Realistic tournament prep** — Your Team 1 can practice against external teams while Team 2/3 develop
+
 [Back to Top](#summonersbook-user-guide)
+
 ---
+
